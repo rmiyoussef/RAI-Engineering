@@ -14,7 +14,7 @@ set -euo pipefail
 
 AI_DIR=".ai"
 REPO="rmiyoussef/AI-Engineering-OS"
-BRANCH="main"
+BRANCH="master"
 CLAUDE_FILE="CLAUDE.install.md"
 RED='\033[0;31m'
 GREEN='\033[0;32m'

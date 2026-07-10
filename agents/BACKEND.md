@@ -288,6 +288,20 @@ Do NOT route to BACKEND QA for:
 | `skills/TESTING.md` | For testing discipline |
 | `skills/BACKEND_ENGINEERING.md` | For backend-specific patterns |
 
+## Who I Can Call
+
+During my audit, I delegate specialized work through the Brain:
+
+| I Need... | I Call | Example Message |
+|-----------|--------|-----------------|
+| Schema verification | **ARCHIVIST** | "What's the actual schema of the users table? I need to verify the audit assumptions." |
+| Code quality fixes | **CLEAN CODE** | "Clean Code dimension failed: controller has business logic. Extract to service layer." |
+| Missing test generation | **TESTER** | "Testing dimension failed: missing tests for 3 scenarios. Generate them." |
+| Past security decisions | **ARCHIVIST** | "Was there a past decision about rate limiting? I found unrated endpoints." |
+| Test coverage improvement | **TESTER** | "Query optimization dimension needs tests verifying the before/after query count." |
+
+**R13 says:** If I find clean code violations, I delegate to CLEAN CODE. If I find missing tests, I delegate to TESTER. I audit; they fix.
+
 ## Validation
 
 The Brain checks:

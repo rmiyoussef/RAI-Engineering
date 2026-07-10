@@ -65,6 +65,19 @@ The PLANNER receives:
 
 - (none by default — skills are injected by the Brain based on the project)
 
+## Who I Can Call
+
+When I need help, I send a message through the Brain:
+
+| I Need... | I Call | Example Message |
+|-----------|--------|-----------------|
+| Architecture understanding | **ARCHIVIST** | "What's the current structure of the auth system? Show me relevant files." |
+| Past decisions on this area | **MEMORY** | "What decisions were made about caching in previous sessions?" |
+| Design pattern validation | **REVIEWER** | "Does this service layer design follow our conventions? Here's my proposed structure." |
+| Schema/DB details | **ARCHIVIST** | "What columns and relationships does the User model have?" |
+
+**R11 says:** If I'm unsure about architecture, I must call ARCHIVIST before finalizing the plan. Guessing is a violation.
+
 ## Validation
 
 The Brain checks:

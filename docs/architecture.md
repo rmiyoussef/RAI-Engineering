@@ -1,28 +1,34 @@
 # AI Engineering OS — Architecture
 
-> Version 0.1 — Foundation
+> Version 0.2 — Agent Mesh
 
 ---
 
 ## 1. What Is the Brain?
 
-The **Brain** is the central orchestrator. Every request enters the Brain, and every response exits through it. It does not perform work itself — it routes, validates, and coordinates.
+The **Brain** is a **message broker**. It does not write code, plan features, review changes, or test anything.
+
+The Brain does exactly three things:
+1. **Route** messages from one agent to another
+2. **Validate** every message's structure before delivery
+3. **Persist** decisions and conversations to memory
+
+Agents talk to each other. The Brain facilitates.
+
+```
+Agent A ──message──► Brain ──validated message──► Agent B
+                         ◄──response──────────────
+```
 
 The Brain is defined by:
 
-- `brain/SYSTEM.md` — How the Brain routes work
+- `brain/SYSTEM.md` — Message broker protocol and routing rules
 - `brain/MISSION.md` — The system's purpose (immutable)
 - `brain/PRINCIPLES.md` — Design values that guide all decisions
 - `brain/LIMITATIONS.md` — Hard boundaries the system must not cross
-- `brain/RULES.md` — Enforceable rules that constrain every agent
+- `brain/RULES.md` — 16 enforceable rules including mesh communication (R11-R16)
 
-```
-Request → Brain → Router → Agent → Structured Output → Brain → Response
-              ↘           ↗
-             Memory (side effect)
-```
-
-**The Brain never writes code.** It delegates to agents. It enforces the rules. It persists decisions to Memory.
+**The Brain never writes code.** It routes messages between agents.
 
 ---
 
@@ -32,11 +38,11 @@ A **Skill** is a single-responsibility capability. It is the smallest unit of re
 
 ```
 skills/
-  laravel.md          # One framework
-  redis.md            # One technology
-  sql.md              # One pattern
-  review.md           # One process
-  testing.md          # One discipline
+  CODE_REVIEW.md          # Code review patterns
+  TESTING.md              # Testing discipline
+  GIT.md                  # Git workflow
+  MEMORY.md               # Memory management
+  BACKEND_ENGINEERING.md  # Backend patterns (queries, security, SOLID)
 ```
 
 ### Rules for Skills
@@ -52,7 +58,7 @@ Every skill file should answer:
 
 1. What is this skill?
 2. When should it be used?
-3. What patterns/patterns does it teach?
+3. What patterns does it teach?
 4. What are its conventions and gotchas?
 5. What files does it typically touch?
 
@@ -62,36 +68,42 @@ Every skill file should answer:
 
 An **Agent** is a specialized role with a defined responsibility. Each agent receives a goal and returns a structured output — never free-form text.
 
+Agents communicate with each other through the Brain using the **Message Protocol**. Any agent can call any other agent for information, delegation, or consultation.
+
 ### Agent Contract
 
-Every agent must return a structured object following a defined schema:
+| Agent | Returns | Can Call |
+|-------|---------|----------|
+| `PLANNER` | `{ goal, affectedFiles, risks, dependencies, executionPlan, questions }` | ARCHIVIST, MEMORY, REVIEWER |
+| `EXECUTOR` | `{ filesChanged, testResults, lintResults, status }` | ARCHIVIST, BACKEND QA, CLEAN CODE, TESTER, REVIEWER |
+| `REVIEWER` | `{ issues, suggestions, performance, security, score }` | BACKEND QA, TESTER, CLEAN CODE, ARCHIVIST, MEMORY |
+| `BACKEND QA` | `{ overallStatus, dimensions: { cleanCode, queryOptimization, security, testing }, fixes }` | CLEAN CODE, TESTER, ARCHIVIST |
+| `TESTER` | `{ generatedTests, testResults, coverage, status }` | ARCHIVIST, EXECUTOR |
+| `CLEAN CODE` | `{ refactored, violationsFixed, qualityScore }` | ARCHIVIST, TESTER |
+| `ARCHIVIST` | `{ answers, relevantFiles, relatedDecisions, status }` | *(read-only, no calls)* |
+| `MEMORY SCRIBE` | `{ decisions, lessons, architectureChanges, sessionSummary }` | PLANNER, EXECUTOR, REVIEWER, TESTER |
+| `GITHUB` | `{ branch, commits, prUrl, prBody, status }` | EXECUTOR, REVIEWER, TESTER, MEMORY |
+| `BRAIN` | Routes, validates, persists | *(broker, all agents)* |
 
-| Agent | Returns | File |
-|-------|---------|------|
-| `PLANNER` | `{ goal, affectedFiles, risks, dependencies, executionPlan, questions }` | `agents/PLANNER.md` |
-| `EXECUTOR` | `{ filesChanged, testResults, lintResults, status }` | `agents/EXECUTOR.md` |
-| `REVIEWER` | `{ issues, suggestions, performance, security, score }` | `agents/REVIEWER.md` |
-| `BACKEND QA` | `{ overallStatus, dimensions: { cleanCode, queryOptimization, security, testing }, fixes }` | `agents/BACKEND.md` |
-| `MEMORY SCRIBE` | `{ decisions, lessons, architectureChanges, sessionSummary }` | `agents/MEMORY.md` |
-| `GITHUB` | `{ branch, commits, prUrl, prBody, status }` | `agents/GITHUB.md` |
+### Agent-to-Agent Communication Types
 
-### Why Structured Outputs
-
-Because every agent returns the same shape every time:
-
-1. **Agents can talk to each other.** The Planner's output feeds the Executor. The Executor's output feeds the Reviewer.
-2. **The Brain can validate.** If a Planner returns `{...}` missing `risks`, the Brain rejects it.
-3. **Memory can index.** Structured decisions are searchable and linkable.
-4. **You can test agents.** Mock the input, assert the output shape.
+| Type | Meaning |
+|------|---------|
+| `request` | "I need information from you" — ask questions |
+| `delegate` | "Take over this work and report back" — assign subtasks |
+| `consult` | "Review this specific piece and give feedback" — mid-work advice |
+| `escalate` | "I can't resolve this — needs human input" |
+| `done` | "Task complete, here's my output" |
 
 ### Agent Lifecycle
 
-1. **Instantiate** — Brain loads the agent's definition + required skills
-2. **Equip** — Brain injects relevant memory, context, and rules
-3. **Execute** — Agent performs its task, returns structured output
-4. **Validate** — Brain checks the output against the agent's schema
-5. **Persist** — Brain writes decisions, changes, and lessons to Memory
-6. **Respond** — Brain returns the result to the caller
+1. **Brain activates agent** — injects role, skills, memory context
+2. **Agent works** — reads files, thinks, produces structured output
+3. **Agent calls for help (optional)** — sends message through Brain to another agent
+4. **Helper responds** — Brain validates and routes response back
+5. **Agent completes output** — returns structured result to Brain
+6. **Brain validates schema** — rejects malformed output
+7. **Brain persists** — writes decisions, conversation to memory
 
 ---
 
@@ -115,7 +127,7 @@ Memory lives **in the project**, not in AI Engineering OS. The OS provides the i
 
 ```
 AI-Engineering-OS/brain/       # System brain (interface, schemas, rules)
-BenchHR/memory/                # Project memory (decisions, architecture, business rules)
+Project/memory/                # Project memory (decisions, architecture, business rules)
 ```
 
 ### Memory Interface
@@ -130,57 +142,113 @@ Brain.memory.link(from, to, relationship)
 
 ## 5. How Do They Communicate?
 
-### The Message Contract
+### The Message Protocol
 
-Every message between components follows:
+Every message between agents follows this structure:
 
-```
+```json
 {
-  "from": "planner | reviewer | brain | ...",
-  "to": "brain | executor | memory | ...",
-  "type": "request | response | event | error",
-  "payload": { ... },
-  "schema": "planner-v1 | executor-v1 | ...",
-  "timestamp": "...",
-  "session": "uuid"
+  "from": "planner | executor | reviewer | backend_qa | tester | clean_code | archivist | memory | github | brain",
+  "to": "planner | executor | reviewer | backend_qa | tester | clean_code | archivist | memory | github | brain",
+  "type": "request | delegate | consult | escalate | error | done",
+  "session": "<uuid>",
+  "context": {
+    "task": "Original user request",
+    "plan": "Active plan reference (if one exists)",
+    "files": ["affected files"]
+  },
+  "payload": { }
 }
 ```
 
-### The Pipeline
+### The Agent Mesh
 
 ```
-User Request
-    ↓
-[1] Brain.loadRules()
-    ↓
-[2] Brain.loadMemory()        ← pulls relevant context
-    ↓
-[3] Brain.route(Planner)      ← Planner returns structured plan
-    ↓
-[4] Brain.validate(plan)      ← rejects if schema doesn't match
-    ↓
-[5] Brain.storeDecision()     ← writes to Memory
-    ↓
-[6] Brain.route(Executor)     ← Executor loads plan + skills
-    ↓
-[7] Executor → modify files → return { filesChanged, status }
-    ↓
-[8] Brain.route(Reviewer)     ← Reviewer loads changes
-    ↓
-[9] Reviewer → { issues, performance, score }
-    ↓
-[10] If score < threshold → Brain.route(Executor)     ← loop
-    ↓
-[10b] If backend code changed → Brain.route(Backend QA)  ← deep audit
-      │
-      ├─ Dimension fails → route to Executor (fix loop, max 5 iters)
-      └─ All pass → proceed
-    ↓
-[11] Brain.route(Tester)      ← run tests
-    ↓
-[12] Brain.storeLessons()     ← writes lessons to Memory
-    ↓
-[13] Brain.respond(user)      ← summarized result
+                    ┌───────────────────┐
+                    │     ARCHIVIST     │── Read-only knowledge base
+                    └────────┬──────────┘
+                             │
+         ┌───────────────────┼───────────────────┐
+         ▼                   ▼                   ▼
+   ┌──────────┐       ┌──────────┐       ┌──────────┐
+   │ PLANNER  │◄─────►│ EXECUTOR │◄─────►│ REVIEWER │
+   └─────┬────┘       └─────┬────┘       └─────┬────┘
+         │                  │                  │
+         ▼                  ▼                  ▼
+   ┌──────────┐       ┌──────────┐       ┌──────────┐
+   │  MEMORY  │       │ CLEAN    │       │ BACKEND  │
+   │  SCRIBE  │       │ CODE     │       │   QA     │
+   └──────────┘       └──────────┘       └────┬─────┘
+         │                                    │
+         ▼                                    ▼
+   ┌──────────┐                       ┌──────────┐
+   │  GITHUB  │                       │  TESTER  │
+   └──────────┘                       └──────────┘
+```
+
+### How a Conversation Unfolds
+
+There is no fixed pipeline. The workflow emerges from agent communication. A typical flow looks like:
+
+```
+User request
+    │
+    ▼
+BRAIN → PLANNER (starts planning)
+    │
+    ├─► PLANNER → ARCHIVIST: "What's the current architecture?"
+    │     ◄─ ARCHIVIST responds
+    │
+    ├─► PLANNER → MEMORY: "Any past decisions about this?"
+    │     ◄─ MEMORY responds
+    │
+    ├─► PLANNER → REVIEWER: "Does this design approach look right?"
+    │     ◄─ REVIEWER validates
+    │
+    ◄─ PLANNER produces plan → BRAIN validates → user approves
+    │
+    ▼
+BRAIN → EXECUTOR (starts building)
+    │
+    ├─► EXECUTOR → ARCHIVIST: "What columns does the X table have?"
+    │     ◄─ ARCHIVIST responds
+    │
+    ├─► EXECUTOR → BACKEND QA: "Review this query mid-write"
+    │     ◄─ BACKEND QA: "Use eager loading, N+1 risk"
+    │
+    ├─► EXECUTOR → TESTER: "Generate tests for this service"
+    │     ◄─ TESTER returns test files
+    │
+    ├─► EXECUTOR → CLEAN CODE: "Refactor this controller"
+    │     ◄─ CLEAN CODE: "Extracted service layer, quality 9/10"
+    │
+    ◄─ EXECUTOR reports completion
+    │
+    ▼
+BRAIN → REVIEWER (reviews everything)
+    │
+    ├─► REVIEWER → BACKEND QA: "Verify these security concerns"
+    │     ◄─ BACKEND QA audits
+    │
+    ├─► REVIEWER → TESTER: "Generate missing edge case tests"
+    │     ◄─ TESTER adds scenarios
+    │
+    ├─► REVIEWER → CLEAN CODE: "Fix naming violations"
+    │     ◄─ CLEAN CODE refactors
+    │
+    ◄─ REVIEWER scores 9/10 → passes
+    │
+    ▼
+BRAIN → MEMORY SCRIBE (persists everything)
+    │
+    ├─► MEMORY → PLANNER: "What was the plan?"
+    ├─► MEMORY → EXECUTOR: "What files changed?"
+    ├─► MEMORY → REVIEWER: "What was the outcome?"
+    │
+    ◄─ MEMORY writes decisions, lessons, architecture, session
+    │
+    ▼
+BRAIN responds to user with full summary
 ```
 
 ---
@@ -190,28 +258,28 @@ User Request
 | Step | Layer | What It Produces | Status |
 |------|-------|------------------|--------|
 | 1 | **Brain** | `CLAUDE.md`, `brain/SYSTEM.md`, `MISSION.md`, `PRINCIPLES.md`, `LIMITATIONS.md`, `RULES.md` | ✅ v0.1 |
-| 2 | **Workflow** | `workflows/STANDARD.md` | ✅ v0.1 |
-| 3 | **Rules** | `rules/` | 🔲 v0.2 planned |
-| 4 | **Skills** | `skills/CODE_REVIEW.md`, `TESTING.md`, `GIT.md`, `MEMORY.md` | ✅ v0.1 |
-| 5 | **Agents** | `agents/PLANNER.md`, `EXECUTOR.md`, `REVIEWER.md`, `MEMORY.md`, `GITHUB.md` | ✅ v0.1 |
-| 6 | **Templates** | `templates/MEMORY_DECISION.md` | ✅ v0.1 |
-| 7 | **Memory** | OS memory interface (protocol defined in `brain/SYSTEM.md`) | ✅ v0.1 |
-| 8 | **Install System** | Install scripts | 🔲 v0.7 planned |
+| 2 | **Workflow** | `workflows/STANDARD.md` | ✅ v0.1 → v0.2 |
+| 3 | **Skills** | `skills/CODE_REVIEW.md`, `TESTING.md`, `GIT.md`, `MEMORY.md`, `BACKEND_ENGINEERING.md` | ✅ v0.1 → v0.2 |
+| 4 | **Agents** | `agents/PLANNER.md`, `EXECUTOR.md`, `REVIEWER.md`, `BACKEND.md`, `TESTER.md`, `CLEAN_CODE.md`, `ARCHIVIST.md`, `MEMORY.md`, `GITHUB.md` | ✅ v0.1 → v0.2 |
+| 5 | **Templates** | `templates/MEMORY_DECISION.md` | ✅ v0.1 |
+| 6 | **Memory** | OS memory interface (protocol defined in `brain/SYSTEM.md`) | ✅ v0.1 |
+| 7 | **Rules expansion** | `rules/` directory with domain-agnostic rule files | 🔲 Planned |
+| 8 | **Install System** | Install scripts that bootstrap any repo | 🔲 Planned |
 
 ---
 
 ## 7. Design Principles
 
-1. **Single responsibility.** Every file does one thing. One skill per file. One agent per role.
-2. **Structured over free-form.** Agents return schemas, not paragraphs. Validatable, testable, composable.
-3. **Context over instructions.** Give the AI context about the domain, not step-by-step prompts. Trust the model to execute.
-4. **Memory is a first-class citizen.** Every decision, every lesson, every architectural change is indexed. Nothing is lost.
-5. **Validation at boundaries.** The Brain validates every input and output. Bad data stops at the border.
-6. **Framework-agnostic core.** The OS knows how to engineer software, not how to build Laravel apps. Domain knowledge lives in Skills.
-7. **Versioned product.** AI Engineering OS has releases. Projects pin a version and upgrade deliberately.
-8. **Testable pieces.** Every agent, every skill, every rule can be tested in isolation.
-9. **Progressive complexity.** Start simple. Add layers as the project grows. Don't build what you don't need yet.
-10. **Nothing exists because it's useful today.** Every file must be reusable across projects.
+1. **Single responsibility.** Every file does one thing. One agent per role.
+2. **Agents ask for help, they don't guess.** Unsure about architecture? Call ARCHIVIST. Unsure about a query? Call BACKEND QA.
+3. **Delegate, don't duplicate.** Need tests? Delegate to TESTER. Need refactoring? Delegate to CLEAN CODE.
+4. **Structured over free-form.** Agents return schemas, not paragraphs.
+5. **Memory is a first-class citizen.** Every decision, every lesson, every architectural change is indexed. Nothing is lost.
+6. **Validation at boundaries.** The Brain validates every input and output.
+7. **Framework-agnostic core.** The OS knows engineering patterns. Domain knowledge lives in Skills.
+8. **Versioned product.** AI Engineering OS has releases. Projects pin a version.
+9. **Testable pieces.** Every agent can be tested in isolation.
+10. **Reusable across projects.** Nothing exists only because it's useful today.
 
 ---
 
@@ -220,9 +288,11 @@ User Request
 1. Create `agents/<name>.md`
 2. Define its purpose, inputs, and structured output schema
 3. Define what skills it loads
-4. Register it in the Brain's router
-5. Add validation for its output schema
-6. Write a test
+4. Define which other agents it can call (and who can call it)
+5. Add "Who I Can Call" section
+6. Register it in the Brain's routing table in `brain/SYSTEM.md`
+7. Add validation for its output schema
+8. Add it to the agent directory in `CLAUDE.md`
 
 ## 9. How to Add a New Skill
 
@@ -237,13 +307,14 @@ User Request
 
 | Version | Focus | Contents | Status |
 |---------|-------|----------|--------|
-| v0.1 | **Foundation** | Brain (`CLAUDE.md`, SYSTEM, MISSION, PRINCIPLES, LIMITATIONS, RULES), Workflow (STANDARD), Skills (CODE_REVIEW, TESTING, GIT, MEMORY), Agents (PLANNER, EXECUTOR, REVIEWER, MEMORY, GITHUB), Templates (MEMORY_DECISION), architecture docs | ✅ **Done** |
-| v0.2 | **Skills expansion** | Framework skills (laravel, sql, redis, react, vue), language skills (php, js, python) | 🔲 Planned |
-| v0.3 | **Rules expansion** | `rules/` directory with domain-agnostic rule files | 🔲 Planned |
-| v0.4 | **Memory enhancements** | Memory querying, linking, lifecycle management | 🔲 Planned |
-| v0.5 | **GitHub release workflow** | Changelog, semantic versioning, release automation | 🔲 Planned |
-| v0.6 | **Templates expansion** | Project scaffolding, agent templates, skill templates | 🔲 Planned |
-| v0.7 | **Install system** | Install script that bootstraps any repo with AI-Engineering-OS | 🔲 Planned |
+| v0.1 | **Foundation** | Brain (CLAUDE.md, SYSTEM, MISSION, PRINCIPLES, LIMITATIONS, RULES), Workflow (STANDARD), Skills (CODE_REVIEW, TESTING, GIT, MEMORY), Agents (PLANNER, EXECUTOR, REVIEWER, MEMORY, GITHUB), Templates, architecture docs | ✅ **Done** |
+| v0.2 | **Agent Mesh** | Message broker protocol (R11-R16), agent-to-agent communication, BACKEND QA, TESTER, CLEAN CODE, ARCHIVIST agents, BRAIN as router not dispatcher | ✅ **Done** |
+| v0.3 | **Skills expansion** | Framework skills (laravel, sql, redis, react, vue), language skills (php, js, python) | 🔲 Planned |
+| v0.4 | **Rules expansion** | `rules/` directory with domain-agnostic rule files | 🔲 Planned |
+| v0.5 | **Memory enhancements** | Memory querying, linking, lifecycle management | 🔲 Planned |
+| v0.6 | **GitHub release workflow** | Changelog, semantic versioning, release automation | 🔲 Planned |
+| v0.7 | **Templates expansion** | Project scaffolding, agent templates, skill templates | 🔲 Planned |
+| v0.8 | **Install system** | Install script that bootstraps any repo with AI-Engineering-OS | 🔲 Planned |
 | v1.0 | **Stable** | Battle-tested, documented, versioned, with upgrade guides | 🔲 Planned |
 
 ---

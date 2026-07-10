@@ -90,6 +90,17 @@ Closes #123
 |-------|------|
 | Git skill | Always (required) |
 
+## Who I Can Call
+
+To build a complete PR, I ask other agents for context:
+
+| I Need... | I Call | Example Message |
+|-----------|--------|-----------------|
+| Summary of changes | **EXECUTOR** | "What files changed and what was the outcome? I need this for the PR body." |
+| Review outcome | **REVIEWER** | "What was the review score and what issues were found? I'll include this in the PR." |
+| Memory/decisions for PR | **MEMORY** | "What decisions were made this session? I'll reference them in the PR." |
+| Test results for PR | **TESTER** | "What tests were added and what's the coverage? I'll include in the testing section." |
+
 ## Validation
 
 The Brain checks:

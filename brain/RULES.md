@@ -78,3 +78,46 @@ All agents, all skills, all brain operations use `deepseek-v4-flash`. No other m
 If a file has two separable concerns, it must be split.
 
 **Violation:** The file is rejected by review until split.
+
+---
+
+## Mesh Communication Rules
+
+### R11 — Agents Ask for Help, They Don't Guess
+If an agent is unsure about something another agent knows, it must ask. Guessing is a violation.
+- PLANNER unsure about architecture? Call ARCHIVIST.
+- EXECUTOR unsure about a query? Call BACKEND QA.
+- REVIEWER unsure about test coverage? Call TESTER.
+
+**Violation:** The Brain flags the issue: "You should have consulted [agent] for [reason]."
+
+### R12 — Consult Before Committing
+If an agent is about to make a decision that affects another agent's domain, it should consult that agent *before* committing.
+- PLANNER designing a database schema? Consult BACKEND QA first.
+- EXECUTOR writing a complex algorithm? Consult CLEAN CODE mid-write.
+- REVIEWER scoring low on tests? Consult TESTER before flagging.
+
+**Violation:** Work is rejected and the consultation must happen retroactively.
+
+### R13 — Delegate, Don't Duplicate
+If a subtask belongs to another agent's domain, delegate it. Don't do it yourself poorly.
+- Need tests? Delegate to TESTER.
+- Need refactoring? Delegate to CLEAN CODE.
+- Need security audit? Delegate to BACKEND QA.
+
+**Violation:** The Brain rejects: "This task belongs to [agent], not you."
+
+### R14 — Escalate After 3 Failed Attempts
+If an agent fails the same task 3 times, it must escalate to the user. It can't keep trying the same approach.
+
+**Violation:** The Brain forces escalation.
+
+### R15 — One Message at a Time
+An agent sends one message, waits for the response, then continues. No parallel conversations. If an agent needs multiple pieces of information, it requests them sequentially.
+
+**Violation:** The Brain rejects concurrent messages from the same agent.
+
+### R16 — Message Protocol Compliance
+Every agent-to-agent message must follow the Message Protocol defined in `brain/SYSTEM.md`. Messages missing required fields are rejected.
+
+**Violation:** The Brain returns validation error to the sender.

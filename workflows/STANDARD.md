@@ -1,252 +1,304 @@
-# Standard Development Workflow
+# Standard Development Workflow — Agent Mesh
 
-> This workflow is the default execution pipeline for all development tasks.
-> It orchestrates Brain → Planner → Executor → Reviewer → Tester → Memory Scribe.
+> There is no fixed pipeline. Agents talk to each other through the Brain.
+> This document shows how the conversation typically flows, not a rigid sequence.
 
 ---
 
 ## Overview
 
 ```
-User Task
-   │
-   ├─► [BRAIN] Load context (rules, memory, skills)
-   │
-   ├─► [PLANNER] Return structured plan
-   │
-   ├─► [BRAIN] Validate plan, write decision to memory
-   │
-   ├─► [EXECUTOR] Write code per plan
-   │
-   ├─► [REVIEWER] Review code, return issues + score
-   │     │
-   │     ├─ Score < 7 ──► [EXECUTOR] Fix issues → [REVIEWER] re-review
-   │     │                    (max 3 iterations, then escalate)
-   │     │
-   │     └─ Score >= 7 ──► proceed
-   │
-   ├─► [BACKEND QA] (if backend code changed)
-   │     │          Deep audit: clean code, queries, security, tests
-   │     │
-   │     ├─ Dimension fails ──► [EXECUTOR] Fix → [BACKEND QA] re-audit
-   │     │                         (max 5 iterations, then escalate)
-   │     │
-   │     └─ All pass ──► proceed
-   │
-   ├─► [TESTER] Run tests
-   │     │
-   │     ├─ Tests fail ──► [EXECUTOR] Fix → [TESTER] re-run
-   │     │
-   │     └─ Tests pass ──► proceed
-   │
-   ├─► [MEMORY SCRIBE] Write decisions, lessons, architecture updates
-   │
-   └─► [BRAIN] Respond to user with summary
+User gives task
+    │
+    ▼
+┌────────────────────────────────────────────────────────────┐
+│                    BRAIN (message broker)                   │
+│  Routes messages between agents, validates every message,  │
+│  persists decisions to memory, escalates when needed       │
+└────────────────────────────────────────────────────────────┘
+    │
+    ▼
+                        ┌─────────────┐
+                  ┌────►│  ARCHIVIST  │◄────┐
+                  │     └─────────────┘     │
+                  │                         │
+            ┌─────┴─────┐           ┌───────┴──────┐
+            │  PLANNER   │◄────────►│   EXECUTOR   │
+            └─────┬─────┘           └──────┬───────┘
+                  │                        │
+            ┌─────┴─────┐           ┌──────┴───────┐
+            │  REVIEWER │◄────────►│  BACKEND QA  │
+            └─────┬─────┘           └──────┬───────┘
+                  │                        │
+            ┌─────┴─────┐           ┌──────┴───────┐
+            │   TESTER  │◄────────►│  CLEAN CODE  │
+            └─────┬─────┘           └──────────────┘
+                  │
+            ┌─────┴─────┐
+            │   MEMORY  │
+            │   SCRIBE  │
+            └───────────┘
+                  │
+            ┌─────┴─────┐
+            │   GITHUB  │
+            └───────────┘
 ```
 
 ---
 
-## When to Use
+## How the Conversation Unfolds
 
-This workflow runs on every task that involves changing code:
-- New features
-- Bug fixes
-- Refactoring
-- Performance improvements
-- Dependency updates
-- Documentation updates
+This is not a pipeline. This is what a typical conversation looks like:
 
-For read-only tasks (questions, exploration), skip to Planner → respond directly.
+### Phase 1: Initiation
+
+```
+USER: "Add user authentication with JWT"
+
+  BRAIN loads context:
+  ├── brain/MISSION.md, PRINCIPLES.md, RULES.md, LIMITATIONS.md
+  ├── brain/SYSTEM.md (message broker protocol)
+  └── project memory/ (if exists)
+
+  BRAIN: "Let me start with planning."
+  ── routes to PLANNER ──
+```
+
+### Phase 2: Planning (PLANNER leads)
+
+```
+PLANNER starts working on the plan.
+
+  PLANNER: "I need to understand the current auth setup."
+  ── request → BRAIN → ARCHIVIST ──
+
+  ARCHIVIST: "The project has User model with email/password.
+              No existing auth system. No JWT package installed."
+  ── response → BRAIN → PLANNER ──
+
+  PLANNER: "What past decisions exist about auth?"
+  ── request → BRAIN → MEMORY (if project memory exists) ──
+
+  MEMORY: "No past decisions about auth found."
+
+  PLANNER: "Let me check if this design approach is sound."
+  ── consult → BRAIN → REVIEWER ──
+
+  REVIEWER: "Service layer approach is good. Use DTOs for registration data."
+  ── response → BRAIN → PLANNER ──
+
+  PLANNER produces the plan:
+  ├── Goal: Implement JWT authentication
+  ├── Files: AuthController, AuthService, JwtService, LoginRequest, RegisterRequest
+  ├── Risks: Token storage, refresh token rotation
+  ├── Dependencies: tymon/jwt-auth package
+  └── Plan: Install package → create DTOs → service → controller → routes → tests
+
+  BRAIN validates the plan schema.
+  BRAIN presents to user for approval.
+  BRAIN writes decision to memory/decisions/.
+```
+
+### Phase 3: Execution (EXECUTOR leads)
+
+```
+User approves.
+
+  BRAIN: "Plan approved. Starting execution."
+  ── routes to EXECUTOR ──
+
+  EXECUTOR starts building.
+
+  EXECUTOR: "I need to see the User model before I extend it."
+  ── request → BRAIN → ARCHIVIST ──
+
+  ARCHIVIST: "User model: id, name, email, password, role, timestamps.
+              Located at app/Models/User.php."
+  ── response → BRAIN → EXECUTOR ──
+
+  EXECUTOR writes AuthService.
+
+  EXECUTOR: "I'm about to write a complex query to find users by role
+             with their posts. Review this approach before I continue."
+  ── consult → BRAIN → BACKEND QA ──
+
+  BACKEND QA: "Use scoped query with eager loading. Here's the pattern."
+  ── response → BRAIN → EXECUTOR ──
+
+  EXECUTOR writes the query correctly the first time.
+
+  EXECUTOR: "I need tests for AuthService (register, login, refresh)."
+  ── delegate → BRAIN → TESTER ──
+
+  TESTER generates tests:
+  ├── tests/Unit/Services/AuthServiceTest.php
+  ├── tests/Feature/Auth/RegistrationTest.php
+  └── tests/Feature/Auth/LoginTest.php
+
+  TESTER: "Tests generated. Covering: happy path, duplicate email,
+            invalid credentials, token expiration."
+  ── done → BRAIN → EXECUTOR ──
+
+  EXECUTOR: "This controller is getting heavy. Can you refactor it?"
+  ── delegate → BRAIN → CLEAN CODE ──
+
+  CLEAN CODE extracts service layer from controller.
+  ├── Controller went from 120 lines → 25 lines
+  └── Service layer created at app/Services/Auth/RegistrationService.php
+
+  CLEAN CODE: "Refactored. Controller now delegates to service.
+               Quality score: 9/10."
+  ── done → BRAIN → EXECUTOR ──
+
+  EXECUTOR reports completion:
+  ├── Files changed: 8
+  ├── Tests: 24 pass, 0 fail
+  └── Status: success
+```
+
+### Phase 4: Review (REVIEWER leads)
+
+```
+  BRAIN: "Code written. Starting review."
+  ── routes to REVIEWER ──
+
+  REVIEWER examines all changes.
+
+  REVIEWER: "I see JWT token handling — verify this is secure."
+  ── consult → BRAIN → BACKEND QA ──
+
+  BACKEND QA audits the auth code:
+  ├── Clean Code: Pass
+  ├── Query Optimization: Pass (no queries in auth flow)
+  ├── Security: Conditional pass — token not blacklisted on logout
+  └── Testing: Adequate
+
+  BACKEND QA: "One issue: no token blacklist on logout.
+               Suggest adding token invalidation."
+  ── response → BRAIN → REVIEWER ──
+
+  REVIEWER: "Fix the token blacklist issue."
+  ── delegate → BRAIN → EXECUTOR ──
+
+  EXECUTOR adds token blacklist to logout flow.
+
+  REVIEWER: "Tests look thin on edge cases. Generate more."
+  ── delegate → BRAIN → TESTER ──
+
+  TESTER adds: expired token test, malformed token test, refresh token test.
+
+  REVIEWER re-scores:
+  ├── Issues: 1 minor (add logging)
+  ├── Performance: Good
+  ├── Security: Good
+  └── Score: 9/10
+
+  BRAIN: "Score 9/10. Passing."
+```
+
+### Phase 5: Backend Audit (BACKEND QA leads, if applicable)
+
+```
+  BRAIN: "Backend code changed. Running backend audit."
+  ── routes to BACKEND QA ──
+
+  BACKEND QA audits all backend files.
+
+  BACKEND QA: "Clean Code dimension needs work — AuthController has
+               registration validation inline."
+  ── delegate → BRAIN → CLEAN CODE ──
+
+  CLEAN CODE extracts validation to RegisterRequest form request.
+
+  BACKEND QA: "Testing dimension missing token refresh test."
+  ── delegate → BRAIN → TESTER ──
+
+  TESTER generates refresh token test.
+
+  BACKEND QA final report:
+  ├── Clean Code: Pass
+  ├── Query Optimization: Pass
+  ├── Security: Pass
+  └── Testing: Pass
+  ├── Overall: PASS
+```
+
+### Phase 6: Testing (TESTER leads)
+
+```
+  BRAIN: "Running final test suite."
+  ── routes to TESTER ──
+
+  TESTER runs all tests:
+  ├── 28 passed
+  ├── 0 failed
+  ├── 1 skipped (mailhog not running)
+  └── Coverage: 92%
+
+  TESTER: "All tests pass. Coverage adequate."
+  ── done → BRAIN ──
+```
+
+### Phase 7: Memory (MEMORY SCRIBE leads)
+
+```
+  BRAIN: "Persisting to memory."
+  ── routes to MEMORY SCRIBE ──
+
+  MEMORY SCRIBE gathers data:
+
+  MEMORY SCRIBE: "What was the plan?"
+  ── request → BRAIN → PLANNER ──
+
+  PLANNER: "Goal: Implement JWT authentication. Files: 8 changed."
+  ── response → BRAIN → MEMORY SCRIBE ──
+
+  MEMORY SCRIBE: "What was the outcome?"
+  ── request → BRAIN → REVIEWER ──
+
+  REVIEWER: "Score 9/10. One minor issue: add logging."
+  ── response → BRAIN → MEMORY SCRIBE ──
+
+  MEMORY SCRIBE writes:
+  ├── decisions/2026-07-10-jwt-authentication.md
+  ├── lessons/2026-07-10-token-blacklist-logout.md
+  ├── architecture/auth-system.md (updated)
+  └── sessions/2026-07-10-jwt-auth-implementation.md
+```
+
+### Phase 8: GitHub (GITHUB leads, if requested)
+
+```
+  BRAIN: "User requested GitHub PR."
+  ── routes to GITHUB ──
+
+  GITHUB: "What changed and what was the review outcome?"
+  ── request → BRAIN → EXECUTOR → REVIEWER ──
+
+  GITHUB creates:
+  ├── Branch: feat/jwt-authentication
+  ├── Commits: 3 conventional commits
+  └── PR: Full body with what/why/how/testing/review score
+```
+
+### Phase 9: Response
+
+```
+  BRAIN summarizes for user:
+  ├── What: JWT authentication implemented
+  ├── Files: 8 created/modified
+  ├── Review: 9/10
+  ├── Tests: 28 pass, 92% coverage
+  ├── Memory: 3 entries created
+  └── Agent interactions: 14 messages between 7 agents
+```
 
 ---
 
-## Workflow Steps
+## Key Principles of the Mesh Workflow
 
-### Phase 1: Context Loading
-
-```
-BRAIN loads:
-├── Rules              → brain/RULES.md
-├── Mission            → brain/MISSION.md
-├── Principles         → brain/PRINCIPLES.md
-├── Limitations        → brain/LIMITATIONS.md
-└── Project Memory
-    ├── decisions/     → past architecture decisions
-    ├── architecture/  → current system map
-    ├── lessons/       → known pitfalls and patterns
-    └── sessions/      → recent session context
-```
-
-**Output:** Enhanced task prompt with full project context.
-
-### Phase 2: Planning
-
-```
-PLANNER receives:
-├── User request
-├── Project memory context
-└── Relevant skills
-
-PLANNER returns:
-├── goal:              What we're accomplishing
-├── affectedFiles:     Files to create/modify
-├── risks:             Risks and assumptions
-├── dependencies:      What must exist first
-├── executionPlan:     Step-by-step implementation
-└── questions:         Open questions for the user
-```
-
-**Validation:** Brain checks all fields are present. If `risks` is empty, PLANNER must justify.
-
-**Memory hook:** If a similar plan exists in `memory/decisions/`, flag it to the user.
-
-### Phase 3: Decision Recording
-
-```
-BRAIN writes to memory/decisions/<date>-<slug>.md:
-├── decision:          What was decided
-├── context:           Why this matters
-├── options:           Alternatives considered
-├── chosen:            Which option was selected
-├── rationale:         Why this option was chosen
-└── date:              Today's date
-```
-
-### Phase 4: Execution
-
-```
-EXECUTOR receives:
-├── Execution plan (from PLANNER)
-├── Affected files list
-├── Relevant skills
-└── Project memory context
-
-EXECUTOR returns:
-├── filesChanged:      List of files modified/created
-├── testResults:       Summary of test outcomes
-├── lintResults:       Lint/format check results
-└── status:            success | partial_failure | blocked
-```
-
-### Phase 5: Review
-
-```
-REVIEWER receives:
-├── Original plan
-├── Changed files (diff)
-├── Test results
-└── Code review skill
-
-REVIEWER returns:
-├── issues:            List of problems found [ { file, line, severity, description } ]
-├── suggestions:       Improvement suggestions
-├── performance:       Performance assessment
-├── security:          Security assessment
-└── score:             Overall score (1-10)
-```
-
-**Fix loop:**
-- Score 1-6: Route to EXECUTOR with `fixedIssues` list
-- Score 7-8: Accept, flag suggestions for future
-- Score 9-10: Accept, no follow-up
-
-**Max iterations:** 3. After 3 failed reviews, escalate to user.
-
-### Phase 6: Testing
-
-```
-TESTER receives:
-├── Changed files
-├── Test files (new + existing)
-└── Testing skill
-
-TESTER returns:
-├── testResults:       Pass/fail per test
-├── coverage:          Coverage assessment
-└── status:            passed | failed | skipped
-```
-
-**On failure:** Route to EXECUTOR with test failures, re-run tests after fix.
-
-### Phase 7: Memory Recording
-
-```
-MEMORY SCRIBE receives:
-├── Plan (from PLANNER)
-├── What was built (from EXECUTOR)
-├── Review outcome (from REVIEWER)
-├── Test results (from TESTER)
-└── Project memory context
-
-MEMORY SCRIBE writes:
-├── memory/decisions/<date>-<slug>.md      → architecture decisions
-├── memory/lessons/<date>-<slug>.md        → what was learned
-├── memory/architecture/<component>.md     → update if structure changed
-└── memory/sessions/<date>-<slug>.md       → session summary
-```
-
-### Phase 8: Response
-
-```
-BRAIN returns to user:
-├── What was done
-├── Files changed
-├── Review score
-├── Test results
-├── Memory written
-└── Open questions / next steps
-```
-
----
-
-## GitHub Workflow (Optional)
-
-When a GitHub PR is requested:
-
-```
-After Phase 7 (memory written):
-
-GITHUB receives:
-├── Plan
-├── Changed files
-├── Review results
-├── Test results
-└── Memory entries
-
-GITHUB returns:
-├── branch:            Branch name created
-├── prUrl:             PR URL
-├── status:            open | merged | draft
-└── issues:            Any remaining issues noted in PR
-```
-
----
-
-## Workflow Variants
-
-### Read-only (Question / Exploration)
-
-```
-Phase 1: Context loading
-Phase 2: Planning (light — just goal and files to read)
-Phase 8: Response (skip execution, review, testing, memory)
-```
-
-### Quick Fix (Small, Well-Defined)
-
-```
-Phase 1: Context loading
-Phase 2: Planning (minimal — goal, files, plan only)
-Phase 4: Execution
-Phase 5: Review
-Phase 6: Testing
-Phase 7: Memory recording
-Phase 8: Response
-```
-
-### Full Feature (Complex, Multi-File)
-
-```
-Complete pipeline with all phases. May include multiple execution-review loops
-for different parts of the feature (backend first, then frontend).
-```
+1. **Agents drive the conversation.** PLANNER decides when it needs architecture info. EXECUTOR decides when it needs a query review. REVIEWER decides when it needs security verification.
+2. **The Brain doesn't force handoffs.** It validates and routes. The agents decide the flow.
+3. **Fix loops are collaborative.** REVIEWER might call BACKEND QA, TESTER, and CLEAN CODE in parallel within the same fix cycle.
+4. **No pipeline stages.** There's no "step 3" that must happen before "step 4". EXECUTOR can call CLEAN CODE mid-write while REVIEWER hasn't started yet.
+5. **Memory is always consulting.** ARCHIVIST and MEMORY are available at any point for any agent.

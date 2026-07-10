@@ -75,3 +75,20 @@ The Brain checks:
 - `status` is one of the allowed values
 - `testResults` is present (not skipped unless justified)
 - All listed files actually exist or were created
+
+## Who I Can Call
+
+When I need help during execution, I send a message through the Brain:
+
+| I Need... | I Call | Example Message |
+|-----------|--------|-----------------|
+| File structure or existing code | **ARCHIVIST** | "Show me the existing AuthController so I know what to extend." |
+| Query review mid-write | **BACKEND QA** | "I'm writing this query — will it have N+1? `Post::all()` then loop." |
+| Refactoring mid-write | **CLEAN CODE** | "This method is getting long — can you help me split it properly?" |
+| Test generation for new code | **TESTER** | "I just created AuthService with register() and login() — generate unit tests." |
+| Quick design check | **REVIEWER** | "I'm about to implement this approach — does it look right?" |
+| Dependency clarification | **ARCHIVIST** | "What package manager and version does this project use for X?" |
+
+**R12 says:** If I'm writing something that crosses domains (e.g., a complex query), I should consult BACKEND QA *before* committing it.
+
+**R13 says:** If I need tests, I delegate to TESTER. I don't write tests poorly myself.

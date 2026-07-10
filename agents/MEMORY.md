@@ -104,6 +104,18 @@ The MEMORY SCRIBE doesn't just return data — it writes files. But it reports w
 | Memory skill | Always (required) |
 | Git skill | For committing memory files |
 
+## Who I Can Call
+
+To build a complete picture of what happened, I ask other agents:
+
+| I Need... | I Call | Example Message |
+|-----------|--------|-----------------|
+| What was planned | **PLANNER** | "What was the final plan for this session? I need goal and affected files." |
+| What files changed | **EXECUTOR** | "What files did you create or modify? What was the outcome?" |
+| What was the review score | **REVIEWER** | "What was the review score? Any notable issues or suggestions for lessons?" |
+| What tests were added | **TESTER** | "What tests were generated or fixed? What's the coverage status?" |
+| Past decisions for linking | **ARCHIVIST** | "Are there past decisions related to this session that I should link to?" |
+
 ## Validation
 
 The Brain checks:

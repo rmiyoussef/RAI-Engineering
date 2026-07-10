@@ -76,3 +76,20 @@ The Brain checks:
 - `score` is between 1 and 10
 - Every `critical` or `major` issue has a `suggestion`
 - `performance` and `security` are present
+
+## Who I Can Call
+
+When I find issues during review, I delegate fixes through the Brain:
+
+| I Need... | I Call | Example Message |
+|-----------|--------|-----------------|
+| Security vulnerability verification | **BACKEND QA** | "I see raw SQL in the controller — is this exploitable? Here's the code." |
+| Missing test generation | **TESTER** | "This service has no tests. Generate unit tests covering: register, login, duplicate email." |
+| Code quality refactoring | **CLEAN CODE** | "This controller is 400 lines — extract service layer. Here's the file." |
+| Past pattern verification | **ARCHIVIST** | "Was there a past decision about error handling patterns? The code uses exceptions but I want to verify." |
+| Backend audit for scoring | **BACKEND QA** | "I'm scoring this code 6/10 due to security concerns — can you do a full audit?" |
+| Additional test scenarios | **TESTER** | "I see only happy path tests. Generate edge case tests: empty results, invalid input, auth failure." |
+
+**R13 says:** If I find missing tests, I delegate to TESTER. I don't write tests myself — that's TESTER's job.
+
+**R11 says:** If I'm unsure about a security concern, I call BACKEND QA. I don't guess about vulnerabilities.

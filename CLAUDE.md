@@ -237,6 +237,22 @@ REVIEWER score < 7
 | **BRAIN (you)** | Message broker — routes, validates, persists | `brain/SYSTEM.md` |
 
 ============================================================
+## RULES DIRECTORY
+
+Domain-agnostic rule files in `rules/`:
+
+| Rule File | When to Load |
+|-----------|-------------|
+| `rules/COMMIT_MESSAGES.md` | Writing commits or PRs |
+| `rules/ERROR_HANDLING.md` | Working with exceptions, error responses, logging |
+| `rules/NAMING_CONVENTIONS.md` | Naming classes, methods, variables, files |
+| `rules/SECURITY.md` | Handling user input, auth, data exposure |
+| `rules/DATABASE.md` | Writing migrations, queries, schema design |
+| `rules/API_DESIGN.md` | Building or modifying API endpoints |
+
+These are project-agnostic rules. Load the relevant one based on what the task touches.
+
+============================================================
 ## SKILLS
 ============================================================
 

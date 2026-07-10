@@ -263,7 +263,7 @@ BRAIN responds to user with full summary
 | 4 | **Agents** | `agents/PLANNER.md`, `EXECUTOR.md`, `REVIEWER.md`, `BACKEND.md`, `TESTER.md`, `CLEAN_CODE.md`, `ARCHIVIST.md`, `MEMORY.md`, `GITHUB.md` | ✅ v0.1 → v0.2 |
 | 5 | **Templates** | `templates/MEMORY_DECISION.md` | ✅ v0.1 |
 | 6 | **Memory** | OS memory interface (protocol defined in `brain/SYSTEM.md`) | ✅ v0.1 |
-| 7 | **Rules expansion** | `rules/` directory with domain-agnostic rule files | 🔲 Planned |
+| 7 | **Rules expansion** | `rules/COMMIT_MESSAGES.md`, `ERROR_HANDLING.md`, `NAMING_CONVENTIONS.md`, `SECURITY.md`, `DATABASE.md`, `API_DESIGN.md` | ✅ v0.3 |
 | 8 | **Install System** | Install scripts that bootstrap any repo | 🔲 Planned |
 
 ---
@@ -309,8 +309,8 @@ BRAIN responds to user with full summary
 |---------|-------|----------|--------|
 | v0.1 | **Foundation** | Brain (CLAUDE.md, SYSTEM, MISSION, PRINCIPLES, LIMITATIONS, RULES), Workflow (STANDARD), Skills (CODE_REVIEW, TESTING, GIT, MEMORY), Agents (PLANNER, EXECUTOR, REVIEWER, MEMORY, GITHUB), Templates, architecture docs | ✅ **Done** |
 | v0.2 | **Agent Mesh** | Message broker protocol (R11-R16), agent-to-agent communication, BACKEND QA, TESTER, CLEAN CODE, ARCHIVIST agents, BRAIN as router not dispatcher | ✅ **Done** |
-| v0.3 | **Skills expansion** | Framework skills (laravel, sql, redis, react, vue), language skills (php, js, python) | 🔲 Planned |
-| v0.4 | **Rules expansion** | `rules/` directory with domain-agnostic rule files | 🔲 Planned |
+| v0.3 | **Rules expansion** | `rules/COMMIT_MESSAGES.md`, `ERROR_HANDLING.md`, `NAMING_CONVENTIONS.md`, `SECURITY.md`, `DATABASE.md`, `API_DESIGN.md` — standalone domain-agnostic rule files | ✅ **Done** |
+| v0.4 | **Skills expansion** | Framework skills (laravel, sql, redis, react, vue), language skills (php, js, python) | 🔲 Planned |
 | v0.5 | **Memory enhancements** | Memory querying, linking, lifecycle management | 🔲 Planned |
 | v0.6 | **GitHub release workflow** | Changelog, semantic versioning, release automation | 🔲 Planned |
 | v0.7 | **Templates expansion** | Project scaffolding, agent templates, skill templates | 🔲 Planned |

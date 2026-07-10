@@ -124,6 +124,7 @@ download_file "rules/GIT_SAFETY.md"   "$AI_DIR/rules/GIT_SAFETY.md"
 
 echo -e "   ├── Updating templates..."
 download_file "templates/MEMORY_DECISION.md"   "$AI_DIR/templates/MEMORY_DECISION.md"
+download_file "templates/GUIDELINES.md"   "$AI_DIR/templates/GUIDELINES.md"
 
 echo -e "   ├── Updating workflows..."
 download_file "workflows/STANDARD.md"   "$AI_DIR/workflows/STANDARD.md"

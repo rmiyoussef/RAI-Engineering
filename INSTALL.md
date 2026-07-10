@@ -101,8 +101,9 @@ your-project/
 │   │   ├── SECURITY.md
 │   │   ├── DATABASE.md
 │   │   └── API_DESIGN.md
-│   ├── templates/                    ← Memory templates
-│   │   └── MEMORY_DECISION.md
+│   ├── templates/                    ← Templates
+│   │   ├── MEMORY_DECISION.md        ← Decision entry template
+│   │   └── GUIDELINES.md             ← Project guidelines template
 │   └── workflows/
 │       └── STANDARD.md
 └── memory/                           ← YOUR project memory

@@ -25,6 +25,12 @@ memory/
     └── database.md
 ```
 
+### guidelines.md
+
+The `memory/guidelines.md` file holds the project's architecture, conventions, commands, middleware, database rules, and security setup. It is created by ARCHITECT on first install using `templates/GUIDELINES.md` as a starting point.
+
+See `agents/ARCHITECT.md` for how guidelines are managed.
+
 ### Git Safety
 
 | Path | Committed? | Why |

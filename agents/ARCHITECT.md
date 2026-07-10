@@ -79,6 +79,22 @@ The `memory/guidelines.md` file is the **source of truth for project structure**
 - /web/* — Web routes
 ```
 
+### Guidelines Template
+
+Use `templates/GUIDELINES.md` as the starting structure. It includes sections for:
+- Architecture pattern
+- Tech stack
+- Custom commands
+- Middleware
+- Database conventions
+- Routes
+- Security (auth, rate limiting, CORS)
+- Coding standards
+- Testing conventions
+
+Fill in the sections you can detect from the project. Leave sections with a note
+like `<!-- AUTO-DETECT: check config/database.php -->` for the user to review.
+
 ### When to Update Guidelines
 
 Update `memory/guidelines.md` when:

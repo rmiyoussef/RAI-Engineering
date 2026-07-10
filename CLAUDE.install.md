@@ -178,6 +178,7 @@ When you receive a user request, follow the phases below. All files are in `.ai/
 | **MEMORY SCRIBE** | Historian — persists decisions and lessons | `.ai/agents/MEMORY.md` |
 | **GITHUB** | Integrator — branches, commits, PRs | `.ai/agents/GITHUB.md` |
 | **GITHUB TASKS** | GitHub task manager — fetches issues, analyzes, plans, manages delivery | `.ai/agents/GITHUB_TASKS.md` |
+| **SUMMARY** | Documentation specialist — professional summaries, tables, metrics | `.ai/agents/SUMMARY.md` |
 
 ============================================================
 ## RULES DIRECTORY

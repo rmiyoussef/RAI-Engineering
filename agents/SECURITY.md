@@ -46,7 +46,42 @@ Your output includes **exploit scenarios** and **CVSS scores** so the team under
 | A9: Logging Failures | Secrets in logs, no audit trail, no monitoring |
 | A10: SSRF | User-controlled URLs fetched server-side |
 
-### 2. Exploit Scenario
+### 2. Headers & Middleware Audit
+
+```
+Header/Middleware Check        Status        How to Fix
+──────────────────────────────────────────────────────────
+Content-Security-Policy        pass/fail     Add CSP header via middleware
+X-Frame-Options               pass/fail     Add DENY or SAMEORIGIN
+X-Content-Type-Options        pass/fail     Add nosniff
+Referrer-Policy               pass/fail     Add strict-origin-when-cross-origin
+Permissions-Policy            pass/fail     Restrict camera, mic, geolocation
+Strict-Transport-Security     pass/fail     Add HSTS header (min 31536000s)
+CSRF Protection               pass/fail     Verify CSRF middleware is active
+CORS Configuration            pass/fail     Restrict to known origins, not '*'
+Auth Middleware on Routes     pass/fail     Verify all protected routes have auth
+Rate Limit Middleware         pass/fail     Verify throttle on public endpoints
+Input Validation Middleware   pass/fail     Verify validation at boundary
+```
+
+Check every route for missing headers. Every API response should include security headers. If middleware is missing, flag it.
+
+### 3. Hardcoded Secrets Scan
+
+Scan the entire codebase for:
+
+```
+❌ APP_KEY=base64:abc123...                  → Should be in .env
+❌ DB_PASSWORD=secret                        → Should be in .env  
+❌ $apiKey = 'sk_live_abc123'               → Should be in .env
+❌ 'allowed_origins' => ['*']               → Should be restricted
+❌ 'debug' => true                           → Should be env-controlled
+❌ 'MAIL_USERNAME' => 'user@example.com'    → Should be in .env
+```
+
+If found, add to vulnerabilities with severity "high".
+
+### 4. Exploit Scenario
 
 Every vulnerability must include:
 
@@ -123,13 +158,39 @@ Every vulnerability must include:
     "sessionManagement": "pass | fail",
     "overallAuthScore": "A | B | C | D | F"
   },
+  "headersAudit": {
+    "contentSecurityPolicy": "pass | fail | missing",
+    "xFrameOptions": "pass | fail | missing",
+    "xContentTypeOptions": "pass | fail | missing",
+    "referrerPolicy": "pass | fail | missing",
+    "strictTransportSecurity": "pass | fail | missing",
+    "corsConfiguration": "pass | fail | missing",
+    "overallHeadersScore": "A | B | C | D | F"
+  },
+  "middlewareAudit": {
+    "csrfProtection": "pass | fail | missing",
+    "authMiddleware": "pass | fail | missing",
+    "rateLimitMiddleware": "pass | fail | missing",
+    "inputValidation": "pass | fail | missing",
+    "overallMiddlewareScore": "A | B | C | D | F"
+  },
+  "hardcodedSecrets": [
+    {
+      "file": "config/app.php",
+      "line": 12,
+      "secret": "APP_KEY",
+      "risk": "critical",
+      "fix": "Move to .env file"
+    }
+  ],
   "passedChecks": [
     "CSRF protection is enabled",
     "HTTPS is enforced"
   ],
   "failedChecks": [
     "No rate limiting on login endpoint",
-    "Password min length is 6 characters (should be 8+)"
+    "Missing Content-Security-Policy header",
+    "Hardcoded APP_KEY in config/app.php"
   ],
   "overallSecurityScore": "A | B | C | D | F",
   "risksSummary": "2 critical, 1 high, 3 medium vulnerabilities found",

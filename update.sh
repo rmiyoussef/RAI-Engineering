@@ -106,6 +106,7 @@ download_file "agents/DATABASE.md"   "$AI_DIR/agents/DATABASE.md"
 download_file "agents/SECURITY.md"   "$AI_DIR/agents/SECURITY.md"
 download_file "agents/ARCHITECT.md"   "$AI_DIR/agents/ARCHITECT.md"
 download_file "agents/GITHUB_TASKS.md"   "$AI_DIR/agents/GITHUB_TASKS.md"
+download_file "agents/SUMMARY.md"   "$AI_DIR/agents/SUMMARY.md"
 
 echo -e "   ├── Updating skills..."
 download_file "skills/CODE_REVIEW.md"   "$AI_DIR/skills/CODE_REVIEW.md"

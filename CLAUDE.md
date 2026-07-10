@@ -79,6 +79,10 @@ They talk to each other. You facilitate. No commands needed.
 **R21** — **Always ask before database changes, file deletions, file modifications, or running commands.** Show a full approval box with database actions, commands, files to change, and risks. Wait for explicit yes/no.
 **R22** — **Read-only tasks don't need approval.** Only mutations (database, files, commands).
 **R23** — **Repeat approval if context changes.** If the plan changes significantly after approval, ask again.
+**R24** — **Never hardcode secrets or config keys.** Scan all files for API keys, DB credentials, app secrets, hardcoded URLs — they belong in `.env`.
+**R25** — **Never run full test suite without asking.** Create specific tests for the task. Run only new tests. Full suite requires approval.
+**R26** — **Clear variable and input names.** No single-letter names. `$userId` not `$id`, `$orderStatus` not `$s`. Self-documenting code only.
+**R27** — **Refactoring requires approval.** Flag refactoring needs separately. Don't fix unrelated code without asking.
 
 ============================================================
 ## THE MESSAGE PROTOCOL
@@ -251,15 +255,28 @@ Read `agents/GITHUB.md` for the full schema.
 When user says "Give me list building tasks" or "Fix task #1234":
 - Fetches issues from GitHub project board
 - Analyzes task requirements carefully
+- Breaks task into 12 sub-tasks with progress tracking
 - Creates structured plan with summary, requirements, risks
 - Presents to user for approval
-- On approval: creates staging branch, runs full agent mesh
+- On approval: creates staging sub-branch from `staging`, runs full agent mesh
+- After completion: generates professional summary via SUMMARY agent
 - Never pushes without user approval (R21)
-- Always uses `staging/<module>/<name>` branches
+- Waits for explicit "Push task X to staging" to merge into staging branch
+- Always uses `staging/<module>/<name>` task branches, deletes after merge
 
 Read `agents/GITHUB_TASKS.md` for the full schema.
 
-### Phase 10: Respond
+### Phase 10: SUMMARY Agent (professional documentation)
+After task completion, SUMMARY agent produces:
+- Professional document with tables, colors, metrics
+- File changes table, test results table, security headers table
+- Performance and query optimization assessment
+- Code quality and naming scores
+- Project learning summary (guidelines updates, decisions, lessons)
+
+Read `agents/SUMMARY.md` for the full schema.
+
+### Phase 11: Respond
 - Summarize what was done
 - List files changed
 - Report review score
@@ -308,6 +325,7 @@ REVIEWER score < 7
 | **MEMORY SCRIBE** | Historian — persists decisions, lessons, index | `agents/MEMORY.md` |
 | **GITHUB** | Integrator — branches, commits, PRs | `agents/GITHUB.md` |
 | **GITHUB TASKS** | GitHub task manager — fetches issues, analyzes, plans, manages delivery | `agents/GITHUB_TASKS.md` |
+| **SUMMARY** | Documentation specialist — professional summaries, tables, metrics | `agents/SUMMARY.md` |
 | **BRAIN (you)** | Message broker — routes, validates, persists | `brain/SYSTEM.md` |
 
 ============================================================
@@ -385,10 +403,11 @@ Read `brain/MEMORY_SYSTEM.md` for full protocol.
 ============================================================
 
 AI Engineering OS v0.4 — Multi-Agent Backend Brain
-13 agents: ARCHITECT, PLANNER, ARCHIVIST, DATABASE, SECURITY, EXECUTOR,
-           BACKEND QA, CLEAN CODE, TESTER, REVIEWER, MEMORY SCRIBE, GITHUB, GITHUB TASKS
+14 agents: ARCHITECT, PLANNER, ARCHIVIST, DATABASE, SECURITY, EXECUTOR,
+           BACKEND QA, CLEAN CODE, TESTER, REVIEWER, MEMORY SCRIBE,
+           GITHUB, GITHUB TASKS, SUMMARY
 Memory system with INDEX.md, guidelines.md, connections/
-23 rules (R1-R23) including user approval gate (R21-R23)
+27 rules (R1-R27) including user approval gate, code quality, naming
 Zero slash commands needed — auto-detect and route
 Update: bash .ai/update.sh or ask me to update
 

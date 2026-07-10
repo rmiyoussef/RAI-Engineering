@@ -24,8 +24,8 @@ Every message between agents follows this structure:
 
 ```json
 {
-  "from": "planner | executor | reviewer | backend_qa | tester | clean_code | archivist | database | security | architect | memory | github | github_tasks | brain",
-  "to": "planner | executor | reviewer | backend_qa | tester | clean_code | archivist | database | security | architect | memory | github | github_tasks | brain",
+  "from": "planner | executor | reviewer | backend_qa | tester | clean_code | archivist | database | security | architect | memory | github | github_tasks | summary | brain",
+  "to": "planner | executor | reviewer | backend_qa | tester | clean_code | archivist | database | security | architect | memory | github | github_tasks | summary | brain",
   "type": "request | response | delegate | consult | escalate | error | done",
   "session": "<uuid>",
   "context": {
@@ -201,6 +201,7 @@ This is how the agents are connected. Any agent can reach any other agent.
 | | REVIEWER | "Score the implementation 1-10" |
 | | TESTER | "Generate tests for the changes" |
 | | MEMORY | "Document what was done" |
+| | SUMMARY | "Generate professional summary with tables" |
 | | GITHUB | "Create staging branch and PR" |
 
 ---

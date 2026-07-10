@@ -237,3 +237,51 @@ Reading files, showing structure, answering questions, and other read-only opera
 
 ### R23 — Repeat Approval If Context Changes
 If after receiving approval the plan changes significantly (different files, different commands, different database actions), ask again. Don't assume blanket approval covers unexpected changes.
+
+---
+
+## Code Quality Rules
+
+### R24 — Never Hardcode Secrets or Configuration Keys
+Scan every file for hardcoded values that belong in `.env` or environment variables. This includes:
+
+| What to Scan For | Examples |
+|-----------------|----------|
+| API keys, tokens | `sk_live_xxx`, `api_key`, `access_token = "..."` |
+| Database credentials | `DB_PASSWORD`, `mysql://user:pass@host` |
+| App secrets | `APP_KEY`, `APP_SECRET`, `JWT_SECRET` |
+| URLs to external services | `https://api.some-service.com` (should be env config) |
+| Storage paths | `/var/www/`, `/home/`, `C:\` (should be configurable) |
+| Debug/test mode flags | `APP_DEBUG=true`, `APP_ENV=local` hardcoded |
+| CORS origins | `'allowed_origins' => ['http://localhost:3000']` (should be env) |
+| Encryption keys | Any 32-char string that looks like a key |
+
+**Scan timing:** Run this scan at the end of every task, before presenting results. If found, flag immediately and suggest moving to `.env`.
+
+**Violation:** Code with hardcoded secrets is blocked from commit. The SECURITY agent must verify resolution.
+
+### R25 — Never Run Full Test Suite Without Asking
+When testing, do not run the entire application test suite unless the user explicitly asks for it. Instead:
+- Create new tests specific to the task (one test file per API endpoint)
+- Test all scenarios: happy path, validation failure, auth failure, not found, edge cases
+- Mock data must be realistic (use factories, not hardcoded arrays)
+- Run only the new tests to verify they pass
+
+**Violation:** Running the full test suite without approval uses too many tokens and time.
+
+### R26 — Clear Variable and Input Names
+All variables, inputs, parameters, and function names must be self-documenting:
+- `$userId` not `$id`, `$postTitle` not `$title`, `$orderStatus` not `$s`
+- Method names describe behavior: `getActiveUsers()` not `getUsers()`
+- Controller parameters: `Request $request`, `Post $post` not `$req`, `$p`
+- No single-letter variables except loop counters ($i, $j) and mathematical operations
+
+**Violation:** Code review drops score for unclear naming.
+
+### R27 — Refactoring Requires Approval
+If a task reveals code that needs refactoring (unrelated to the task):
+- Flag it in the plan with a note: "Found potential refactoring in [file]"
+- Ask the user: "Should I refactor [file] as part of this task, or create a separate ticket?"
+- Never refactor unrelated code without asking
+
+**Violation:** Refactoring outside task scope without approval is a violation of R21.

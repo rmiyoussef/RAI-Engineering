@@ -239,6 +239,62 @@ Task completed
 
 ---
 
+## Branch Strategy
+
+### Every task gets its own sub-branch from staging
+
+```
+staging/                              ← Main integration branch (exists on GitHub)
+  └── staging/performance/             ← Never commit directly here
+       └── staging/performance/review-cycle-assigned-employees  ← Task branch
+```
+
+**Flow:**
+1. Task starts → create branch from `staging`: `staging/<module>/<task-name>`
+2. All work happens on this task branch
+3. User reviews and tests locally
+4. User says "push task X and Y to staging" → **merge task branch into `staging`** → delete task branch
+5. User says "push to production" → separate step
+
+### Never push to `staging` directly. Always use task branches.
+
+---
+
+## Push & Merge Flow (Approval Gate)
+
+```
+User finishes testing locally
+    │
+    ├─► User: "Push task #3115 to staging"
+    │     │
+    │     ├─► GITHUB TASKS asks approval (R21):
+    │     │     ═══════════════════════════════════════════════
+    │     │       APPROVAL REQUIRED — Merge #3115 to Staging
+    │     │     ═══════════════════════════════════════════════
+    │     │       Task: #3115 — Review Cycle - Assigned Employees
+    │     │       Branch: staging/performance/review-cycle-assigned
+    │     │       Files: 4  |  Score: 9/10  |  Tests: 5 passed
+    │     │       
+    │     │       This will:
+    │     │       • Merge task branch INTO staging
+    │     │       • Delete task branch (staging/performance/...)
+    │     │       • NOT push to main or production
+    │     │       
+    │     │       Proceed? (yes/no)
+    │     │     ═══════════════════════════════════════════════
+    │     │
+    │     ├─► User approves → merge into staging → delete task branch
+    │     └─► User says no → stays on task branch for more work
+    │
+    ├─► User: "Push task #3115 and #3157 to staging"
+    │     └─► Same flow, both tasks merged to staging
+    │
+    └─► User: NEVER forces a push
+          R21 blocks every git operation without approval
+```
+
+---
+
 ## Execution Flow with Progress
 
 ### Full Flow: Fix a Task
@@ -250,11 +306,14 @@ User: "Fix task #3115"
     │     ├─► Fetch issue #3115 from GitHub
     │     ├─► Read full body, comments, labels, project status
     │     ├─► Identify 3 requirements, 2 risks
-    │     └─► Sub-tasks: 11 identified
+    │     └─► Sub-tasks: 12 identified
     │     Progress: ✅ Analysis  (1/12, 8%)
     │
     ├─► Present plan to user with sub-task breakdown
     │     User approves (R21)
+    │
+    ├─► Create task branch from staging:
+    │     staging/performance/review-cycle-assigned-employees
     │
     ├─► [2/12] PLANNING (PLANNER)
     │     ├─► Refine execution plan
@@ -274,68 +333,88 @@ User: "Fix task #3115"
     │
     ├─► [5/12] SECURITY (SECURITY)
     │     ├─► Review auth requirements for new endpoint
+    │     ├─► Check headers (CSP, XFO, HSTS, CORS)
+    │     ├─► Check middleware (auth, CSRF, rate limit)
     │     └─► Existing auth middleware sufficient
     │     Progress: ... (5/12, 41%)
     │
     ├─► [6/12] IMPLEMENTATION (EXECUTOR)
     │     ├─► Create ReviewCycleService method
     │     ├─► Create ReviewCycleAssignedController
-    │     └─► Add API route
+    │     ├─► Add API route
+    │     └─► Clear naming verified (R26)
     │     Progress: ... (6/12, 50%)
     │
     ├─► [7/12] REFACTORING (CLEAN CODE)
     │     ├─► Check SOLID compliance
+    │     ├─► Check for clear naming
     │     └─► Score: 9/10
     │     Progress: ... (7/12, 58%)
     │
     ├─► [8/12] BACKEND AUDIT (BACKEND QA)
     │     ├─► Check queries for N+1
+    │     ├─► Check indexes
     │     ├─► Check security
+    │     ├─► Check for hardcoded secrets (R24)
     │     └─► All dimensions pass
     │     Progress: ... (8/12, 66%)
     │
     ├─► [9/12] CODE REVIEW (REVIEWER)
     │     ├─► Score: 9/10
+    │     ├─► Performance check: ✅
+    │     ├─► Query optimization: ✅
+    │     ├─► Naming check (R26): ✅
+    │     ├─► Refactoring found? → If yes, ask user
     │     └─► No issues found
     │     Progress: ... (9/12, 75%)
     │
     ├─► [10/12] TESTING (TESTER)
     │     ├─► Generate tests for new endpoint
-    │     ├─► 3 tests: happy path, empty, validation
+    │     ├─► 5 tests: happy path, 404, 401, empty, pagination
+    │     ├─► Mock data: realistic factories
+    │     ├─► Run only new tests (not full suite — R25)
     │     └─► All pass
     │     Progress: ... (10/12, 83%)
     │
-    ├─► [11/12] DOCUMENTATION (MEMORY SCRIBE + ARCHITECT)
-    │     ├─► Write decision: dedicated controller
-    │     ├─► Write lesson: eager loading pattern
-    │     ├─► Update session summary
-    │     └─► Update INDEX.md
+    ├─► [11/12] SUMMARY (SUMMARY agent)
+    │     ├─► Generate professional summary with tables
+    │     ├─► Security headers table
+    │     ├─► Test results table
+    │     ├─► Performance metrics
+    │     └─► File change summary
     │     Progress: ... (11/12, 91%)
     │
-    ├─► [12/12] SELF-LEARN (ARCHITECT)
+    ├─► [12/12] SELF-LEARN (ARCHITECT + MEMORY SCRIBE)
     │     ├─► Check: new route added?
     │     │     └─► Yes → Update guidelines.md Routes section
     │     ├─► Check: new pattern used?
     │     │     └─► Yes → Update guidelines.md Conventions section
     │     ├─► Check: any other changes?
     │     │     └─► No → guidelines.md stays current
-    │     └─► Project is now smarter for the next task
+    │     ├─► Write decisions, lessons, session
+    │     └─► Update INDEX.md
     │     Progress: ✅ Complete! (12/12, 100%)
     │
-    └─► Present summary to user:
-          ├─► Files changed: 3
-          ├─► Review score: 9/10
-          ├─► Tests: 3 passed
-          ├─► Guidelines updated: Routes, Conventions
-          ├─► Lessons learned: 1
-          └─► Memory entries: 4 created
+    └─► Present professional summary to user:
+          ├─► 📋 What was done
+          ├─► 📁 4 files changed (table)
+          ├─► ⚡ Performance: 9/10
+          ├─► 🔒 Security: A (all headers passed)
+          ├─► ✅ Review score: 9/10
+          ├─► 🧪 Tests: 5/5 passed
+          ├─► 🧠 Memory: 4 entries created
+          │
+          └─► "Task #3115 complete on branch:
+               staging/performance/review-cycle-assigned-employees"
+          │
+          └─► "Say 'Push task #3115 to staging' when ready to merge"
 ```
 
 ---
 
 ## Branch Naming Convention
 
-All work goes to staging branches — never to main:
+All work goes to sub-branches from `staging` — never to main:
 
 ```
 staging/<module>/<short-description>
@@ -350,19 +429,20 @@ staging/onboarding/fix-checklist-bug
 
 ## Rules
 
-1. **Never push to main.** All work goes to `staging/<module>/<name>` branches.
-2. **Never push without user approval.** R21 applies to every git operation.
-3. **Break every task into sub-tasks.** Show progress after each step. Don't skip phases.
-4. **Always analyze the task fully before presenting a plan.** Read issue body, comments, labels, project status. Don't skim.
-5. **Ask clarifying questions.** If the issue is ambiguous, list your questions in the plan.
-6. **Always create a draft PR, never a ready PR.** The user converts it when ready.
-7. **Include review score and test results in the PR body.**
-8. **Always update guidelines.md after a task if anything changed.** This is how the project learns.
-9. **Always write lessons learned.** If something was tricky, capture it so it's never tricky again.
-10. **Always update INDEX.md.** The master index is the entry point for all future work.
-11. **Never delete the issue from the project board.** Leave status updates to the user.
-12. **If the task has no existing code to modify, start from scratch** using the project guidelines.
+1. **Never push to main.** All work goes to `staging/<module>/<name>` task branches.
+2. **Never push to `staging` directly.** Always create a task branch, then merge into staging after approval.
+3. **Never push anything without user approval.** R21 blocks every git operation.
+4. **Merge task branch into staging, then delete it.** After user says "push task X to staging", merge and delete the task branch.
+5. **Wait for explicit command.** Only push when user says "Push task X to staging" or "Push tasks X and Y to staging".
+6. **Break every task into sub-tasks.** Show progress after each step. Don't skip phases.
+7. **Always analyze the task fully before presenting a plan.** Read issue body, comments, labels, project status. Don't skim.
+8. **Always generate professional summary after task completion.** Use SUMMARY agent.
+9. **Always update guidelines.md after a task if anything changed.** This is how the project learns.
+10. **Always write lessons learned.** If something was tricky, capture it so it's never tricky again.
+11. **Always update INDEX.md.** The master index is the entry point for all future work.
+12. **Never delete the issue from the project board.** Leave status updates to the user.
 13. **The project should be smarter after every task.** If the guidelines didn't change, check harder.
+14. **Include SUMMARY output in the final presentation to user.** The professional summary is the deliverable.
 
 ---
 

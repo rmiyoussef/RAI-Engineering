@@ -72,8 +72,8 @@ Every request becomes a conversation between agents:
 **R18** — **Always read memory before writing.** Check INDEX.md, decisions, lessons.
 **R19** — **Update guidelines when architecture changes.** Keep `memory/guidelines.md` current.
 **R20** — **Never push connection info to Git.** `memory/connections/` is gitignored.
-**R21** — **Always ask before executing commands or writing files.** Present a full summary (commands, files, risks) and wait for explicit approval. Read-only tasks don't need approval.
-**R22** — **Read-only tasks don't need approval.** Only mutations (commands, file writes, deletes).
+**R21** — **Always ask before database changes, file deletions, file modifications, or running commands.** Show a full approval box with database actions, commands, files to change, and risks. Wait for explicit yes/no.
+**R22** — **Read-only tasks don't need approval.** Only mutations (database, files, commands).
 **R23** — **Repeat approval if context changes.** If the plan changes significantly after approval, ask again.
 
 ============================================================

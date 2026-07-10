@@ -154,24 +154,60 @@ The `memory/connections/` directory contains database schema and connection info
 
 ## User Approval Rules
 
-### R21 — Always Ask Before Executing Commands or Writing Files
-Before running any shell command (`bash`, `cp`, `mv`, `rm`, `git`, `artisan`, `npm`, `composer`, `curl`, etc.) or writing any file, **you must present a full summary of what you're about to do and ask for explicit approval**.
+### R21 — Always Ask Before Changing or Deleting Anything
 
-The approval request must include:
-1. **Plan Summary** — What you're trying to accomplish
-2. **Commands to Execute** — Every command, exactly as it will run
-3. **Files to Create/Modify** — Every file path and a summary of the change
-4. **Files to Delete** — Every file path that will be removed
-5. **Risks** — Any potential side effects (data loss, breaking changes, downtime)
+You must **always ask for explicit approval** before any of these actions:
 
-**Format:**
+**Before Database Changes:**
+- Dropping, renaming, or altering any table or column
+- Running any migration (up or down)
+- Truncating or deleting data from any table
+- Modifying seeders or factories that change test data
+- Executing raw SQL that modifies data (INSERT, UPDATE, DELETE, DROP, ALTER)
+
+**Before File Operations:**
+- Deleting any file, no matter how small or temporary
+- Modifying any existing file (exception: files you just created in the current task)
+- Renaming or moving any file
+- Running destructive shell commands (`rm -rf`, `mv`, etc.)
+
+**Before Running Commands:**
+- Any shell command (`git`, `artisan`, `npm`, `composer`, `php`, `curl`, etc.)
+- Any command that has side effects (installing packages, clearing cache, running builds)
+
+### What Needs Approval — Detailed Breakdown
+
+| Action | Approval Required? | Example |
+|--------|-------------------|---------|
+| Creating a new file | ✅ Yes | Creating a new controller |
+| Modifying an existing file | ✅ Yes | Editing UserController.php |
+| Deleting a file | ✅ Yes | Removing a old migration |
+| Running a migration | ✅ Yes | `php artisan migrate` |
+| Dropping a table | ✅ Yes | `Schema::drop('users')` |
+| Altering a column | ✅ Yes | `$table->string('email')->nullable()->change()` |
+| Deleting from the database | ✅ Yes | `User::where('active', false)->delete()` |
+| Installing a package | ✅ Yes | `composer require laravel/sanctum` |
+| Running a git command | ✅ Yes | `git commit`, `git push`, `git rebase` |
+| Clearing cache | ✅ Yes | `php artisan cache:clear` |
+| Reading a file | ❌ No | `cat app/Models/User.php` |
+| Showing project structure | ❌ No | `ls app/` |
+| Answering a question | ❌ No | "How does the auth system work?" |
+| Generating a plan | ❌ No | "What files would this task affect?" |
+
+### Approval Format
+
+Every approval request must show this box:
 
 ```
 ═══════════════════════════════════════════════
   APPROVAL REQUIRED — Review before continuing
 ═══════════════════════════════════════════════
 
-  Task: [one sentence]
+  Task: [what we're trying to accomplish]
+
+  Database Actions:
+    • [table/column] — [action] — [reason]
+    • [query] — [reason]
 
   Commands:
     • [command 1]
@@ -181,13 +217,13 @@ The approval request must include:
     • [path] — [reason]
 
   Files to modify:
-    • [path] — [summary of changes]
+    • [path] — [summary of change]
 
   Files to delete:
     • [path] — [reason]
 
   Risks:
-    • [risk 1]
+    • [risk 1] — [data loss? breaking change?]
     • [risk 2]
 
   Ready to proceed? (yes/no)
@@ -197,7 +233,7 @@ The approval request must include:
 **Violation:** The BRAIN must not execute anything without explicit user approval. If you proceed without asking, you've violated the user's trust.
 
 ### R22 — Read-Only Tasks Don't Need Approval
-Reading files, showing structure, answering questions, and other read-only operations do not require approval. Only mutations (commands, file writes, file deletes).
+Reading files, showing structure, answering questions, and other read-only operations do not require approval. Only mutations (commands, file writes, file deletes, database changes).
 
 ### R23 — Repeat Approval If Context Changes
-If after receiving approval the plan changes significantly (different files, different commands), ask again. Don't assume blanket approval covers unexpected changes.
+If after receiving approval the plan changes significantly (different files, different commands, different database actions), ask again. Don't assume blanket approval covers unexpected changes.

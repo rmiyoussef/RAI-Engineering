@@ -97,13 +97,22 @@ like `<!-- AUTO-DETECT: check config/database.php -->` for the user to review.
 
 ### When to Update Guidelines
 
-Update `memory/guidelines.md` when:
-- A new pattern is introduced (new middleware, new command)
-- An architectural decision changes the project structure
-- A new technology is added (new cache driver, new queue)
-- The conventions change (new naming pattern, new coding standard)
+**Update `memory/guidelines.md` after EVERY task.** This is how the project self-learns.
 
-### Guidelines Lifecycle
+After each task, check:
+- Did we add a new route? → Update Routes section
+- Did we add new middleware? → Update Middleware section
+- Did we use a new pattern? → Update Conventions section
+- Did we create a new command? → Update Custom Commands section
+- Did we add/modify a DB table? → Update Database section
+- Did we add a new technology? → Update Tech Stack section
+- Did we change the architecture? → Update Architecture section
+
+If the answer to ALL is "no", guidelines stays as-is. Otherwise, update.
+
+**Every task must leave the project smarter than before.**
+
+### Guidelines Lifecycle (Self-Learning Loop)
 
 ```
 Project initialized (no guidelines.md)
@@ -112,18 +121,32 @@ Project initialized (no guidelines.md)
     ├─► Creates memory/guidelines.md with initial structure
     │
     ▼
-Feature request arrives
+Task request arrives
     │
-    ├─► BRAIN: "Read memory/guidelines.md for context"
-    ├─► PLANNER: "This feature should follow [guidelines pattern]"
-    │
-    ▼
-Feature built
-    │
-    ├─► If architecture changed: ARCHITECT updates guidelines.md
+    ├─► BRAIN: "Read memory/guidelines.md for context"  ← Always reads first
+    ├─► PLANNER: "This task should follow [guidelines pattern]"
     │
     ▼
-Next feature: reads updated guidelines
+Task completed
+    │
+    ├─► ARCHITECT: "What did this task add or change?"
+    │     ├─► New route?       → Update Routes section
+    │     ├─► New middleware?   → Update Middleware section
+    │     ├─► New pattern?      → Update Conventions section
+    │     ├─► New command?      → Update Custom Commands section
+    │     ├─► New DB table?     → Update Database section
+    │     ├─► New tech?         → Update Tech Stack section
+    │     └─► Nothing changed?  → guidelines.md stays current
+    │
+    ├─► MEMORY SCRIBE: Capture decisions, lessons, session
+    │
+    └─► MEMORY SCRIBE: Update INDEX.md with new entries
+    │
+    ▼
+    Project is now smarter than before.
+    │
+    ▼
+Next task: BRAIN reads updated guidelines → sees new patterns → better code
 ```
 
 ### 2. Architecture Impact Assessment

@@ -96,6 +96,14 @@ Review all changes:
 - If score < 7: return to EXECUTOR with fix list (max 3 iterations)
 - If score >= 7: proceed
 
+### Step 4b: Route to BACKEND QA (if backend code changed)
+If the task modified controllers, models, services, queries, migrations, or API routes:
+- Deep audit: clean code → query optimization → security → testing with mock data
+- Four dimensions must ALL pass before proceeding
+- Failures route to EXECUTOR with dimension-specific fixes (max 5 iterations)
+- Read: `agents/BACKEND.md` for full schema and rules
+- Read: `skills/BACKEND_ENGINEERING.md` for backend patterns
+
 ### Step 5: Route to TESTER
 Run tests and verify:
 - All tests pass
@@ -135,6 +143,11 @@ Read: `agents/REVIEWER.md` for schema and rules.
 Persists decisions, lessons, architecture to project memory.
 Read: `agents/MEMORY.md` for schema and rules.
 
+### BACKEND QA
+Deep backend audit: clean code, query optimization, security, testing with mock data.
+Runs after REVIEWER if backend code was changed. Has its own fix loop (max 5 iterations).
+Read: `agents/BACKEND.md` for schema and rules.
+
 ### GITHUB
 Handles GitHub operations: branches, commits, PRs, issues.
 Read: `agents/GITHUB.md` for schema and rules.
@@ -149,6 +162,7 @@ Read: `agents/GITHUB.md` for schema and rules.
 | `skills/TESTING.md` | Writing or reviewing tests |
 | `skills/GIT.md` | Committing, branching, PRs |
 | `skills/MEMORY.md` | Writing to project memory |
+| `skills/BACKEND_ENGINEERING.md` | Backend QA audit |
 
 ============================================================
 ## MEMORY PROTOCOL

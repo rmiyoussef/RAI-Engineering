@@ -25,6 +25,14 @@ User Task
    │     │
    │     └─ Score >= 7 ──► proceed
    │
+   ├─► [BACKEND QA] (if backend code changed)
+   │     │          Deep audit: clean code, queries, security, tests
+   │     │
+   │     ├─ Dimension fails ──► [EXECUTOR] Fix → [BACKEND QA] re-audit
+   │     │                         (max 5 iterations, then escalate)
+   │     │
+   │     └─ All pass ──► proceed
+   │
    ├─► [TESTER] Run tests
    │     │
    │     ├─ Tests fail ──► [EXECUTOR] Fix → [TESTER] re-run

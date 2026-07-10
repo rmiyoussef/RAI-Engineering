@@ -38,7 +38,10 @@ Determine which agent handles this work based on the current stage:
 | Plan approved | EXECUTOR | `{ filesChanged, testResults, lintResults, status }` |
 | Code written | REVIEWER | `{ issues, suggestions, perf, security, score }` |
 | Code reviewed (score < 7) | EXECUTOR (fix loop) | `{ filesChanged, status, fixedIssues }` |
-| Code reviewed (score >= 7) | TESTER | `{ testResults, coverage, status }` |
+| Code reviewed (score >= 7) | **BACKEND QA** (if backend change) | `{ overallStatus, dimensions, fixes }` |
+| Code reviewed (score >= 7) | TESTER (if no backend change) | `{ testResults, coverage, status }` |
+| BACKEND QA: dimension fails | EXECUTOR (backed fix loop) | `{ filesChanged, status, fixedIssues }` |
+| BACKEND QA: all pass | TESTER | `{ testResults, coverage, status }` |
 | Task complete | MEMORY SCRIBE | `{ decisions, lessons, architectureChanges }` |
 | GitHub action requested | GITHUB | `{ prUrl, branch, status, issues }` |
 
@@ -58,6 +61,11 @@ After each stage completes:
 ### Step 5: Loop or Return
 - If REVIEWER score < 7 → route back to EXECUTOR with review issues
 - If tests fail → route back to EXECUTOR with test failures
+- If REVIEWER score >= 7 AND task touches backend code → route to **BACKEND QA** agent
+  - If BACKEND QA: `overallStatus === "fail"` → route to EXECUTOR with all dimension fixes
+  - If still failing after 5 iterations → escalate to user
+  - If BACKEND QA: `overallStatus === "pass"` → route to TESTER
+- If REVIEWER score >= 7 AND no backend code → route to TESTER
 - If REVIEWER score >= 7 AND tests pass → route to MEMORY SCRIBE → respond to user
 
 ---

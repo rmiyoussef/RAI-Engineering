@@ -71,6 +71,7 @@ Every agent must return a structured object following a defined schema:
 | `PLANNER` | `{ goal, affectedFiles, risks, dependencies, executionPlan, questions }` | `agents/PLANNER.md` |
 | `EXECUTOR` | `{ filesChanged, testResults, lintResults, status }` | `agents/EXECUTOR.md` |
 | `REVIEWER` | `{ issues, suggestions, performance, security, score }` | `agents/REVIEWER.md` |
+| `BACKEND QA` | `{ overallStatus, dimensions: { cleanCode, queryOptimization, security, testing }, fixes }` | `agents/BACKEND.md` |
 | `MEMORY SCRIBE` | `{ decisions, lessons, architectureChanges, sessionSummary }` | `agents/MEMORY.md` |
 | `GITHUB` | `{ branch, commits, prUrl, prBody, status }` | `agents/GITHUB.md` |
 
@@ -170,9 +171,16 @@ User Request
     ↓
 [10] If score < threshold → Brain.route(Executor)     ← loop
     ↓
-[11] Brain.storeLessons()     ← writes lessons to Memory
+[10b] If backend code changed → Brain.route(Backend QA)  ← deep audit
+      │
+      ├─ Dimension fails → route to Executor (fix loop, max 5 iters)
+      └─ All pass → proceed
     ↓
-[12] Brain.respond(user)      ← summarized result
+[11] Brain.route(Tester)      ← run tests
+    ↓
+[12] Brain.storeLessons()     ← writes lessons to Memory
+    ↓
+[13] Brain.respond(user)      ← summarized result
 ```
 
 ---

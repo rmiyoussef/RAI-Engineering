@@ -143,6 +143,62 @@ download_file "VERSION"   "$AI_DIR/VERSION"
 # Create symlink
 ln -sf "$AI_DIR/CLAUDE.md" "./CLAUDE.md"
 
+# ── Caveman install (token compression) ──────────────────────────
+echo ""
+echo -e "   ${CYAN}●  Installing Caveman token compression (ULTRA mode)...${NC}"
+CAVEMAN_OK=false
+
+if command -v node &>/dev/null && [ "$(node -e "console.log(process.version.slice(1).split('.')[0])")" -ge 18 ] 2>/dev/null; then
+  if [ "$LOCAL_FILES" = true ]; then
+    CAVEMAN_SRC="$(dirname "${_LOCAL_CHECK:-.}")"
+    if [ -f "$CAVEMAN_SRC/bin/install.js" ] && node "$CAVEMAN_SRC/bin/install.js" --only claude --non-interactive 2>/dev/null; then
+      CAVEMAN_OK=true
+    fi
+  fi
+  if [ "$CAVEMAN_OK" = false ] && npx -y github:JuliusBrussee/caveman -- --only claude --non-interactive --force 2>/dev/null; then
+    CAVEMAN_OK=true
+  fi
+fi
+
+# Always write repo caveman config + rule file — even if plugin install skipped
+echo '{"defaultMode":"ultra"}' > ".caveman.json"
+
+if [ ! -f "AGENTS.md" ]; then
+  cat > "AGENTS.md" << 'CAVEOF'
+CAVEMAN ULTRA — max compression. Active every response. No revert.
+
+Rules:
+- Drop articles (a/an/the), filler (just/really/basically/actually/simply), pleasantries, hedging, conjunctions when order unambiguous
+- Fragments OK. One word when enough. State each fact once.
+- Code exact. Errors exact. Technical terms exact.
+- NO tool-call narration, decorative tables/emoji, raw error logs unless asked
+- NO causal arrows (→), NO invented abbreviations (cfg/impl/req/res/fn) — zero token saved
+- Standard acronyms OK (DB/API/HTTP). Full word cheaper AND clearer.
+- Pattern: `[thing] [action] [reason].`
+
+Not: "Sure! I'd be happy to help you with that."
+Yes: "Auth middleware bug. Token expiry `<` not `<=`."
+
+Switch: /caveman lite|full|ultra|wenyan
+Stop: "normal mode"
+
+Auto-Clarity: full sentences for security/destructive ops/user confused. Resume ultra after.
+
+Boundaries: code/commits/PRs normal.
+CAVEOF
+  echo -e "   ${GREEN}✓${NC} Created AGENTS.md with caveman ULTRA rules"
+fi
+
+if [ "$CAVEMAN_OK" = true ]; then
+  echo -e "   ${GREEN}✓${NC} Caveman ULTRA installed — ~67% output token savings"
+else
+  echo -e "   ${YELLOW}⚠  Caveman plugin skipped (Node ≥18 required).${NC}"
+  echo -e "   ${YELLOW}   .caveman.json + AGENTS.md still written.${NC}"
+  echo -e "   ${YELLOW}   Install manually later: npm install -g npx && npx github:JuliusBrussee/caveman${NC}"
+fi
+
+# ── Done ─────────────────────────────────────────────────────────
+echo ""
 echo -e "${GREEN}✅  AI Engineering OS installed successfully!${NC}"
 echo ""
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
@@ -157,6 +213,8 @@ echo "  │   ├── skills/                      ← Domain knowledge"
 echo "  │   ├── rules/                       ← Engineering rules"
 echo "  │   ├── templates/                   ← Memory templates"
 echo "  │   └── workflows/                   ← Workflow references"
+echo "  ├── .caveman.json                    ← Token compression (ULTRA)"
+echo "  ├── AGENTS.md                        ← Caveman per-repo rules"
 echo "  └── .claude/memory/                  ← YOUR project memory (persists across sessions)"
 echo "      ├── INDEX.md                     ← Auto-maintained"
 echo "      ├── guidelines.md                ← Project structure & conventions"
@@ -176,4 +234,5 @@ echo "  3. Try: 'Show me the structure of this project'"
 echo "  4. Or:  'Add validation to the UserController'"
 echo ""
 echo -e "${GREEN}  The Brain is ready. Agents are waiting.${NC}"
+echo -e "${CYAN}  Caveman ULTRA active — ~67% output token savings.${NC}"
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"

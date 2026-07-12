@@ -141,7 +141,56 @@ else
     echo "updated-$(date +%Y%m%d)" > "$AI_DIR/VERSION"
 fi
 
-# Download the latest update.sh into .ai/
+# ── Caveman update (token compression) ──────────────────────────
+echo ""
+echo -e "   ${CYAN}●  Updating Caveman token compression (ULTRA mode)...${NC}"
+
+# Write/refresh .caveman.json
+echo '{"defaultMode":"ultra"}' > ".caveman.json"
+echo -e "   ${GREEN}✓${NC} .caveman.json (ULTRA)"
+
+# Write/refresh AGENTS.md if missing
+if [ ! -f "AGENTS.md" ]; then
+  cat > "AGENTS.md" << 'CAVEOF'
+CAVEMAN ULTRA — max compression. Active every response. No revert.
+
+Rules:
+- Drop articles (a/an/the), filler (just/really/basically/actually/simply), pleasantries, hedging, conjunctions when order unambiguous
+- Fragments OK. One word when enough. State each fact once.
+- Code exact. Errors exact. Technical terms exact.
+- NO tool-call narration, decorative tables/emoji, raw error logs unless asked
+- NO causal arrows (→), NO invented abbreviations (cfg/impl/req/res/fn) — zero token saved
+- Standard acronyms OK (DB/API/HTTP). Full word cheaper AND clearer.
+- Pattern: `[thing] [action] [reason].`
+
+Not: "Sure! I'd be happy to help you with that."
+Yes: "Auth middleware bug. Token expiry `<` not `<=`."
+
+Switch: /caveman lite|full|ultra|wenyan
+Stop: "normal mode"
+
+Auto-Clarity: full sentences for security/destructive ops/user confused. Resume ultra after.
+
+Boundaries: code/commits/PRs normal.
+CAVEOF
+  echo -e "   ${GREEN}✓${NC} Created AGENTS.md"
+else
+  echo -e "   ${GREEN}✓${NC} AGENTS.md already exists (skipped)"
+fi
+
+# Install/update caveman plugin via npx
+if command -v node &>/dev/null && [ "$(node -e "console.log(process.version.slice(1).split('.')[0])")" -ge 18 ] 2>/dev/null; then
+  if npx -y github:JuliusBrussee/caveman -- --only claude --non-interactive --force 2>/dev/null; then
+    echo -e "   ${GREEN}✓${NC} Caveman plugin updated — ~67% output token savings"
+  else
+    echo -e "   ${YELLOW}⚠  Caveman plugin install skipped.${NC}"
+    echo -e "   ${YELLOW}   .caveman.json + AGENTS.md still up to date.${NC}"
+  fi
+else
+  echo -e "   ${YELLOW}⚠  Node ≥18 required for caveman plugin. Config files still updated.${NC}"
+fi
+
+# ── Done ─────────────────────────────────────────────────────────
 download_file "update.sh"   "$AI_DIR/update.sh"
 chmod +x "$AI_DIR/update.sh"
 

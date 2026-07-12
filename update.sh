@@ -45,30 +45,34 @@ fi
 echo -e "   Checking for updates..."
 LATEST_VERSION=$(curl -fsSL "https://raw.githubusercontent.com/$REPO/$BRANCH/VERSION" 2>/dev/null || echo "")
 
+NEEDS_UPDATE=false
 if [ -z "$LATEST_VERSION" ]; then
     echo -e "   ${YELLOW}Could not check latest version. Updating anyway...${NC}"
-elif [ "$CURRENT_VERSION" = "$LATEST_VERSION" ]; then
-    echo -e "   ${GREEN}Already at latest version: $CURRENT_VERSION${NC}"
-    echo ""
-    echo -e "   No update needed."
-    echo ""
-    exit 0
-else
+    NEEDS_UPDATE=true
+elif [ "$CURRENT_VERSION" != "$LATEST_VERSION" ]; then
     echo -e "   Current version: ${YELLOW}$CURRENT_VERSION${NC}"
     echo -e "   Latest version:  ${GREEN}$LATEST_VERSION${NC}"
+    NEEDS_UPDATE=true
+fi
+
+if [ "$NEEDS_UPDATE" = false ]; then
+    echo -e "   ${GREEN}Already at latest version: $CURRENT_VERSION${NC}"
     echo ""
+    # Still run caveman install (new config/files may be missing from older installs)
+    echo -e "   Checking caveman install..."
+else
+    # Confirm with user
+    echo -e "   ${YELLOW}This will update .ai/ files. Your .claude/memory/ directory will NOT be touched.${NC}"
+    echo -e "   ${YELLOW}Existing .ai/ files will be overwritten.${NC}"
+    echo ""
+    read -rp "   Proceed with update? (y/N): " CONFIRM
+    if [ "$CONFIRM" != "y" ] && [ "$CONFIRM" != "Y" ]; then
+        echo -e "   ${RED}Update cancelled.${NC}"
+        exit 0
+    fi
 fi
 
-# Confirm with user
-echo -e "   ${YELLOW}This will update .ai/ files. Your .claude/memory/ directory will NOT be touched.${NC}"
-echo -e "   ${YELLOW}Existing .ai/ files will be overwritten.${NC}"
-echo ""
-read -rp "   Proceed with update? (y/N): " CONFIRM
-if [ "$CONFIRM" != "y" ] && [ "$CONFIRM" != "Y" ]; then
-    echo -e "   ${RED}Update cancelled.${NC}"
-    exit 0
-fi
-
+if [ "$NEEDS_UPDATE" = true ]; then
 echo ""
 echo -e "📦 Updating AI Brain in ${CYAN}$AI_DIR/${NC}..."
 echo ""
@@ -140,10 +144,11 @@ if [ -n "$LATEST_VERSION" ]; then
 else
     echo "updated-$(date +%Y%m%d)" > "$AI_DIR/VERSION"
 fi
+fi
 
-# ── Caveman update (token compression) ──────────────────────────
+# ── Caveman install (runs every update, even if version unchanged) ──
 echo ""
-echo -e "   ${CYAN}●  Updating Caveman token compression (ULTRA mode)...${NC}"
+echo -e "   ${CYAN}●  Caveman token compression (ULTRA mode)...${NC}"
 
 # Write/refresh .caveman.json
 echo '{"defaultMode":"ultra"}' > ".caveman.json"
@@ -175,22 +180,30 @@ Boundaries: code/commits/PRs normal.
 CAVEOF
   echo -e "   ${GREEN}✓${NC} Created AGENTS.md"
 else
-  echo -e "   ${GREEN}✓${NC} AGENTS.md already exists (skipped)"
+  echo -e "   ${GREEN}✓${NC} AGENTS.md exists"
 fi
 
 # Install/update caveman plugin via npx
 if command -v node &>/dev/null && [ "$(node -e "console.log(process.version.slice(1).split('.')[0])")" -ge 18 ] 2>/dev/null; then
   if npx -y github:JuliusBrussee/caveman -- --only claude --non-interactive --force 2>/dev/null; then
-    echo -e "   ${GREEN}✓${NC} Caveman plugin updated — ~67% output token savings"
+    echo -e "   ${GREEN}✓${NC} Caveman plugin installed — ~67% output token savings"
   else
-    echo -e "   ${YELLOW}⚠  Caveman plugin install skipped.${NC}"
-    echo -e "   ${YELLOW}   .caveman.json + AGENTS.md still up to date.${NC}"
+    echo -e "   ${YELLOW}⚠  Caveman plugin install skipped. Config files still updated.${NC}"
   fi
 else
   echo -e "   ${YELLOW}⚠  Node ≥18 required for caveman plugin. Config files still updated.${NC}"
 fi
 
+# Exit if version already latest (only caveman needed)
+if [ "$NEEDS_UPDATE" = false ]; then
+    echo ""
+    echo -e "${GREEN}✅  AI Engineering OS already at latest version. Caveman checked.${NC}"
+    echo ""
+    exit 0
+fi
+
 # ── Done ─────────────────────────────────────────────────────────
+if [ "$NEEDS_UPDATE" = true ]; then
 download_file "update.sh"   "$AI_DIR/update.sh"
 chmod +x "$AI_DIR/update.sh"
 
@@ -207,4 +220,5 @@ echo ""
 echo -e "   ${YELLOW}Note:${NC} .claude/memory/ directory was not modified."
 if [ -f "$AI_DIR/VERSION.bak" ]; then
     rm "$AI_DIR/VERSION.bak"
+fi
 fi

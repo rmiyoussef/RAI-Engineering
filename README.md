@@ -171,6 +171,10 @@ memory/
 │   └── 2026-07-10-n-plus-one-fix.md
 ├── sessions/                ← Session summaries
 │   └── 2026-07-10-implement-auth.md
+├── tests/                   ← Team-ready test summaries (per feature)
+│   └── 2026-07-13-onboarding-api.md
+├── tasks/                   ← Full task summaries (files, tests, security, perf)
+│   └── 2026-07-13-create-onboarding.md
 └── business/                ← Business rules and domain glossary
 ```
 
@@ -190,6 +194,13 @@ When installed, your project gets access to domain-agnostic engineering rules:
 | `rules/SECURITY.md` | Input validation, SQL injection, XSS, CSRF, auth |
 | `rules/DATABASE.md` | Migrations, indexing, N+1, pagination, constraints |
 | `rules/API_DESIGN.md` | RESTful URLs, consistent responses, versioning |
+
+| `rules/TESTING_RULES.md` | Writing tests — coverage, scenarios, templates |
+
+| Template | When Used |
+|----------|-----------|
+| `templates/summary/TEST_SUMMARY.md` | Team-ready test summary (icons, tables, security, perf, DB) |
+| `templates/summary/TASK_SUMMARY.md` | Full task summary (files, tests, security, quality scores) |
 
 Rules are loaded automatically based on what the task touches.
 

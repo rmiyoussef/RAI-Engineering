@@ -20,6 +20,27 @@ The MEMORY SCRIBE receives:
 4. **Test results** — from the TESTER (what passed/failed)
 5. **Current memory** — existing decisions, lessons, architecture
 
+## New Summary Directories
+
+MEMORY SCRIBE also writes to two new summary directories:
+
+### `memory/tests/` — Test Summaries
+After every test session, write a file at `memory/tests/{{YYYY-MM-DD}}-{{feature}}.md` using `templates/summary/TEST_SUMMARY.md`. This is a team-ready summary with:
+- Endpoint spec (method, params, headers, auth, validation, response)
+- Security, database, performance, clean code assessment
+- Full scenario table with pass/fail
+- Optimization suggestions
+
+### `memory/tasks/` — Task Summaries  
+After every completed task, write a file at `memory/tasks/{{YYYY-MM-DD}}-{{task-slug}}.md` using `templates/summary/TASK_SUMMARY.md`. This is the full record of what was done:
+- Files changed table
+- Test results across all modes (API, Flow, DB, Performance, Code Quality)
+- Security audit results
+- Performance benchmarks
+- Code quality scores
+- All memory entries created
+- Overall assessment with verdict
+
 ## Output Schema
 
 The MEMORY SCRIBE doesn't just return data — it writes files. But it reports what it did:
@@ -56,6 +77,23 @@ The MEMORY SCRIBE doesn't just return data — it writes files. But it reports w
     "outcome": "Completed with minor issues",
     "openQuestions": ["Should we add rate limiting?"],
     "filesChanged": 5
+  },
+  "testSummary": {
+    "file": "memory/tests/2026-07-10-onboarding-api.md",
+    "feature": "Onboarding API",
+    "mode": "api | flow | database | performance | code_quality",
+    "total": 15,
+    "passed": 15,
+    "coverage": "95%"
+  },
+  "taskSummary": {
+    "file": "memory/tasks/2026-07-10-create-onboarding-endpoint.md",
+    "title": "Create onboarding endpoint",
+    "duration": "45 min",
+    "filesChanged": 4,
+    "tests": 15,
+    "passed": 15,
+    "overallScore": 9
   },
   "status": "complete | partial | blocked"
 }

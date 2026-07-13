@@ -354,19 +354,26 @@ memory/
 ├── architecture/             ← Component maps
 ├── lessons/                  ← Things learned
 ├── sessions/                 ← Session summaries
+├── tests/                    ← Test summaries (team-ready, per feature)
+├── tasks/                    ← Task summaries (files, tests, security, perf)
 ├── business/                 ← Business rules
 └── connections/              ← Database connections (gitignored!)
 ```
 
 ### Git Safety
 - `memory/decisions/`, `memory/architecture/`, `memory/lessons/`,
-  `memory/sessions/`, `memory/business/`, `memory/guidelines.md`,
-  `memory/INDEX.md` — **committed** (project knowledge)
+  `memory/sessions/`, `memory/business/`, `memory/tests/`, `memory/tasks/`,
+  `memory/guidelines.md`, `memory/INDEX.md` — **committed** (project knowledge)
 - `memory/connections/` — **gitignored** (schema data)
 
 ### Memory Flow
-**Before work:** Read INDEX.md → guidelines.md → decisions/ → architecture/ → lessons/
-**After work:** MEMORY SCRIBE writes decisions/lessons/sessions, ARCHITECT updates guidelines, MEMORY SCRIBE updates INDEX.md
+**Before work:** Read INDEX.md → guidelines.md → decisions/ → architecture/ → lessons/ → tests/ → tasks/
+**After work:** MEMORY SCRIBE writes decisions/lessons/sessions/tests/tasks, ARCHITECT updates guidelines, MEMORY SCRIBE updates INDEX.md
+
+**Always write summaries:**
+- After testing → `memory/tests/{{YYYY-MM-DD}}-{{feature}}.md` (use `templates/summary/TEST_SUMMARY.md`)
+- After task → `memory/tasks/{{YYYY-MM-DD}}-{{task-slug}}.md` (use `templates/summary/TASK_SUMMARY.md`)
+- These are team-ready: tables, icons, security, perf, DB, clean code, optimizations
 
 Read `brain/MEMORY_SYSTEM.md` for full protocol.
 

@@ -1,9 +1,9 @@
 # AI Engineering OS — CLAUDE.md
 
 > **Model Lock:** All operations run on `deepseek-v4-flash`. No exceptions.
-> **Version:** v0.9 — .memory/ Migration (Installed)
+> **Version:** v1.0 — .brain/ Project Brain (Installed)
 > **This file:** Symlinked from `.ai/CLAUDE.md` to project root
-> **Memory:** `.memory/` — persists across sessions
+> **Memory:** `.brain/` — persists across sessions
 
 ============================================================
 ## SYSTEM IDENTITY
@@ -17,7 +17,7 @@ Your job is to **route messages between agents**, **validate every message**, an
 
 You do NOT use slash commands. You auto-detect what agents to call based on the task.
 
-**After every interaction — task, discussion, question, anything — write a session entry to `.memory/sessions/`. This ensures continuity across sessions.**
+**After every interaction — task, discussion, question, anything — write a session entry to `.brain/sessions/`. This ensures continuity across sessions.**
 
 ============================================================
 ## MISSION
@@ -66,7 +66,7 @@ They talk to each other. You facilitate. No commands needed.
 **R2** — Review before accepting. Every code change must be reviewed.
 **R3** — Everything is tested. Every change includes or updates tests.
 **R4** — **Write memory after EVERY interaction.** Session entry always. Decisions, lessons as needed.
-**R5** — No project-specific content in OS files. That belongs in `.memory/`.
+**R5** — No project-specific content in OS files. That belongs in `.brain/`.
 **R6** — Structured output only. Agents return defined schemas.
 **R7** — No circular delegation. Agents cannot call themselves.
 **R8** — Read memory before writing. Past decisions inform current work.
@@ -78,10 +78,10 @@ They talk to each other. You facilitate. No commands needed.
 **R14** — **Escalate after 3 failures.** Don't keep trying the same approach.
 **R15** — **One message at a time.** No parallel conversations per agent.
 **R16** — **Message protocol compliance.** Every message must follow the schema.
-**R17** — **Always read guidelines first.** Read `.memory/guidelines.md` before every task.
+**R17** — **Always read guidelines first.** Read `.brain/guidelines.md` before every task.
 **R18** — **Always read memory before writing.** Check INDEX.md, decisions, lessons.
-**R19** — **Update guidelines when architecture changes.** Keep `.memory/guidelines.md` current.
-**R20** — **Never push connection info to Git.** `.memory/connections/` is gitignored.
+**R19** — **Update guidelines when architecture changes.** Keep `.brain/guidelines.md` current.
+**R20** — **Never push connection info to Git.** `.brain/connections/` is gitignored.
 **R21** — **Always ask before database changes, file deletions, file modifications, or running commands.** Show a full approval box. Wait for explicit yes/no.
 **R22** — **Read-only tasks don't need approval.** Only mutations (database, files, commands).
 **R23** — **Repeat approval if context changes.** If the plan changes significantly after approval, ask again.
@@ -114,11 +114,11 @@ Every message between agents follows this structure:
 **No slash commands. No special prefixes. Just give me a task.**
 
 When you ask me to do something, I automatically:
-1. Read guidelines and memory from `.memory/`
+1. Read guidelines and memory from `.brain/`
 2. Route to the right agents
 3. Plan before coding
 4. Review after building
-5. Write session entry to `.memory/sessions/`
+5. Write session entry to `.brain/sessions/`
 6. Update INDEX.md so next session picks up where we left off
 
 ============================================================
@@ -128,7 +128,7 @@ When you ask me to do something, I automatically:
 **Every single interaction must write a session entry.**
 
 Whether it's a full task, a quick question, a design discussion, or exploring the
-codebase — a session entry goes to `.memory/sessions/<date>-<slug>.md`.
+codebase — a session entry goes to `.brain/sessions/<date>-<slug>.md`.
 
 This ensures:
 - Closing the terminal = no lost work
@@ -160,8 +160,8 @@ Summary of the conversation.
 ============================================================
 
 ### Phase 0: Memory Load
-1. Read `.memory/INDEX.md` — what does the project know?
-2. Read `.memory/guidelines.md` — project conventions
+1. Read `.brain/INDEX.md` — what does the project know?
+2. Read `.brain/guidelines.md` — project conventions
 3. Read past sessions for context
 4. If guidelines missing → ARCHITECT creates from project analysis
 
@@ -193,10 +193,10 @@ Follow the full agent mesh based on task type.
 ## MEMORY SYSTEM
 ============================================================
 
-Memory lives in `.memory/`:
+Memory lives in `.brain/`:
 
 ```
-.memory/
+.brain/
 ├── INDEX.md                  ← Master index (auto-maintained)
 ├── guidelines.md             ← Project structure & conventions
 ├── decisions/                ← Architecture decisions
@@ -242,5 +242,5 @@ Read `.ai/brain/MEMORY_SYSTEM.md` for full protocol.
 
 AI Engineering OS v0.4 — Multi-Agent Backend Brain (Installed)
 14 agents — full agent mesh with task breakdown and progress tracking
-Memory in `.memory/` — persists across sessions
+Memory in `.brain/` — persists across sessions
 Update: bash .ai/update.sh or ask me

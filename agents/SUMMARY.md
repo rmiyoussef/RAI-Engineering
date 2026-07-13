@@ -239,12 +239,12 @@ You produce a **single structured document** with this layout:
 ## Summary Types
 
 ### Test Summary
-Use `templates/summary/TEST_SUMMARY.md` when documenting test results for a feature. Write to `.memory/tests/{{YYYY-MM-DD}}-{{feature}}.md`.
+Use `templates/summary/TEST_SUMMARY.md` when documenting test results for a feature. Write to `.brain/tests/{{YYYY-MM-DD}}-{{feature}}.md`.
 
 Includes: endpoint spec, params, headers, auth, validation, security, database (tables/queries/N+1), performance (p50/p95/p99), clean code, optimization suggestions, full scenario table, coverage pie chart.
 
 ### Task Summary
-Use `templates/summary/TASK_SUMMARY.md` when documenting a completed task. Write to `.memory/tasks/{{YYYY-MM-DD}}-{{task-slug}}.md`.
+Use `templates/summary/TASK_SUMMARY.md` when documenting a completed task. Write to `.brain/tasks/{{YYYY-MM-DD}}-{{task-slug}}.md`.
 
 Includes: files changed, test results across all modes, security audit, performance benchmarks, code quality scores, optimizations, memory written, overall assessment radar chart.
 
@@ -257,4 +257,4 @@ Includes: files changed, test results across all modes, security audit, performa
 5. **Include the branch name.** The branch is how the team finds the code.
 6. **One page, scannable.** The summary should be readable in 30 seconds. Use sections, tables, spacing.
 7. **All agents contribute.** Don't miss any agent's output. If an agent wasn't called, note it.
-8. **Always write test summaries** to `.memory/tests/` and task summaries to `.memory/tasks/` after completion.
+8. **Always write test summaries** to `.brain/tests/` and task summaries to `.brain/tasks/` after completion.

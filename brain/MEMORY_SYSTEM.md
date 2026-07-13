@@ -2,7 +2,7 @@
 
 > How the BRAIN organizes, indexes, and queries project memory.
 > Memory is the project's persistent knowledge. It grows with every session.
-> Memory lives in `.memory/` — in your project root. Works with ANY AI tool (Claude, Cursor, Copilot, etc.).
+> Memory lives in `.brain/` — in your project root. Works with ANY AI tool (Claude, Cursor, Copilot, etc.).
 > **Every task, test, and discussion saves a summary — always.**
 
 ---
@@ -10,7 +10,7 @@
 ## Memory Layout
 
 ```
-.memory/
+.brain/
 ├── INDEX.md                         ← Master index (auto-maintained)
 ├── guidelines.md                    ← Project structure & conventions
 ├── decisions/                       ← Architecture decisions
@@ -37,18 +37,18 @@
     └── database.md
 ```
 
-### Why `.memory/` (not `.claude/memory/`)?
+### Why `.brain/` (not `.claude/memory/`)?
 
 | Reason | Explanation |
 |--------|-------------|
-| **Any AI tool** | Not tied to Claude. Cursor, Copilot, Windsurf — all can read `.memory/` |
+| **Any AI tool** | Not tied to Claude. Cursor, Copilot, Windsurf — all can read `.brain/` |
 | **Team-wide** | Commit to repo. Every developer and every AI sees the same knowledge |
-| **Clean root** | Single `.memory/` folder is self-documenting |
+| **Clean root** | Single `.brain/` folder is self-documenting |
 | **No lock-in** | Switch AI tools without losing project memory |
 
 ### Session Entry — Every Interaction
 
-**Every single interaction** — task, discussion, question, exploration — must write a session entry into `.memory/sessions/`. This ensures:
+**Every single interaction** — task, discussion, question, exploration — must write a session entry into `.brain/sessions/`. This ensures:
 
 - If you close the terminal, you can resume exactly where you left off
 - Nothing is lost between sessions
@@ -65,7 +65,7 @@ A session entry is written after:
 
 ### guidelines.md
 
-The `.memory/guidelines.md` file holds the project's architecture, conventions, commands, middleware, database rules, and security setup. Created by ARCHITECT on first install.
+The `.brain/guidelines.md` file holds the project's architecture, conventions, commands, middleware, database rules, and security setup. Created by ARCHITECT on first install.
 
 ### Test & Task Summaries
 
@@ -73,8 +73,8 @@ The `.memory/guidelines.md` file holds the project's architecture, conventions, 
 
 | Summary | Location | When | Template |
 |---------|----------|------|----------|
-| 🧪 Test Summary | `.memory/tests/{{date}}-{{feature}}.md` | After every test session | `templates/summary/TEST_SUMMARY.md` |
-| 📋 Task Summary | `.memory/tasks/{{date}}-{{task}}.md` | After every completed task | `templates/summary/TASK_SUMMARY.md` |
+| 🧪 Test Summary | `.brain/tests/{{date}}-{{feature}}.md` | After every test session | `templates/summary/TEST_SUMMARY.md` |
+| 📋 Task Summary | `.brain/tasks/{{date}}-{{task}}.md` | After every completed task | `templates/summary/TASK_SUMMARY.md` |
 
 If you ask for a summary and none exists, I create it before responding.
 
@@ -82,23 +82,23 @@ If you ask for a summary and none exists, I create it before responding.
 
 | Path | Committed? | Why |
 |------|-----------|-----|
-| `.memory/decisions/` | ✅ Committed | Architecture decisions are project knowledge |
-| `.memory/architecture/` | ✅ Committed | Component maps are part of the project |
-| `.memory/lessons/` | ✅ Committed | Lessons benefit the whole team |
-| `.memory/sessions/` | ✅ Committed | Session history helps resume work |
-| `.memory/tests/` | ✅ Committed | Test summaries are team knowledge |
-| `.memory/tasks/` | ✅ Committed | Task records show what was done |
-| `.memory/templates/` | ✅ Committed | Code templates are project standards |
-| `.memory/business/` | ✅ Committed | Business rules are project knowledge |
-| `.memory/guidelines.md` | ✅ Committed | Project structure is shared knowledge |
-| `.memory/INDEX.md` | ✅ Committed | Master index helps everyone navigate |
-| `.memory/connections/` | ❌ **Never** | Contains schema info — never push secrets |
+| `.brain/decisions/` | ✅ Committed | Architecture decisions are project knowledge |
+| `.brain/architecture/` | ✅ Committed | Component maps are part of the project |
+| `.brain/lessons/` | ✅ Committed | Lessons benefit the whole team |
+| `.brain/sessions/` | ✅ Committed | Session history helps resume work |
+| `.brain/tests/` | ✅ Committed | Test summaries are team knowledge |
+| `.brain/tasks/` | ✅ Committed | Task records show what was done |
+| `.brain/skills/` | ✅ Committed | Code templates are project standards |
+| `.brain/business/` | ✅ Committed | Business rules are project knowledge |
+| `.brain/guidelines.md` | ✅ Committed | Project structure is shared knowledge |
+| `.brain/INDEX.md` | ✅ Committed | Master index helps everyone navigate |
+| `.brain/connections/` | ❌ **Never** | Contains schema info — never push secrets |
 
 ---
 
 ## INDEX.md — The Master Index
 
-The `.memory/INDEX.md` file is the **entry point for all memory queries**. Auto-maintained by MEMORY SCRIBE after every session.
+The `.brain/INDEX.md` file is the **entry point for all memory queries**. Auto-maintained by MEMORY SCRIBE after every session.
 
 ### Format
 
@@ -131,12 +131,12 @@ The `.memory/INDEX.md` file is the **entry point for all memory queries**. Auto-
 After every session, MEMORY SCRIBE calls:
 ```
 MEMORY SCRIBE: "I need to update INDEX.md"
-  ├─► List files in .memory/decisions/ → add new ones
-  ├─► List files in .memory/lessons/ → add new ones
-  ├─► List files in .memory/sessions/ → add new ones
-  ├─► List files in .memory/tests/ → add new ones
-  ├─► List files in .memory/tasks/ → add new ones
-  └─► List files in .memory/architecture/ → add new ones
+  ├─► List files in .brain/decisions/ → add new ones
+  ├─► List files in .brain/lessons/ → add new ones
+  ├─► List files in .brain/sessions/ → add new ones
+  ├─► List files in .brain/tests/ → add new ones
+  ├─► List files in .brain/tasks/ → add new ones
+  └─► List files in .brain/architecture/ → add new ones
 ```
 
 ---
@@ -148,14 +148,14 @@ MEMORY SCRIBE: "I need to update INDEX.md"
 ```
 BRAIN receives task
     │
-    ├─► Read .memory/INDEX.md          ← What does the project know?
-    ├─► Read .memory/guidelines.md     ← Project conventions
-    ├─► Read .memory/decisions/        ← Past decisions
-    ├─► Read .memory/architecture/     ← Current component map
-    ├─► Read .memory/lessons/          ← Known pitfalls
-    ├─► Read .memory/tests/            ← Past test results (for context)
-    ├─► Read .memory/tasks/            ← Past task summaries (for context)
-    └─► Read .memory/connections/      ← Database schema (if needed)
+    ├─► Read .brain/INDEX.md          ← What does the project know?
+    ├─► Read .brain/guidelines.md     ← Project conventions
+    ├─► Read .brain/decisions/        ← Past decisions
+    ├─► Read .brain/architecture/     ← Current component map
+    ├─► Read .brain/lessons/          ← Known pitfalls
+    ├─► Read .brain/tests/            ← Past test results (for context)
+    ├─► Read .brain/tasks/            ← Past task summaries (for context)
+    └─► Read .brain/connections/      ← Database schema (if needed)
 ```
 
 ### After Any Work (Always)
@@ -260,8 +260,8 @@ Summary of the conversation, decisions, findings.
 
 | Template | Purpose | Output Location |
 |----------|---------|----------------|
-| `templates/summary/TEST_SUMMARY.md` | Test results with icons, tables, perf, DB, security | `.memory/tests/` |
-| `templates/summary/TASK_SUMMARY.md` | Full task record with quality assessment | `.memory/tasks/` |
+| `templates/summary/TEST_SUMMARY.md` | Test results with icons, tables, perf, DB, security | `.brain/tests/` |
+| `templates/summary/TASK_SUMMARY.md` | Full task record with quality assessment | `.brain/tasks/` |
 
 Use these templates to ensure consistent, team-readable summaries every time.
 

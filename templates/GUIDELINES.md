@@ -152,7 +152,7 @@ List all middleware and which routes they apply to:
 ## Important Notes
 
 - Never commit `.env` files or real credentials (use `.env.example`)
-- Never commit `.memory/connections/` (gitignored)
+- Never commit `.brain/connections/` (gitignored)
 - Run `pint` before committing PHP code
 - Write tests for every new feature or bug fix
 - Update this file when adding new patterns, commands, or middleware

@@ -1,7 +1,7 @@
 # AI Engineering OS — CLAUDE.md
 
 > **Model Lock:** All operations run on `deepseek-v4-flash`. No exceptions.
-> **Version:** v0.9 — .memory/ Migration + Summary Force
+> **Version:** v1.0 — .brain/ Project Brain + Skills + Memory
 
 ============================================================
 ## SYSTEM IDENTITY
@@ -86,13 +86,13 @@ They talk to each other. You facilitate. No commands needed.
 **R28** — **Every task includes tests.** If no tests exist for the feature, TESTER asks "Create template for this?" before generating. Business flows use `templates/testing/` templates.
 **R29** — **Template-led testing.** `templates/testing/` is the source of truth for test structure. User says "create template for X" → write to templates. User says "test X" → use existing template.
 **R30** — **Version bump before every push.** Update VERSION, CLAUDE.md header + footer, and README.md before every `git push`. All files must show the same version.
-**R31** — **Always write summaries.** Every task, test, or discussion writes a summary to `.memory/tasks/` or `.memory/tests/`. If user asks for a summary and none exists — create it before responding. Summaries are team-readable with tables, icons, security, perf, DB, clean code.
+**R31** — **Always write summaries.** Every task, test, or discussion writes a summary to `.brain/tasks/` or `.brain/tests/`. If user asks for a summary and none exists — create it before responding. Summaries are team-readable with tables, icons, security, perf, DB, clean code.
 
 ## Summary Force Rule
-- User: "Show me summary for X" → check `.memory/tests/` or `.memory/tasks/`
+- User: "Show me summary for X" → check `.brain/tests/` or `.brain/tasks/`
 - If found → read it
-- If not found → create it immediately from available data, save to `.memory/`, then respond
-- User: "Enhance task X based on summary" → read `.memory/tasks/X.md` first, understand past work, then proceed
+- If not found → create it immediately from available data, save to `.brain/`, then respond
+- User: "Enhance task X based on summary" → read `.brain/tasks/X.md` first, understand past work, then proceed
 
 ============================================================
 ## THE MESSAGE PROTOCOL
@@ -353,42 +353,45 @@ REVIEWER score < 7
 ============================================================
 
 Memory is the project's persistent knowledge. It grows with every session.
-**All memory lives in `.memory/`** — works with ANY AI tool (Claude, Cursor, Copilot, Windsurf).
+**All memory lives in `.brain/`** — works with ANY AI tool (Claude, Cursor, Copilot, Windsurf).
 **Team-wide.** Commit to repo. Every developer and every AI sees the same knowledge.
 **Summaries are ALWAYS written.** Every task, every test, every discussion.
 
 ```
-.memory/
+.brain/
 ├── INDEX.md                  ← Master index (auto-maintained)
-├── guidelines.md             ← Project structure & conventions
-├── decisions/                ← Architecture decisions
-├── architecture/             ← Component maps
-├── lessons/                  ← Things learned
-├── sessions/                 ← Session summaries
-├── tests/                    ← Test summaries (team-ready, per feature)
-├── tasks/                    ← Task summaries (files, tests, security, perf)
-├── templates/                ← Project code templates
+├── README.md                 ← What .brain/ is
+├── memory/
+│   ├── guidelines.md         ← Project structure & conventions
+│   ├── decisions/            ← Architecture decisions
+│   ├── architecture/         ← Component maps
+│   ├── lessons/              ← Things learned
+│   ├── sessions/             ← Session summaries
+│   ├── tests/                ← Test summaries (team-ready, per feature)
+│   ├── tasks/                ← Task summaries (files, tests, security, perf)
+│   └── business/             ← Business rules
+├── skills/                   ← Project code templates
 │   ├── service.md            ← How to create services
 │   ├── controller.md         ← How to create controllers
 │   ├── resource.md           ← How to create API resources
 │   └── crud.md               ← Full CRUD generation
-├── business/                 ← Business rules
+├── rules/                    ← Project conventions
 └── connections/              ← Database connections (gitignored!)
 ```
 
 ### Git Safety
-- `.memory/decisions/`, `.memory/architecture/`, `.memory/lessons/`,
-  `.memory/sessions/`, `.memory/business/`, `.memory/tests/`, `.memory/tasks/`,
-  `.memory/templates/`, `.memory/guidelines.md`, `.memory/INDEX.md` — **committed**
-- `.memory/connections/` — **gitignored** (schema data)
+- `.brain/decisions/`, `.brain/architecture/`, `.brain/lessons/`,
+  `.brain/sessions/`, `.brain/business/`, `.brain/tests/`, `.brain/tasks/`,
+  `.brain/skills/`, `.brain/rules/`, `.brain/guidelines.md`, `.brain/INDEX.md` — **committed**
+- `.brain/connections/` — **gitignored** (schema data)
 
 ### Memory Flow
 **Before work:** Read INDEX.md → guidelines.md → decisions/ → architecture/ → lessons/ → tests/ → tasks/
 **After work:** MEMORY SCRIBE writes decisions/lessons/sessions/tests/tasks, ARCHITECT updates guidelines, MEMORY SCRIBE updates INDEX.md
 
 **Always write summaries:**
-- After testing → `.memory/tests/{{YYYY-MM-DD}}-{{feature}}.md` (use `templates/summary/TEST_SUMMARY.md`)
-- After task → `.memory/tasks/{{YYYY-MM-DD}}-{{task-slug}}.md` (use `templates/summary/TASK_SUMMARY.md`)
+- After testing → `.brain/tests/{{YYYY-MM-DD}}-{{feature}}.md` (use `templates/summary/TEST_SUMMARY.md`)
+- After task → `.brain/tasks/{{YYYY-MM-DD}}-{{task-slug}}.md` (use `templates/summary/TASK_SUMMARY.md`)
 - If user asks for summary and none exists → create it before responding
 - These are team-ready: tables, icons, security, perf, DB, clean code, optimizations
 
@@ -439,14 +442,14 @@ Read `brain/MEMORY_SYSTEM.md` for full protocol.
 ## VERSION
 ============================================================
 
-AI Engineering OS v0.9 — .memory/ Migration + Summary Force
+AI Engineering OS v1.0 — .brain/ Project Brain + Skills + Memory
 15 agents: ARCHITECT, PLANNER, ARCHIVIST, DATABASE, SECURITY, EXECUTOR,
            BACKEND QA, CLEAN CODE, TESTER, REVIEWER, MEMORY SCRIBE,
            GITHUB, GITHUB TASKS, SUMMARY
-Memory system in .memory/ — AI-tool agnostic, team-wide, auto-summarized
+Memory system in .brain/ — AI-tool agnostic, team-wide, auto-summarized
 31 rules (R1-R31) including testing templates, flow testing, version bump, summary force
 Testing templates in templates/testing/ — API, Flow, DB, Performance, Code Quality
-Project templates in .memory/templates/ — service, controller, resource, crud
+Project skills in .brain/skills/ — service, controller, resource, crud
 Zero slash commands needed — auto-detect and route
 Update: bash .ai/update.sh or ask me to update
 

@@ -58,21 +58,21 @@ echo ""
 
 # Create directories
 mkdir -p "$AI_DIR"/{brain,agents,skills,rules,templates,workflows}
-mkdir -p ".memory"/{decisions,architecture,lessons,sessions,tests,tasks,business,connections,templates}
+mkdir -p ".brain"/{memory/{decisions,architecture,lessons,sessions,tests,tasks,business},skills,rules,connections}
 mkdir -p ".claude"
 
-# Add .memory/connections/ to .gitignore (never push connection info)
+# Add .brain/connections/ to .gitignore (never push connection info)
 if [ -f ".gitignore" ]; then
-    if ! grep -q ".memory/connections/" ".gitignore" 2>/dev/null; then
+    if ! grep -q ".brain/connections/" ".gitignore" 2>/dev/null; then
         echo "" >> ".gitignore"
         echo "# AI Engineering OS — Database connections (schema only, no secrets)" >> ".gitignore"
-        echo ".memory/connections/" >> ".gitignore"
-        echo -e "   ${GREEN}✓${NC} Added .memory/connections/ to .gitignore"
+        echo ".brain/connections/" >> ".gitignore"
+        echo -e "   ${GREEN}✓${NC} Added .brain/connections/ to .gitignore"
     fi
 else
     echo "# AI Engineering OS — Database connections (schema only, no secrets)" > ".gitignore"
-    echo ".memory/connections/" >> ".gitignore"
-    echo -e "   ${GREEN}✓${NC} Created .gitignore with .memory/connections/ excluded"
+    echo ".brain/connections/" >> ".gitignore"
+    echo -e "   ${GREEN}✓${NC} Created .gitignore with .brain/connections/ excluded"
 fi
 
 download_file() {
@@ -216,18 +216,25 @@ echo "  │   ├── templates/                   ← Memory templates"
 echo "  │   └── workflows/                   ← Workflow references"
 echo "  ├── .caveman.json                    ← Token compression (ULTRA)"
 echo "  ├── AGENTS.md                        ← Caveman per-repo rules"
-echo "  └── .memory/                  ← Team-wide knowledge base (any AI tool)"
-echo "      ├── INDEX.md                     ← Auto-maintained"
-echo "      ├── guidelines.md                ← Project structure & conventions"
-echo "      ├── decisions/"
-echo "      ├── architecture/"
-echo "      ├── lessons/"
-echo "      ├── sessions/"
-echo "      ├── tests/                       ← Test summaries"
-echo "      ├── tasks/                       ← Task summaries"
-echo "      ├── templates/                   ← Project code templates"
-echo "      ├── business/"
-echo "      └── connections/ (gitignored)"
+	echo "  └── .brain/                  ← Team-wide AI knowledge base (any AI tool)"
+	echo "      ├── INDEX.md                     ← Auto-maintained"
+	echo "      ├── README.md                    ← What .brain/ is"
+	echo "      ├── memory/"
+	echo "      │   ├── guidelines.md            ← Project structure & conventions"
+	echo "      │   ├── decisions/"
+	echo "      │   ├── architecture/"
+	echo "      │   ├── lessons/"
+	echo "      │   ├── sessions/"
+	echo "      │   ├── tests/                   ← Test summaries"
+	echo "      │   ├── tasks/                   ← Task summaries"
+	echo "      │   └── business/"
+	echo "      ├── skills/                      ← Project code templates"
+	echo "      │   ├── service.md"
+	echo "      │   ├── controller.md"
+	echo "      │   ├── resource.md"
+	echo "      │   └── crud.md"
+	echo "      ├── rules/                       ← Project conventions"
+	echo "      └── connections/ (gitignored)"
 echo ""
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo "  Next steps:"

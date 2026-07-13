@@ -275,6 +275,60 @@ Caveman compresses AI agent output by eliminating filler while preserving every 
 
 ---
 
+## Super TESTER — Comprehensive Testing
+
+TESTER agent now handles **5 testing modes** with reusable templates in `templates/testing/`.
+
+### Testing Modes
+
+| Mode | Template | What It Covers |
+|------|----------|----------------|
+| 🅰️ **API** | `templates/testing/API_ENDPOINT.md` | 15+ scenarios: happy path, validation, auth, edge cases |
+| 🔗 **Flow** | `templates/testing/BUSINESS_FLOW.md` | Multi-step chained APIs (full flow + per-step auth) |
+| 🗄️ **Database** | `templates/testing/DATABASE_QUERY.md` | N+1 detection, index checks, migration safety |
+| ⚡ **Performance** | `templates/testing/PERFORMANCE.md` | Response time benchmarks, query load tests |
+| 🧹 **Code Quality** | `templates/testing/CODE_QUALITY.md` | Naming, SOLID, method length, docblocks |
+
+### API Coverage (Per Endpoint)
+
+| Scenario | Status |
+|----------|--------|
+| ✅ Happy Path — Create, Read, Update, Delete | 🟢 Required |
+| ❌ Validation — Empty, missing, wrong types, max length | 🟢 Required |
+| 🔒 Auth — No token, invalid token, expired token | 🟢 Required |
+| 🚫 Authorization — Wrong role, insufficient permissions | 🟢 Required |
+| 🔍 Not Found — Nonexistent ID, deleted resource | 🟢 Required |
+| 📄 Edge Cases — Empty list, pagination, special chars | 🟢 Required |
+| 🔄 Idempotency — Duplicate submission, unique violation | 🟢 Required |
+
+### Business Flow Testing
+
+When you say *"Test onboarding"*, TESTER maps the business flow to API steps:
+
+```
+Step 1: POST /api/v1/employees          → employee ID
+Step 2: GET  /api/v1/employees/{id}/uuid → UUID
+Step 3: POST /api/v1/contracts          → contract ID
+Step 4: POST /api/v1/contracts/{id}/finalize → "active"
+```
+
+Each flow tested: **full flow**, **partial failures**, **auth at every step**, **final DB state**.
+
+### Template System
+
+- **"Create template for onboarding"** — writes to `templates/testing/onboarding.md`
+- **"Test onboarding"** — checks templates, generates tests from existing template
+- **"I need test {xyz}"** — if no template exists, TESTER asks to create one first
+
+### Rules
+
+```yaml
+R28: Every task includes tests. If no tests exist, TESTER asks.
+R29: Template-led testing. Templates are the source of truth.
+```
+
+---
+
 ## Version Roadmap
 
 | Version | Focus | Status |
@@ -284,10 +338,10 @@ Caveman compresses AI agent output by eliminating filler while preserving every 
 | v0.3 | **Rules + Install** — 6 rule files, .ai/ convention, setup.sh | ✅ Done |
 | v0.4 | **Skills expansion** — framework skills (Laravel, React, SQL) | ✅ Done |
 | v0.5 | **Caveman ULTRA** — 67% token compression, built into setup/update | ✅ Done |
-| v0.6 | **Memory enhancements** — querying, linking, lifecycle | 🔲 Planned |
-| v0.6 | **GitHub release workflow** — changelog, semantic versioning | 🔲 Planned |
-| v0.7 | **Templates expansion** — project scaffolding | 🔲 Planned |
-| v0.8 | **Install script improvements** — flags, customization | 🔲 Planned |
+| v0.6 | **Super TESTER** — 5 testing modes, flow testing, templates | ✅ Done |
+| v0.7 | **Memory enhancements** — querying, linking, lifecycle | 🔲 Planned |
+| v0.8 | **GitHub release workflow** — changelog, semantic versioning | 🔲 Planned |
+| v0.9 | **Templates expansion** — project scaffolding | 🔲 Planned |
 | v1.0 | **Stable** — battle-tested, documented, versioned | 🔲 Planned |
 
 ---
@@ -302,7 +356,7 @@ Caveman compresses AI agent output by eliminating filler while preserving every 
       <b>Rami Youssef</b>
     </a>
     <br>
-    <small>AI Engineering OS — v0.4</small>
+    <small>AI Engineering OS — v0.5</small>
   </sub>
   <br>
 </div>

@@ -159,10 +159,10 @@ Then give it a task:
 
 ## Project Memory
 
-Every decision, lesson, and architecture change is saved to `memory/`. Over time, your project grows a persistent knowledge base:
+Every decision, lesson, test result, and task is saved to `.memory/` — a **team-wide, AI-tool-agnostic** knowledge base. Works with Claude, Cursor, Copilot, Windsurf, and any AI tool.
 
 ```
-memory/
+.memory/
 ├── decisions/               ← Architecture decisions with rationale
 │   └── 2026-07-10-jwt-auth.md
 ├── architecture/            ← Component maps
@@ -175,8 +175,15 @@ memory/
 │   └── 2026-07-13-onboarding-api.md
 ├── tasks/                   ← Full task summaries (files, tests, security, perf)
 │   └── 2026-07-13-create-onboarding.md
+├── templates/               ← Project code templates
+│   ├── service.md           ← How to create services
+│   ├── controller.md        ← How to create controllers
+│   ├── resource.md          ← How to create API resources
+│   └── crud.md              ← Full CRUD generation
 └── business/                ← Business rules and domain glossary
 ```
+
+**Summaries are always written.** Every task, test, and discussion saves a summary. If you ask for a summary and it doesn't exist yet, it's created before responding.
 
 The Brain reads this before every session so nothing is forgotten.
 
@@ -201,6 +208,10 @@ When installed, your project gets access to domain-agnostic engineering rules:
 |----------|-----------|
 | `templates/summary/TEST_SUMMARY.md` | Team-ready test summary (icons, tables, security, perf, DB) |
 | `templates/summary/TASK_SUMMARY.md` | Full task summary (files, tests, security, quality scores) |
+| `.memory/templates/service.md` | Service class — structure, rules, transactions |
+| `.memory/templates/controller.md` | Controller — thin HTTP layer, action methods |
+| `.memory/templates/resource.md` | API Resource — response transformation, field filtering |
+| `.memory/templates/crud.md` | Full CRUD — migration, model, service, controller, routes, tests |
 
 Rules are loaded automatically based on what the task touches.
 
@@ -351,9 +362,8 @@ R29: Template-led testing. Templates are the source of truth.
 | v0.5 | **Caveman ULTRA** — 67% token compression, built into setup/update | ✅ Done |
 | v0.6 | **Super TESTER** — 5 testing modes, flow testing, templates | ✅ Done |
 | v0.7 | **Memory Summaries** — test + task summaries with team-ready templates | ✅ Done |
-| v0.7 | **Memory enhancements** — querying, linking, lifecycle | 🔲 Planned |
 | v0.8 | **R30 Version Bump Rule** — enforce version sync before every push | ✅ Done |
-| v0.9 | **Templates expansion** — project scaffolding | 🔲 Planned |
+| v0.9 | **`.memory/` Migration** — team-wide, AI-tool-agnostic memory + summary force | ✅ Done |
 | v1.0 | **Stable** — battle-tested, documented, versioned | 🔲 Planned |
 
 ---
@@ -368,7 +378,7 @@ R29: Template-led testing. Templates are the source of truth.
       <b>Rami Youssef</b>
     </a>
     <br>
-    <small>AI Engineering OS — v0.8</small>
+    <small>AI Engineering OS — v0.9</small>
   </sub>
   <br>
 </div>

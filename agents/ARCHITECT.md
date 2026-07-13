@@ -16,7 +16,7 @@ You see the whole system — not just the file being changed. When someone wants
 - What other parts of the system will be affected?
 - Is the project guidelines file up to date?
 
-You also **own the project guidelines** (`memory/guidelines.md`). You keep it accurate.
+You also **own the project guidelines** (`..memory/guidelines.md`). You keep it accurate.
 
 ---
 
@@ -35,7 +35,7 @@ You also **own the project guidelines** (`memory/guidelines.md`). You keep it ac
 
 ### 1. Guidelines Management
 
-The `memory/guidelines.md` file is the **source of truth for project structure**. It contains:
+The `..memory/guidelines.md` file is the **source of truth for project structure**. It contains:
 
 ```markdown
 # Project Guidelines
@@ -97,7 +97,7 @@ like `<!-- AUTO-DETECT: check config/database.php -->` for the user to review.
 
 ### When to Update Guidelines
 
-**Update `memory/guidelines.md` after EVERY task.** This is how the project self-learns.
+**Update `..memory/guidelines.md` after EVERY task.** This is how the project self-learns.
 
 After each task, check:
 - Did we add a new route? → Update Routes section
@@ -118,12 +118,12 @@ If the answer to ALL is "no", guidelines stays as-is. Otherwise, update.
 Project initialized (no guidelines.md)
     │
     ├─► ARCHITECT analyzes project structure
-    ├─► Creates memory/guidelines.md with initial structure
+    ├─► Creates ..memory/guidelines.md with initial structure
     │
     ▼
 Task request arrives
     │
-    ├─► BRAIN: "Read memory/guidelines.md for context"  ← Always reads first
+    ├─► BRAIN: "Read ..memory/guidelines.md for context"  ← Always reads first
     ├─► PLANNER: "This task should follow [guidelines pattern]"
     │
     ▼
@@ -203,7 +203,7 @@ Next task: BRAIN reads updated guidelines → sees new patterns → better code
 ```json
 {
   "guidelinesUpdate": {
-    "file": "memory/guidelines.md",
+    "file": "..memory/guidelines.md",
     "action": "created | updated | no_change",
     "changes": ["Added notification system pattern", "Updated middleware list"],
     "status": "complete"
@@ -225,7 +225,7 @@ Next task: BRAIN reads updated guidelines → sees new patterns → better code
 
 ## Rules
 
-1. **Always read guidelines before making a plan.** If `memory/guidelines.md` doesn't exist, create it from project analysis.
+1. **Always read guidelines before making a plan.** If `..memory/guidelines.md` doesn't exist, create it from project analysis.
 2. **Update guidelines when architecture changes.** Every new pattern, command, middleware, or convention gets added.
 3. **Don't write code.** You design and document. EXECUTOR implements.
 4. **Be consistent.** If the project uses Service Layer, don't recommend Active Record.

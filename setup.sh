@@ -58,20 +58,21 @@ echo ""
 
 # Create directories
 mkdir -p "$AI_DIR"/{brain,agents,skills,rules,templates,workflows}
-mkdir -p ".claude/memory"/{decisions,architecture,lessons,sessions,business,connections}
+mkdir -p ".memory"/{decisions,architecture,lessons,sessions,tests,tasks,business,connections,templates}
+mkdir -p ".claude"
 
-# Add .claude/memory/connections/ to .gitignore (never push connection info)
+# Add .memory/connections/ to .gitignore (never push connection info)
 if [ -f ".gitignore" ]; then
-    if ! grep -q ".claude/memory/connections/" ".gitignore" 2>/dev/null; then
+    if ! grep -q ".memory/connections/" ".gitignore" 2>/dev/null; then
         echo "" >> ".gitignore"
         echo "# AI Engineering OS — Database connections (schema only, no secrets)" >> ".gitignore"
-        echo ".claude/memory/connections/" >> ".gitignore"
-        echo -e "   ${GREEN}✓${NC} Added .claude/memory/connections/ to .gitignore"
+        echo ".memory/connections/" >> ".gitignore"
+        echo -e "   ${GREEN}✓${NC} Added .memory/connections/ to .gitignore"
     fi
 else
     echo "# AI Engineering OS — Database connections (schema only, no secrets)" > ".gitignore"
-    echo ".claude/memory/connections/" >> ".gitignore"
-    echo -e "   ${GREEN}✓${NC} Created .gitignore with .claude/memory/connections/ excluded"
+    echo ".memory/connections/" >> ".gitignore"
+    echo -e "   ${GREEN}✓${NC} Created .gitignore with .memory/connections/ excluded"
 fi
 
 download_file() {
@@ -215,13 +216,16 @@ echo "  │   ├── templates/                   ← Memory templates"
 echo "  │   └── workflows/                   ← Workflow references"
 echo "  ├── .caveman.json                    ← Token compression (ULTRA)"
 echo "  ├── AGENTS.md                        ← Caveman per-repo rules"
-echo "  └── .claude/memory/                  ← YOUR project memory (persists across sessions)"
+echo "  └── .memory/                  ← Team-wide knowledge base (any AI tool)"
 echo "      ├── INDEX.md                     ← Auto-maintained"
 echo "      ├── guidelines.md                ← Project structure & conventions"
 echo "      ├── decisions/"
 echo "      ├── architecture/"
 echo "      ├── lessons/"
 echo "      ├── sessions/"
+echo "      ├── tests/                       ← Test summaries"
+echo "      ├── tasks/                       ← Task summaries"
+echo "      ├── templates/                   ← Project code templates"
 echo "      ├── business/"
 echo "      └── connections/ (gitignored)"
 echo ""

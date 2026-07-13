@@ -2,14 +2,15 @@
 
 > How the BRAIN organizes, indexes, and queries project memory.
 > Memory is the project's persistent knowledge. It grows with every session.
-> Memory lives in `.claude/memory/` — in your project root, not in the AI-Engineering-OS folder.
+> Memory lives in `.memory/` — in your project root. Works with ANY AI tool (Claude, Cursor, Copilot, etc.).
+> **Every task, test, and discussion saves a summary — always.**
 
 ---
 
 ## Memory Layout
 
 ```
-.claude/memory/
+.memory/
 ├── INDEX.md                         ← Master index (auto-maintained)
 ├── guidelines.md                    ← Project structure & conventions
 ├── decisions/                       ← Architecture decisions
@@ -21,24 +22,33 @@
 ├── sessions/                        ← Every interaction, task, discussion
 │   ├── 2026-07-10-implement-auth.md
 │   └── 2026-07-10-discussion-api-design.md
+├── tests/                           ← Team-ready test summaries (per feature)
+│   └── 2026-07-13-onboarding-api.md
+├── tasks/                           ← Full task summaries (files, tests, security, perf)
+│   └── 2026-07-13-create-onboarding.md
+├── templates/                       ← Project code templates
+│   ├── service.md
+│   ├── controller.md
+│   ├── resource.md
+│   └── crud.md
 ├── business/                        ← Business rules
 │   └── two-factor-auth.md
 └── connections/                     ← Database connections ⚠️ GITIGNORED
     └── database.md
 ```
 
-### Why `.claude/memory/`?
+### Why `.memory/` (not `.claude/memory/`)?
 
 | Reason | Explanation |
 |--------|-------------|
-| **Persistence** | Claude Code reads `.claude/` automatically. Memory persists across sessions. |
-| **Clean project root** | No extra `memory/` folder cluttering your project. |
-| **Standard location** | `.claude/` is the standard Claude Code directory. |
-| **Git safety** | Can be gitignored or committed per-project. |
+| **Any AI tool** | Not tied to Claude. Cursor, Copilot, Windsurf — all can read `.memory/` |
+| **Team-wide** | Commit to repo. Every developer and every AI sees the same knowledge |
+| **Clean root** | Single `.memory/` folder is self-documenting |
+| **No lock-in** | Switch AI tools without losing project memory |
 
 ### Session Entry — Every Interaction
 
-**Every single interaction** — task, discussion, question, exploration — must write a session entry. This ensures:
+**Every single interaction** — task, discussion, question, exploration — must write a session entry into `.memory/sessions/`. This ensures:
 
 - If you close the terminal, you can resume exactly where you left off
 - Nothing is lost between sessions
@@ -55,35 +65,47 @@ A session entry is written after:
 
 ### guidelines.md
 
-The `.claude/memory/guidelines.md` file holds the project's architecture, conventions, commands, middleware, database rules, and security setup. Created by ARCHITECT on first install using `templates/GUIDELINES.md`.
+The `.memory/guidelines.md` file holds the project's architecture, conventions, commands, middleware, database rules, and security setup. Created by ARCHITECT on first install.
 
-See `agents/ARCHITECT.md` for how guidelines are managed.
+### Test & Task Summaries
+
+**Always written — never skipped.**
+
+| Summary | Location | When | Template |
+|---------|----------|------|----------|
+| 🧪 Test Summary | `.memory/tests/{{date}}-{{feature}}.md` | After every test session | `templates/summary/TEST_SUMMARY.md` |
+| 📋 Task Summary | `.memory/tasks/{{date}}-{{task}}.md` | After every completed task | `templates/summary/TASK_SUMMARY.md` |
+
+If you ask for a summary and none exists, I create it before responding.
 
 ### Git Safety
 
 | Path | Committed? | Why |
 |------|-----------|-----|
-| `.claude/memory/decisions/` | ✅ Recommended | Architecture decisions are project knowledge |
-| `.claude/memory/architecture/` | ✅ Recommended | Component maps are part of the project |
-| `.claude/memory/lessons/` | ✅ Recommended | Lessons benefit the whole team |
-| `.claude/memory/sessions/` | ✅ Recommended | Session history helps resume work |
-| `.claude/memory/business/` | ✅ Recommended | Business rules are project knowledge |
-| `.claude/memory/guidelines.md` | ✅ Recommended | Project structure is shared knowledge |
-| `.claude/memory/INDEX.md` | ✅ Recommended | Master index helps everyone navigate |
-| `.claude/memory/connections/` | ❌ **Never** | Contains schema info — never push secrets |
+| `.memory/decisions/` | ✅ Committed | Architecture decisions are project knowledge |
+| `.memory/architecture/` | ✅ Committed | Component maps are part of the project |
+| `.memory/lessons/` | ✅ Committed | Lessons benefit the whole team |
+| `.memory/sessions/` | ✅ Committed | Session history helps resume work |
+| `.memory/tests/` | ✅ Committed | Test summaries are team knowledge |
+| `.memory/tasks/` | ✅ Committed | Task records show what was done |
+| `.memory/templates/` | ✅ Committed | Code templates are project standards |
+| `.memory/business/` | ✅ Committed | Business rules are project knowledge |
+| `.memory/guidelines.md` | ✅ Committed | Project structure is shared knowledge |
+| `.memory/INDEX.md` | ✅ Committed | Master index helps everyone navigate |
+| `.memory/connections/` | ❌ **Never** | Contains schema info — never push secrets |
 
 ---
 
 ## INDEX.md — The Master Index
 
-The `.claude/memory/INDEX.md` file is the **entry point for all memory queries**. Auto-maintained by MEMORY SCRIBE after every session.
+The `.memory/INDEX.md` file is the **entry point for all memory queries**. Auto-maintained by MEMORY SCRIBE after every session.
 
 ### Format
 
 ```markdown
 # Memory Index
 
-> Auto-maintained. Last updated: 2026-07-10
+> Auto-maintained. Last updated: 2026-07-13
 
 ## Active Decisions
 - [JWT Authentication](decisions/2026-07-10-jwt-auth.md) — Using JWT over session auth
@@ -96,6 +118,12 @@ The `.claude/memory/INDEX.md` file is the **entry point for all memory queries**
 
 ## Sessions
 - [Implement JWT Auth](sessions/2026-07-10-implement-auth.md) — Completed score 9/10
+
+## Test Summaries
+- [Onboarding API](tests/2026-07-13-onboarding-api.md) — 15 tests, all pass
+
+## Task Summaries
+- [Create Onboarding](tasks/2026-07-13-create-onboarding.md) — 4 files, 15 tests
 ```
 
 ### How it's maintained
@@ -103,10 +131,12 @@ The `.claude/memory/INDEX.md` file is the **entry point for all memory queries**
 After every session, MEMORY SCRIBE calls:
 ```
 MEMORY SCRIBE: "I need to update INDEX.md"
-  ├─► List files in .claude/memory/decisions/ → add new ones
-  ├─► List files in .claude/memory/lessons/ → add new ones
-  ├─► List files in .claude/memory/sessions/ → add new ones
-  └─► List files in .claude/memory/architecture/ → add new ones
+  ├─► List files in .memory/decisions/ → add new ones
+  ├─► List files in .memory/lessons/ → add new ones
+  ├─► List files in .memory/sessions/ → add new ones
+  ├─► List files in .memory/tests/ → add new ones
+  ├─► List files in .memory/tasks/ → add new ones
+  └─► List files in .memory/architecture/ → add new ones
 ```
 
 ---
@@ -118,24 +148,28 @@ MEMORY SCRIBE: "I need to update INDEX.md"
 ```
 BRAIN receives task
     │
-    ├─► Read .claude/memory/INDEX.md       ← What does the project know?
-    ├─► Read .claude/memory/guidelines.md  ← Project conventions
-    ├─► Read .claude/memory/decisions/     ← Past decisions
-    ├─► Read .claude/memory/architecture/  ← Current component map
-    ├─► Read .claude/memory/lessons/       ← Known pitfalls
-    └─► Read .claude/memory/connections/   ← Database schema (if needed)
+    ├─► Read .memory/INDEX.md          ← What does the project know?
+    ├─► Read .memory/guidelines.md     ← Project conventions
+    ├─► Read .memory/decisions/        ← Past decisions
+    ├─► Read .memory/architecture/     ← Current component map
+    ├─► Read .memory/lessons/          ← Known pitfalls
+    ├─► Read .memory/tests/            ← Past test results (for context)
+    ├─► Read .memory/tasks/            ← Past task summaries (for context)
+    └─► Read .memory/connections/      ← Database schema (if needed)
 ```
 
 ### After Any Work (Always)
 
 ```
-Task/Discussion/Question complete — ALWAYS write session
+Task/Discussion/Question complete — ALWAYS write
     │
-    ├─► MEMORY SCRIBE writes session/      ← WHAT happened (ALWAYS)
-    ├─► MEMORY SCRIBE writes decisions/    ← WHAT was decided (if applicable)
-    ├─► MEMORY SCRIBE writes lessons/      ← WHAT was learned (if applicable)
-    ├─► ARCHITECT updates guidelines/      ← Did architecture change?
-    └─► MEMORY SCRIBE updates INDEX.md     ← Keep index in sync
+    ├─► MEMORY SCRIBE writes sessions/ ← WHAT happened (ALWAYS)
+    ├─► MEMORY SCRIBE writes tests/    ← Test summary (if testing done)
+    ├─► MEMORY SCRIBE writes tasks/    ← Task summary (always)
+    ├─► MEMORY SCRIBE writes decisions/ ← WHAT was decided (if applicable)
+    ├─► MEMORY SCRIBE writes lessons/  ← WHAT was learned (if applicable)
+    ├─► ARCHITECT updates guidelines/  ← Did architecture change?
+    └─► MEMORY SCRIBE updates INDEX.md ← Keep index in sync
 ```
 
 ---
@@ -147,7 +181,7 @@ This is the most important rule. Every interaction writes a session entry.
 ### Session File Format
 
 ```markdown
-# Session: 2026-07-10 - Discussion about API Design
+# Session: 2026-07-10 — Discussion about API Design
 
 **Date:** 2026-07-10
 **Type:** Task | Discussion | Exploration | Question
@@ -165,6 +199,10 @@ Summary of the conversation, decisions, findings.
 
 ## Files Referenced
 - path/to/file.php
+
+## Summary Written
+- [Test Summary](tests/2026-07-13-feature.md)
+- [Task Summary](tasks/2026-07-13-task.md)
 
 ## Next Steps
 - [ ] Action item 1
@@ -218,6 +256,17 @@ Summary of the conversation, decisions, findings.
 
 ---
 
+## Summary Templates
+
+| Template | Purpose | Output Location |
+|----------|---------|----------------|
+| `templates/summary/TEST_SUMMARY.md` | Test results with icons, tables, perf, DB, security | `.memory/tests/` |
+| `templates/summary/TASK_SUMMARY.md` | Full task record with quality assessment | `.memory/tasks/` |
+
+Use these templates to ensure consistent, team-readable summaries every time.
+
+---
+
 ## How Agents Use Memory
 
 | Agent | Reads | Writes |
@@ -230,9 +279,10 @@ Summary of the conversation, decisions, findings.
 | **BACKEND QA** | architecture/ | Nothing — passes to MEMORY SCRIBE |
 | **DATABASE** | connections/ | connections/ (schema only) |
 | **SECURITY** | architecture/ | Nothing — passes to MEMORY SCRIBE |
-| **TESTER** | Nothing specific | test files |
-| **MEMORY SCRIBE** | All stores (to build index) | decisions/, lessons/, sessions/, INDEX.md |
+| **TESTER** | templates/testing/ | test files + test summaries |
+| **MEMORY SCRIBE** | All stores (to build index) | decisions/, lessons/, sessions/, tests/, tasks/, INDEX.md |
 | **GITHUB** | decisions/, INDEX.md | Nothing |
+| **SUMMARY** | All agent outputs | tests/, tasks/ summaries |
 
 ---
 

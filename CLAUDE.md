@@ -1,7 +1,7 @@
 # AI Engineering OS — CLAUDE.md
 
 > **Model Lock:** All operations run on `deepseek-v4-flash`. No exceptions.
-> **Version:** v0.7 — Memory Summaries + Super TESTER
+> **Version:** v0.8 — R30 Version Bump Rule + Memory Summaries
 
 ============================================================
 ## SYSTEM IDENTITY
@@ -423,7 +423,7 @@ Read `brain/MEMORY_SYSTEM.md` for full protocol.
 ## VERSION
 ============================================================
 
-AI Engineering OS v0.7 — Memory Summaries + Super TESTER
+AI Engineering OS v0.8 — R30 Version Bump Rule + Memory Summaries
 15 agents: ARCHITECT, PLANNER, ARCHIVIST, DATABASE, SECURITY, EXECUTOR,
            BACKEND QA, CLEAN CODE, TESTER, REVIEWER, MEMORY SCRIBE,
            GITHUB, GITHUB TASKS, SUMMARY

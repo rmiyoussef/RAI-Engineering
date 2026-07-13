@@ -170,46 +170,91 @@ If xyz has no template → create it first, then run tests.
 
 ---
 
-## Output Schema
+## Output Schema (API Mode)
 
 ```json
 {
-  "testPlan": {
-    "template": "templates/testing/{TEMPLATE_USED}.md",
-    "mode": "api | flow | database | performance | code_quality",
-    "scenarios": {
-      "total": 20,
-      "api": 15,
-      "flow": 0,
-      "db": 3,
-      "performance": 2,
-      "codeQuality": 0
-    }
+  "endpoint": {
+    "method": "POST",
+    "path": "/api/v1/employees",
+    "version": "v1"
   },
-  "generatedTests": [
-    {
-      "path": "tests/Feature/Api/V1/EmployeesTest.php",
-      "action": "created",
-      "scenarios": ["list", "create", "show", "update", "delete", "validation", "auth"],
-      "mockDataQuality": "good",
-      "realisticDataUsed": true,
-      "mode": "api"
-    }
+
+  "params": {
+    "path": [{"name": "id", "type": "uuid", "required": true}],
+    "query": [{"name": "page", "type": "int", "default": 1}],
+    "body": [{"name": "name", "type": "string", "required": true, "max": 255}]
+  },
+
+  "headers": {
+    "required": ["Authorization: Bearer {token}", "Accept: application/json"],
+    "optional": ["Idempotency-Key: uuid"]
+  },
+
+  "auth": {
+    "type": "sanctum",
+    "required": true,
+    "roles": {"read": ["admin","manager","user"], "write": ["admin","manager"]}
+  },
+
+  "validation": [
+    {"field": "email", "rules": ["required", "email", "max:255", "unique"]},
+    {"field": "age", "rules": ["integer", "min:18", "max:120"]}
   ],
+
+  "response": {
+    "success": {"status": 201, "body": {"data": {"id": "uuid", "name": "string"}}},
+    "validation_error": {"status": 422, "code": "VALIDATION_ERROR"},
+    "auth_error": {"status": 401, "code": "UNAUTHENTICATED"},
+    "forbidden_error": {"status": 403, "code": "FORBIDDEN"},
+    "not_found": {"status": 404, "code": "NOT_FOUND"}
+  },
+
+  "security": {
+    "sql_injection": true,
+    "xss": true,
+    "csrf": true,
+    "rate_limited": true,
+    "sensitive_filtered": ["password", "token"],
+    "mass_assignment": true
+  },
+
+  "database": {
+    "tables": ["employees", "contracts"],
+    "query_count_expected": 2,
+    "nplus_one_detected": false,
+    "indexes": ["users.email (unique)", "employees.user_id"]
+  },
+
+  "performance": {
+    "p95_ms": 280,
+    "max_ms": 450,
+    "payload_size_kb": 12,
+    "queries_per_request": 2,
+    "within_thresholds": true
+  },
+
+  "clean_code": {
+    "controller_lines": 45,
+    "validation_separate": true,
+    "resource_transformer": true,
+    "single_responsibility": true,
+    "logging_included": true
+  },
+
+  "optimizations": [
+    "Add composite index on (status, created_at)",
+    "Eager load profile to avoid N+1"
+  ],
+
   "testResults": {
-    "runOnlyNewTests": true,
-    "passed": 14,
+    "scenarios_covered": 15,
+    "scenarios_total": 15,
+    "passed": 15,
     "failed": 0,
-    "notes": "14 tests for Employees API — all pass"
+    "coverage": {"lines": "90%", "branches": "85%"}
   },
-  "coverage": {
-    "lines": "85%",
-    "branches": "80%",
-    "apis": "100%",
-    "flows": "100%"
-  },
-  "securityIssuesFound": [],
-  "refactoringSuggestions": [],
-  "status": "all_tests_pass | partial | needs_fixes"
+
+  "status": "all_tests_pass"
 }
 ```

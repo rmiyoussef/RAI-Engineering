@@ -5,18 +5,217 @@
 
 ---
 
-## Endpoint Spec
+## Endpoint Summary
 
 ```yaml
+# ── Method & Path ────────────────────────────────────────────────
 method: GET|POST|PUT|PATCH|DELETE
 path: /api/v1/{resource}
-auth: required|optional|none
-roles: [admin, manager, user]
-rate_limit: true|false
-idempotent: true|false
-```
+version: v1
 
-## Test Scenarios
+# ── Parameters ───────────────────────────────────────────────────
+params:
+  path:
+    - name: id
+      type: int|uuid|string
+      required: true|false
+      example: 1|550e8400-e29b-41d4-a716-446655440000
+  query:
+    - name: page
+      type: int
+      default: 1
+      example: 2
+    - name: per_page
+      type: int
+      default: 20
+      example: 10
+    - name: filters
+      type: string
+      example: status:active
+  body (payload):
+    - name: name
+      type: string
+      required: true
+      min_length: 2
+      max_length: 255
+      example: "John Doe"
+    - name: email
+      type: email
+      required: true
+      example: "john.doe@example.com"
+    - name: role
+      type: enum
+      values: [admin, manager, user]
+      default: user
+      example: admin
+
+# ── Headers ──────────────────────────────────────────────────────
+headers:
+  required:
+    - name: Authorization
+      value: "Bearer {token}"
+      description: Sanctum/JWT auth token
+    - name: Accept
+      value: application/json
+  optional:
+    - name: X-Request-Id
+      value: string
+      description: Idempotency key for retry safety
+    - name: Idempotency-Key
+      value: uuid
+      description: Prevents duplicate processing
+
+# ── Auth & Roles ─────────────────────────────────────────────────
+auth:
+  type: sanctum|jwt|oauth|session|api_key|none
+  required: true|false
+roles:
+  read: [admin, manager, user]
+  write: [admin, manager]
+  delete: [admin]
+guest_access: false|read_only
+
+# ── Rate Limiting ────────────────────────────────────────────────
+rate_limits:
+  - tier: authenticated
+    limit: 60
+    period: 1 minute
+  - tier: guest
+    limit: 10
+    period: 1 minute
+
+# ── Idempotency ──────────────────────────────────────────────────
+idempotent: true|false
+idempotency_key_required: true|false
+idempotency_window_hours: 24
+
+# ── Validation Rules ─────────────────────────────────────────────
+validation:
+  - field: email
+    rules:
+      - required
+      - email format
+      - max:255
+      - unique in users table
+      - lowercase enforced
+  - field: password
+    rules:
+      - required
+      - min:8
+      - max:128
+      - regex: must have uppercase, lowercase, number, special char
+  - field: role
+    rules:
+      - required
+      - in: admin, manager, user
+  - field: age
+    rules:
+      - integer
+      - min:18
+      - max:120
+
+# ── Expected Response ────────────────────────────────────────────
+response:
+  success:
+    status_code: 200|201|204
+    body:
+      data:
+        id: "uuid|int"
+        name: "string"
+        email: "string"
+        role: "string"
+        created_at: "2026-07-13T00:00:00Z"
+      meta:
+        current_page: 1
+        per_page: 20
+        total: 150
+        last_page: 8
+  validation_error:
+    status_code: 422
+    body:
+      error:
+        code: "VALIDATION_ERROR"
+        message: "The given data was invalid."
+        details:
+          field_name: ["The field name is required."]
+  auth_error:
+    status_code: 401
+    body:
+      error:
+        code: "UNAUTHENTICATED"
+        message: "Unauthenticated."
+  forbidden_error:
+    status_code: 403
+    body:
+      error:
+        code: "FORBIDDEN"
+        message: "Forbidden."
+  not_found_error:
+    status_code: 404
+    body:
+      error:
+        code: "NOT_FOUND"
+        message: "Resource not found."
+
+# ── Security Considerations ──────────────────────────────────────
+security:
+  - sql_injection_protected: true
+  - xss_protected: true
+  - csrf_protected: true
+  - rate_limited: true|false
+  - data_encrypted_in_transit: true
+  - sensitive_fields_filtered: [password, token, credit_card]
+  - mass_assignment_protected: true
+  - authorization_checked_per_action: true
+  - own_data_only: false|user can only access own data
+
+# ── Database ─────────────────────────────────────────────────────
+database:
+  tables:
+    - users
+    - profiles
+  joins:
+    - users LEFT JOIN profiles ON users.id = profiles.user_id
+  indexes_used:
+    - users.email (unique)
+    - users.role
+    - profiles.user_id
+  query_count_expected: 2
+  nplus_one_risk: false
+  eager_loads: [profile, roles]
+
+# ── Performance Targets ──────────────────────────────────────────
+performance:
+  response_time_ms:
+    p50: < 150
+    p95: < 300
+    p99: < 500
+    max: 1000
+  payload_size_kb:
+    list: < 100
+    detail: < 50
+  concurrent_users: 50
+  queries_per_request: <= 3
+  cache_strategy: "redis | null"
+
+# ── Clean Code ───────────────────────────────────────────────────
+clean_code:
+  controller_lines: 45
+  service_lines_if_any: 120
+  validation_separate: true|false
+  uses_resource_transformer: true|false
+  has_query_scopes: true|false
+  exceptions_handled: true|false
+  logging_included: true|false
+  single_responsibility: true|false
+
+# ── Optimization Suggestions (if any) ────────────────────────────
+optimizations:
+  - "Add composite index on (status, created_at) for list queries"
+  - "Eager load profile to avoid N+1"
+  - "Cache role listing for 5 minutes — rarely changes"
+  - "Use cursor pagination for large datasets"
+
 
 Each endpoint gets **ALL** of the following scenarios:
 

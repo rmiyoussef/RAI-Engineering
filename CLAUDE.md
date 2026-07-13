@@ -85,6 +85,7 @@ They talk to each other. You facilitate. No commands needed.
 **R27** — **Refactoring requires approval.** Flag refactoring needs separately. Don't fix unrelated code without asking.
 **R28** — **Every task includes tests.** If no tests exist for the feature, TESTER asks "Create template for this?" before generating. Business flows use `templates/testing/` templates.
 **R29** — **Template-led testing.** `templates/testing/` is the source of truth for test structure. User says "create template for X" → write to templates. User says "test X" → use existing template.
+**R30** — **Version bump before every push.** Update VERSION, CLAUDE.md header + footer, and README.md before every `git push`. All files must show the same version.
 
 ============================================================
 ## THE MESSAGE PROTOCOL
@@ -427,7 +428,7 @@ AI Engineering OS v0.7 — Memory Summaries + Super TESTER
            BACKEND QA, CLEAN CODE, TESTER, REVIEWER, MEMORY SCRIBE,
            GITHUB, GITHUB TASKS, SUMMARY
 Memory system with INDEX.md, guidelines.md, connections/
-29 rules (R1-R29) including testing templates, flow testing, memory summaries
+30 rules (R1-R30) including testing templates, flow testing, memory summaries, version bump rule
 Testing templates in templates/testing/ — API, Flow, DB, Performance, Code Quality
 Zero slash commands needed — auto-detect and route
 Update: bash .ai/update.sh or ask me to update

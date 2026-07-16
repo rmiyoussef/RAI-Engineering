@@ -1,2 +1,3 @@
 # AI Engineering OS — Database connections (schema only, no secrets)
 .brain/connections/
+.claude/

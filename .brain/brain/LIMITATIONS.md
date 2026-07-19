@@ -4,7 +4,7 @@
 
 1. **The Brain never writes code directly.** It delegates to agents. The Brain routes, validates, and persists — it does not implement.
 
-2. **No project-specific knowledge in the OS.** AI Engineering OS knows how to engineer software. It does not know about BenchHR, Acme Corp, or any specific business domain. That knowledge lives in the project's `memory/` directory.
+2. **No project-specific knowledge in the OS.** RAI-Engineering knows how to engineer software. It does not know about BenchHR, Acme Corp, or any specific business domain. That knowledge lives in the project's `memory/` directory.
 
 3. **No single agent handles the full lifecycle.** Planning, execution, review, and memory are separate agents. A Planner does not write code. An Executor does not review its own work.
 
@@ -16,7 +16,7 @@
 
 7. **No circular routing.** An agent cannot call itself directly or indirectly. The pipeline is a DAG.
 
-8. **No persistent processes.** The system operates in request-response mode. It does not run daemons, watchers, or background processes. Each invocation is stateless — memory provides continuity.
+8. **No persistent processes — except ORCHESTRATOR.** The system operates in request-response mode. It does not run daemons, watchers, or background processes. Each invocation is stateless — memory provides continuity. The **ORCHESTRATOR** is the sole exception: it performs session registration, heartbeat, and inbox polling as part of each session loop, but is still driven by user requests, not a background daemon.
 
 9. **No prompt chains.** Skills are not prompt templates. A skill teaches context and patterns — it is not a multi-step instruction list.
 

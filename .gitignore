@@ -1,3 +1,8 @@
-# AI Engineering OS — Database connections (schema only, no secrets)
+# RAI-Engineering — Database connections (schema only, no secrets)
 .brain/connections/
+
+# Inter-session ephemeral data (message bus, live session registrations)
+.brain/session-bus/
+.brain/sessions/live/
+
 .claude/

@@ -1,1 +1,1 @@
-v1.1 — .brain/ Full Restructure (agents, rules, brain, templates under .brain/)
+v1.2 — Multi-Session Mesh (ORCHESTRATOR, inter-session bus, session registry)

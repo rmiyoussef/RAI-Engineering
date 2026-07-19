@@ -17,9 +17,9 @@ Before `git push`, update ALL of these:
 |------|----------------|
 | `VERSION` | `vX.Y — Description` |
 | `CLAUDE.md` header | `> **Version:** vX.Y — Description` |
-| `CLAUDE.md` bottom | `AI Engineering OS vX.Y — Description` + rules/agents count |
+| `CLAUDE.md` bottom | `RAI-Engineering vX.Y — Description` + rules/agents count |
 | `README.md` roadmap | Add completed version row + shift planned versions |
-| `README.md` footer | `<small>AI Engineering OS — vX.Y</small>` |
+| `README.md` footer | `<small>RAI-Engineering — vX.Y</small>` |
 | `setup.sh` | Version string in installer output (if displayed) |
 | `update.sh` | Version string in updater output (if displayed) |
 

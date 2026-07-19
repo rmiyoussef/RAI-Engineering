@@ -1,11 +1,11 @@
-# AI Engineering OS
+# RAI-Engineering
 
 **An operating system for AI software engineering.**
 
 Instead of behaving like a chatbot, the AI behaves like an **engineering organization** — with specialized agents that plan, build, review, test, audit, and remember.
 
 ```
-curl -fsSL https://raw.githubusercontent.com/rmiyoussef/AI-Engineering-OS/master/setup.sh | bash
+curl -fsSL https://raw.githubusercontent.com/rmiyoussef/RAI-Engineering/master/setup.sh | bash
 ```
 
 ---
@@ -14,7 +14,7 @@ curl -fsSL https://raw.githubusercontent.com/rmiyoussef/AI-Engineering-OS/master
 
 Most AI coding assistants behave like chatbots — they answer questions, write code on demand, and forget everything between sessions.
 
-AI Engineering OS is different. It turns your AI into a **disciplined engineering team** that:
+RAI-Engineering is different. It turns your AI into a **disciplined engineering team** that:
 
 - **Understands architecture** before touching code
 - **Plans** every change before writing it
@@ -109,7 +109,7 @@ REVIEWER scores 6/10
 
 ```bash
 cd /path/to/your-project
-curl -fsSL https://raw.githubusercontent.com/rmiyoussef/AI-Engineering-OS/master/setup.sh | bash
+curl -fsSL https://raw.githubusercontent.com/rmiyoussef/RAI-Engineering/master/setup.sh | bash
 ```
 
 This creates:
@@ -117,7 +117,7 @@ This creates:
 ```
 your-project/
 ├── CLAUDE.md → .ai/CLAUDE.md     ← The Brain (loaded automatically by Claude Code)
-├── .ai/                          ← AI Engineering OS
+├── .ai/                          ← RAI-Engineering
 │   ├── brain/                    ← System definitions
 │   ├── agents/                   ← Agent roles
 │   ├── skills/                   ← Domain knowledge
@@ -138,7 +138,7 @@ your-project/
 bash .ai/update.sh
 ```
 
-Or just ask: *"Update AI Engineering OS"*
+Or just ask: *"Update RAI-Engineering"*
 
 ### Use It
 
@@ -251,7 +251,7 @@ Key design decisions:
 
 ## Token Optimization — Caveman ULTRA
 
-AI Engineering OS ships with **[Caveman](https://github.com/juliusbrussee/caveman)** at **ULTRA** compression level — built-in token optimization that cuts output tokens by **~67%** without losing technical accuracy.
+RAI-Engineering ships with **[Caveman](https://github.com/juliusbrussee/caveman)** at **ULTRA** compression level — built-in token optimization that cuts output tokens by **~67%** without losing technical accuracy.
 
 ### How It Works
 
@@ -383,7 +383,7 @@ R29: Template-led testing. Templates are the source of truth.
       <b>Rami Youssef</b>
     </a>
     <br>
-    <small>AI Engineering OS — v1.1</small>
+    <small>RAI-Engineering — v1.1</small>
   </sub>
   <br>
 </div>
@@ -392,11 +392,11 @@ R29: Template-led testing. Templates are the source of truth.
 
 ## Development
 
-To work on AI Engineering OS itself:
+To work on RAI-Engineering itself:
 
 ```bash
-git clone git@github.com:rmiyoussef/AI-Engineering-OS.git
-cd AI-Engineering-OS
+git clone git@github.com:rmiyoussef/RAI-Engineering.git
+cd RAI-Engineering
 ```
 
 The `CLAUDE.md` in the root is the **development version** (loads from `./`).

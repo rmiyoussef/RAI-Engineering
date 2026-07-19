@@ -1,6 +1,6 @@
 # Mission
 
-AI Engineering OS transforms an AI chat interface into a disciplined engineering organization.
+RAI-Engineering transforms an AI chat interface into a disciplined engineering organization.
 
 Every interaction follows a repeatable, verifiable process:
 plan → execute → review → persist → learn.

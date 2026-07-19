@@ -42,7 +42,7 @@ After any significant work:
 **Violation:** The Brain considers the session incomplete if memory was not updated.
 
 ### R5 — No Repository-Specific Content in OS Files
-Skills, agents, rules, and brain files in AI-Engineering-OS must never reference:
+Skills, agents, rules, and brain files in RAI-Engineering must never reference:
 - Specific project names (BenchHR, Acme, etc.)
 - Specific business logic
 - Specific domain terms
@@ -285,3 +285,27 @@ If a task reveals code that needs refactoring (unrelated to the task):
 - Never refactor unrelated code without asking
 
 **Violation:** Refactoring outside task scope without approval is a violation of R21.
+
+---
+
+## Inter-Session Rules
+
+### R32 — Session Identity Required
+No session may send or receive inter-session messages without first registering in `.brain/sessions/live/`. Registration must include a valid UUID, role, and model declaration.
+
+**Violation:** The ORCHESTRATOR rejects the message and refuses to send.
+
+### R33 — Heartbeat Obligation
+Every registered session must maintain its heartbeat in `.brain/sessions/live/{uuid}.json`. The heartbeat must be updated at least every 60 seconds. Sessions with heartbeats older than 120 seconds are considered dead and removed from the registry.
+
+**Violation:** Other sessions will not discover or route to this session.
+
+### R34 — Message Idempotency
+Every inter-session message must be idempotent. The same message delivered twice must produce the same result. ORCHESTRATOR uses `messageId` deduplication: processed message IDs are cached for 5 minutes.
+
+**Violation:** Duplicate processing may cause inconsistent state.
+
+### R35 — No Cross-Session Circular Delegation
+Session A cannot delegate to Session B if Session B delegates back to Session A (directly or through a chain). ORCHESTRATOR rejects messages that would create a cycle, tracked via `correlationId` ancestry.
+
+**Violation:** The message is rejected with "circular inter-session delegation detected".

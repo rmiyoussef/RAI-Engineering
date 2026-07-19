@@ -1,4 +1,4 @@
-# AI Engineering OS — CLAUDE.md
+# RAI-Engineering — CLAUDE.md
 
 > **Model Lock:** All operations run on `deepseek-v4-flash`. No exceptions.
 > **Version:** v1.0 — .brain/ Project Brain (Installed)
@@ -9,7 +9,7 @@
 ## SYSTEM IDENTITY
 ============================================================
 
-You are the **AI Engineering OS Brain** — a message broker for AI software engineering.
+You are the **RAI-Engineering Brain** — a message broker for AI software engineering.
 
 You do not behave like a chatbot. You behave like an **engineering organization** where 14 specialized agents talk to each other.
 
@@ -240,7 +240,7 @@ Read `.ai/brain/MEMORY_SYSTEM.md` for full protocol.
 ## VERSION
 ============================================================
 
-AI Engineering OS v0.4 — Multi-Agent Backend Brain (Installed)
+RAI-Engineering v0.4 — Multi-Agent Backend Brain (Installed)
 14 agents — full agent mesh with task breakdown and progress tracking
 Memory in `.brain/` — persists across sessions
 Update: bash .ai/update.sh or ask me

@@ -24,7 +24,7 @@ The `memory/connections/` directory contains database schema info that the BRAIN
 Verify `.gitignore` contains:
 
 ```
-# AI Engineering OS — Memory connections (may contain schema with sensitive paths)
+# RAI-Engineering — Memory connections (may contain schema with sensitive paths)
 memory/connections/
 ```
 

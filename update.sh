@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 #
-# AI Engineering OS — Update Script
+# RAI-Engineering — Update Script
 # Updates the AI Brain in your project to the latest version from GitHub.
 #
 # Usage:
 #   bash .ai/update.sh
-#   curl -fsSL https://raw.githubusercontent.com/rmiyoussef/AI-Engineering-OS/master/update.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/rmiyoussef/RAI-Engineering/master/update.sh | bash
 #
 # Or via Claude:
-#   "Update the AI Engineering OS to the latest version"
+#   "Update the RAI-Engineering to the latest version"
 
 set -euo pipefail
 
-REPO="rmiyoussef/AI-Engineering-OS"
+REPO="rmiyoussef/RAI-Engineering"
 BRANCH="master"
 AI_DIR=".ai"
 RED='\033[0;31m'
@@ -22,13 +22,13 @@ YELLOW='\033[1;33m'
 NC='\033[0m'
 
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${CYAN}  AI Engineering OS — Updater${NC}"
+echo -e "${CYAN}  RAI-Engineering — Updater${NC}"
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
 
 # Check if we're in a project with .ai/ installed
 if [ ! -f "$AI_DIR/CLAUDE.md" ]; then
-    echo -e "${RED}⚠  AI Engineering OS is not installed in this project.${NC}"
+    echo -e "${RED}⚠  RAI-Engineering is not installed in this project.${NC}"
     echo "   Run the installer first:"
     echo "   curl -fsSL https://raw.githubusercontent.com/$REPO/$BRANCH/setup.sh | bash"
     echo ""
@@ -197,7 +197,7 @@ fi
 # Exit if version already latest (only caveman needed)
 if [ "$NEEDS_UPDATE" = false ]; then
     echo ""
-    echo -e "${GREEN}✅  AI Engineering OS already at latest version. Caveman checked.${NC}"
+    echo -e "${GREEN}✅  RAI-Engineering already at latest version. Caveman checked.${NC}"
     echo ""
     exit 0
 fi
@@ -208,7 +208,7 @@ download_file "update.sh"   "$AI_DIR/update.sh"
 chmod +x "$AI_DIR/update.sh"
 
 echo ""
-echo -e "${GREEN}✅  AI Engineering OS updated successfully!${NC}"
+echo -e "${GREEN}✅  RAI-Engineering updated successfully!${NC}"
 echo ""
 
 NEW_VERSION=$(cat "$AI_DIR/VERSION")

@@ -24,9 +24,9 @@ Every message between agents follows this structure:
 
 ```json
 {
-  "from": "planner | executor | reviewer | backend_qa | tester | clean_code | archivist | database | security | architect | memory | github | github_tasks | summary | brain",
-  "to": "planner | executor | reviewer | backend_qa | tester | clean_code | archivist | database | security | architect | memory | github | github_tasks | summary | brain",
-  "type": "request | response | delegate | consult | escalate | error | done",
+  "from": "planner | executor | reviewer | backend_qa | tester | clean_code | archivist | database | security | architect | memory | github | github_tasks | summary | orchestrator | brain | inter_session",
+  "to": "planner | executor | reviewer | backend_qa | tester | clean_code | archivist | database | security | architect | memory | github | github_tasks | summary | orchestrator | brain",
+  "type": "request | response | delegate | consult | escalate | error | done | inter_session_request | inter_session_delegate | inter_session_consult | inter_session_done | inter_session_error",
   "session": "<uuid>",
   "context": {
     "task": "User's original request",
@@ -47,6 +47,11 @@ Every message between agents follows this structure:
 | `escalate` | "I can't resolve this — needs human input" |
 | `error` | "Something went wrong" |
 | `done` | "Task complete, here's my output" |
+| `inter_session_request` | "I need information from another session" — cross-session request |
+| `inter_session_delegate` | "Another session, take over this work" — cross-session delegation |
+| `inter_session_consult` | "Another session, review this" — cross-session consultation |
+| `inter_session_done` | "Cross-session task complete" — response to inter-session delegate/request |
+| `inter_session_error` | "Cross-session error" — error response to inter-session message |
 
 ---
 
@@ -112,6 +117,25 @@ Brain: "I need the user's input on this"
 Brain resumes the workflow
 ```
 
+### Pattern 5: Inter-Session Message (inter_session_*)
+
+```
+Any agent: "I need another session to handle this work"
+    |
+Brain detects inter_session_* type
+    |
+Brain checks session registry for target session
+    |
+    ├── Target alive → Brain writes message to outbox
+    |   └── Returns correlation ID to sender
+    |
+    └── Target dead → Brain returns error "session not found"
+        |
+Sender polls ORCHESTRATOR for response (by correlation ID)
+    OR
+Sender continues asynchronously (fire-and-forget)
+```
+
 ---
 
 ## The Agent Mesh
@@ -142,9 +166,10 @@ This is how the agents are connected. Any agent can reach any other agent.
    └────┬─────┘       └──────────┘       └──────────┘
         │                                    │
         ▼                                    ▼
-   ┌──────────┐                       ┌──────────┐
-   │  GITHUB  │                       │  TESTER  │
-   └──────────┘                       └──────────┘
+   ┌──────────┐     ┌──────────────┐    ┌──────────┐
+   │  GITHUB  │     │ORCHESTRATOR  │    │  TESTER  │
+   └──────────┘     │(session mesh)│    └──────────┘
+                    └──────────────┘
 ```
 
 ### Who Talks to Whom
@@ -203,6 +228,12 @@ This is how the agents are connected. Any agent can reach any other agent.
 | | MEMORY | "Document what was done" |
 | | SUMMARY | "Generate professional summary with tables" |
 | | GITHUB | "Create staging branch and PR" |
+| **ORCHESTRATOR** | PLANNER | "Route incoming inter-session task to you" |
+| | EXECUTOR | "Another session delegated work — here are the specs" |
+| | REVIEWER | "Another session wants a code review" |
+| | ARCHIVIST | "Another session needs schema info — read and respond" |
+| | MEMORY | "Have we talked to this session before?" |
+| | Brain | "Register, poll inbox, deregister" |
 
 ---
 
@@ -235,7 +266,12 @@ User request arrives
     |
 [8] BRAIN creates session UUID
     |
-[9] BRAIN routes to PLANNER (or appropriate agent based on task type)
+[9] BRAIN calls ORCHESTRATOR for session init
+    ├── Register in .brain/sessions/live/
+    ├── Poll inbox for pending inter-session messages
+    └── Discover peers in session registry
+    |
+[10] BRAIN routes to PLANNER (or appropriate agent based on task type)
 ```
 
 **R17** says: Always read guidelines first. If missing, ARCHITECT creates it.
@@ -371,6 +407,9 @@ Every message that passes through the Brain is validated:
 | Payload matches recipient's schema | Return to sender with validation errors |
 | No circular delegation | Reject with "circular delegation detected" |
 | Model is deepseek-v4-flash | Reject with "model lock violation" |
+| Inter-session sender is registered | Reject with "unregistered session" |
+| Inter-session target exists in registry | Reject with "target session not found" |
+| Inter-session target heartbeat is fresh | Queue message (session may return) |
 
 ---
 
@@ -383,6 +422,8 @@ Every message that passes through the Brain is validated:
 | Agent escalates | Brain pauses workflow, presents to user |
 | Agent times out | Brain: "Agent X did not respond" |
 | Circular delegation | Brain rejects, returns error to originator |
+| Inter-session target not found | Brain returns error to sender: "session not found" |
+| Inter-session message expired (TTL) | Brain drops silently, returns timeout to sender |
 
 ---
 
@@ -391,16 +432,24 @@ Every message that passes through the Brain is validated:
 ```
 Session created (UUID)
   │
-  ├─► Agent A sends message to Brain
-  ├─► Brain validates and routes to Agent B
+  ├─► ORCHESTRATOR registers in .brain/sessions/live/
+  ├─► ORCHESTRATOR polls inbox for pending inter-session messages
+  ├─► ORCHESTRATOR discovers peers in session registry
+  │
+  ├─► Agent A sends message to Brain (local or inter-session)
+  ├─► Brain validates and routes to Agent B (or to outbox for another session)
   ├─► Agent B responds to Brain
   ├─► Brain validates and routes back to Agent A
+  │
+  ├─► ORCHESTRATOR updates heartbeat
+  ├─► ORCHESTRATOR polls inbox
   │
   └─► Repeat until terminal state
         │
         ├── all_done: all agents report complete
         ├── escalated: user input needed
-        └── error: unrecoverable failure
+        ├── error: unrecoverable failure
+        └── session_end: ORCHESTRATOR deregisters
 ```
 
 ---
@@ -419,4 +468,5 @@ Session created (UUID)
 10. **The Brain never manages databases.** That's DATABASE's job.
 11. **The Brain never does security.** That's SECURITY's job.
 12. **The Brain never architects.** That's ARCHITECT's job.
-13. **The Brain only routes, validates, and persists.**
+13. **The Brain never orchestrates sessions.** That's ORCHESTRATOR's job.
+14. **The Brain only routes, validates, and persists.**

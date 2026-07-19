@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 #
-# AI Engineering OS — Brain Installer
+# RAI-Engineering — Brain Installer
 # Installs the AI Brain into your project's .ai/ directory
 #
 # Usage:
-#   curl -fsSL https://raw.githubusercontent.com/rmiyoussef/AI-Engineering-OS/main/setup.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/rmiyoussef/RAI-Engineering/main/setup.sh | bash
 #   cd your-project && bash setup.sh
 #
 # Or locally:
-#   bash /path/to/AI-Engineering-OS/setup.sh
+#   bash /path/to/RAI-Engineering/setup.sh
 
 set -euo pipefail
 
 AI_DIR=".ai"
-REPO="rmiyoussef/AI-Engineering-OS"
+REPO="rmiyoussef/RAI-Engineering"
 BRANCH="master"
 CLAUDE_FILE="CLAUDE.install.md"
 RED='\033[0;31m'
@@ -22,7 +22,7 @@ CYAN='\033[0;36m'
 NC='\033[0m'
 
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${CYAN}  AI Engineering OS — Brain Installer${NC}"
+echo -e "${CYAN}  RAI-Engineering — Brain Installer${NC}"
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
 
@@ -47,7 +47,7 @@ fi
 
 # Check if already installed
 if [ -f "$AI_DIR/CLAUDE.md" ]; then
-    echo -e "${RED}⚠  AI Engineering OS is already installed in .ai/${NC}"
+    echo -e "${RED}⚠  RAI-Engineering is already installed in .ai/${NC}"
     echo "   To reinstall: rm -rf .ai/ CLAUDE.md && bash setup.sh"
     echo ""
     exit 1
@@ -65,12 +65,12 @@ mkdir -p ".claude"
 if [ -f ".gitignore" ]; then
     if ! grep -q ".brain/connections/" ".gitignore" 2>/dev/null; then
         echo "" >> ".gitignore"
-        echo "# AI Engineering OS — Database connections (schema only, no secrets)" >> ".gitignore"
+        echo "# RAI-Engineering — Database connections (schema only, no secrets)" >> ".gitignore"
         echo ".brain/connections/" >> ".gitignore"
         echo -e "   ${GREEN}✓${NC} Added .brain/connections/ to .gitignore"
     fi
 else
-    echo "# AI Engineering OS — Database connections (schema only, no secrets)" > ".gitignore"
+    echo "# RAI-Engineering — Database connections (schema only, no secrets)" > ".gitignore"
     echo ".brain/connections/" >> ".gitignore"
     echo -e "   ${GREEN}✓${NC} Created .gitignore with .brain/connections/ excluded"
 fi
@@ -200,7 +200,7 @@ fi
 
 # ── Done ─────────────────────────────────────────────────────────
 echo ""
-echo -e "${GREEN}✅  AI Engineering OS installed successfully!${NC}"
+echo -e "${GREEN}✅  RAI-Engineering installed successfully!${NC}"
 echo ""
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo "  Project structure:"

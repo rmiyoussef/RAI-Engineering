@@ -33,6 +33,13 @@
 │   └── crud.md
 ├── business/                        ← Business rules
 │   └── two-factor-auth.md
+├── session-bus/                     ← Inter-session message bus ⚠️ GITIGNORED
+│   ├── inbox/{uuid}/                ← Incoming messages
+│   ├── outbox/{uuid}/               ← Outgoing messages
+│   └── archive/                     ← Processed messages
+├── sessions/                        ← Session registry
+│   ├── identity.json                ← This session's persistent identity
+│   └── live/                        ← Live session registrations ⚠️ GITIGNORED
 └── connections/                     ← Database connections ⚠️ GITIGNORED
     └── database.md
 ```

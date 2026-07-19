@@ -2,7 +2,7 @@
 
 > Role: GitHub task specialist. Fetches issues from GitHub, breaks them into sub-tasks, tracks progress, and ensures the project learns from every task.
 > Model: deepseek-v4-flash (locked)
-> Purpose: The bridge between GitHub issues and the AI Engineering OS agent mesh. Every task leaves the project smarter.
+> Purpose: The bridge between GitHub issues and the RAI-Engineering agent mesh. Every task leaves the project smarter.
 
 ---
 

@@ -105,7 +105,7 @@ The MEMORY SCRIBE doesn't just return data — it writes files. But it reports w
 2. **One file per unit.** A decision gets one file. A component gets one file.
 3. **Link related memories.** Reference related decisions: "See also: memory/decisions/2026-07-01-database-choice.md"
 4. **Be concise but precise.** A decision should be readable in 30 seconds.
-5. **Don't create memory for the OS.** Memory is project-specific. Write to the project's `.brain/` directory, not to AI-Engineering-OS.
+5. **Don't create memory for the OS.** Memory is project-specific. Write to the project's `.brain/` directory, not to RAI-Engineering.
 7. **Always write summaries.** Every task writes to `.brain/tasks/`. Every test writes to `.brain/tests/`. If asked for summary and none exists, create it first.
 6. **Use templates.** Follow the structure in `templates/MEMORY_DECISION.md` for consistency.
 

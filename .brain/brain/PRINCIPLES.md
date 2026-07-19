@@ -19,7 +19,7 @@ The Brain validates every input and every output. Bad data stops at the border. 
 The OS knows how to engineer software, not how to build Laravel apps. Domain knowledge (Laravel, React, Redis) lives in Skills. The Brain knows patterns — routing, validation, pipeline, memory, review — and delegates domain specifics.
 
 ## 7. Versioned Product
-AI Engineering OS has releases. Projects pin a version and upgrade deliberately. Breaking changes are documented. Changelogs are enforced.
+RAI-Engineering has releases. Projects pin a version and upgrade deliberately. Breaking changes are documented. Changelogs are enforced.
 
 ## 8. Testable Pieces
 Every agent, every skill, every rule can be tested in isolation. Mock the input, assert the output. If you can't test it in isolation, it's coupled wrong.
@@ -28,4 +28,4 @@ Every agent, every skill, every rule can be tested in isolation. Mock the input,
 Start simple. Add layers as the project grows. Don't build scaffolding for problems you don't have yet. The system must work well with just the Brain and one agent before you add a second.
 
 ## 10. Reusable Across Projects
-Nothing exists only because it's useful today. Every file must be designed for reuse. If a skill references a specific project, it's not a skill — it's a note. Skills live in AI Engineering OS. Memories live in the project.
+Nothing exists only because it's useful today. Every file must be designed for reuse. If a skill references a specific project, it's not a skill — it's a note. Skills live in RAI-Engineering. Memories live in the project.

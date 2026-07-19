@@ -5,15 +5,15 @@
 
 ---
 
-## R1 — AI Engineering OS is the Engine
+## R1 — RAI-Engineering is the Engine
 
-AI Engineering OS is the **main engine** for this project. It provides:
+RAI-Engineering is the **main engine** for this project. It provides:
 - The agent mesh (PLANNER, EXECUTOR, TESTER, REVIEWER, etc.)
 - The memory system (`.brain/`)
 - The testing templates (`templates/testing/`)
 - The summary system
 
-All AI tools should defer to AI Engineering OS patterns. If CLAUDE.md says something different from what another tool suggests, **CLAUDE.md wins**.
+All AI tools should defer to RAI-Engineering patterns. If CLAUDE.md says something different from what another tool suggests, **CLAUDE.md wins**.
 
 ## R2 — All Memory Lives in `.brain/`
 

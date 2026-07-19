@@ -1,4 +1,4 @@
-# AI Engineering OS — Architecture
+# RAI-Engineering — Architecture
 
 > Version 0.2 — Agent Mesh
 
@@ -123,10 +123,10 @@ Agents communicate with each other through the Brain using the **Message Protoco
 
 ### Memory Is Project-Specific
 
-Memory lives **in the project**, not in AI Engineering OS. The OS provides the interface and schema; the project provides the storage.
+Memory lives **in the project**, not in RAI-Engineering. The OS provides the interface and schema; the project provides the storage.
 
 ```
-AI-Engineering-OS/              # OS source project (development)
+RAI-Engineering/              # OS source project (development)
 ├── CLAUDE.md                   # Development version (loads from ./)
 ├── CLAUDE.install.md           # Installable version (loads from .ai/)
 ├── brain/, agents/, skills/...
@@ -288,7 +288,7 @@ BRAIN responds to user with full summary
 5. **Memory is a first-class citizen.** Every decision, every lesson, every architectural change is indexed. Nothing is lost.
 6. **Validation at boundaries.** The Brain validates every input and output.
 7. **Framework-agnostic core.** The OS knows engineering patterns. Domain knowledge lives in Skills.
-8. **Versioned product.** AI Engineering OS has releases. Projects pin a version.
+8. **Versioned product.** RAI-Engineering has releases. Projects pin a version.
 9. **Testable pieces.** Every agent can be tested in isolation.
 10. **Reusable across projects.** Nothing exists only because it's useful today.
 
@@ -325,9 +325,9 @@ BRAIN responds to user with full summary
 | v0.5 | **Memory enhancements** | Memory querying, linking, lifecycle management | 🔲 Planned |
 | v0.6 | **GitHub release workflow** | Changelog, semantic versioning, release automation | 🔲 Planned |
 | v0.7 | **Templates expansion** | Project scaffolding, agent templates, skill templates | 🔲 Planned |
-| v0.8 | **Install system** | Install script that bootstraps any repo with AI-Engineering-OS | 🔲 Planned |
+| v0.8 | **Install system** | Install script that bootstraps any repo with RAI-Engineering | 🔲 Planned |
 | v1.0 | **Stable** | Battle-tested, documented, versioned, with upgrade guides | 🔲 Planned |
 
 ---
 
-*This document is the source of truth for AI Engineering OS architecture. All implementation must conform to it. Changes to this document require full team consensus.*
+*This document is the source of truth for RAI-Engineering architecture. All implementation must conform to it. Changes to this document require full team consensus.*

@@ -1,6 +1,6 @@
 # Installation
 
-Install the **AI Engineering OS Brain** into any project.
+Install the **RAI-Engineering Brain** into any project.
 
 ## Prerequisites
 
@@ -15,7 +15,7 @@ One command from your project root:
 
 ```bash
 cd /path/to/your-project
-curl -fsSL https://raw.githubusercontent.com/rmiyoussef/AI-Engineering-OS/master/setup.sh | bash
+curl -fsSL https://raw.githubusercontent.com/rmiyoussef/RAI-Engineering/master/setup.sh | bash
 ```
 
 The script will:
@@ -35,15 +35,15 @@ cd /path/to/your-project
 mkdir -p .ai/{brain,agents,skills,rules,templates,workflows}
 
 # 2. Copy all OS files
-cp -r /path/to/AI-Engineering-OS/brain/*.md .ai/brain/
-cp -r /path/to/AI-Engineering-OS/agents/*.md .ai/agents/
-cp -r /path/to/AI-Engineering-OS/skills/*.md .ai/skills/
-cp -r /path/to/AI-Engineering-OS/rules/*.md .ai/rules/
-cp -r /path/to/AI-Engineering-OS/templates/*.md .ai/templates/
-cp -r /path/to/AI-Engineering-OS/workflows/*.md .ai/workflows/
+cp -r /path/to/RAI-Engineering/brain/*.md .ai/brain/
+cp -r /path/to/RAI-Engineering/agents/*.md .ai/agents/
+cp -r /path/to/RAI-Engineering/skills/*.md .ai/skills/
+cp -r /path/to/RAI-Engineering/rules/*.md .ai/rules/
+cp -r /path/to/RAI-Engineering/templates/*.md .ai/templates/
+cp -r /path/to/RAI-Engineering/workflows/*.md .ai/workflows/
 
 # 3. Copy the installable CLAUDE.md
-cp /path/to/AI-Engineering-OS/CLAUDE.install.md .ai/CLAUDE.md
+cp /path/to/RAI-Engineering/CLAUDE.install.md .ai/CLAUDE.md
 
 # 4. Create project memory directory
 mkdir -p memory/{decisions,architecture,lessons,sessions,business}
@@ -60,7 +60,7 @@ Same command, works from anywhere:
 
 ```bash
 cd /path/to/your-project
-curl -fsSL https://raw.githubusercontent.com/rmiyoussef/AI-Engineering-OS/master/setup.sh | bash
+curl -fsSL https://raw.githubusercontent.com/rmiyoussef/RAI-Engineering/master/setup.sh | bash
 ```
 
 ---
@@ -178,7 +178,7 @@ To update the Brain after installing:
 
 ```bash
 # Replace the .ai/ files with the new version
-cp -r /path/to/new/AI-Engineering-OS/.ai/* .ai/
+cp -r /path/to/new/RAI-Engineering/.ai/* .ai/
 
 # Or re-run setup
 bash setup.sh

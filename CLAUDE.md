@@ -1,7 +1,7 @@
 # RAI-Engineering — CLAUDE.md
 
 > **Model Lock:** All operations run on `deepseek-v4-flash`. No exceptions.
-> **Version:** v1.2 — Multi-Session Mesh (ORCHESTRATOR, inter-session bus, session registry)
+> **Version:** v1.3 — Domain Isolation Protocol (per-domain plans, rules, skills, memory)
 
 ============================================================
 ## SYSTEM IDENTITY
@@ -40,6 +40,18 @@ They talk to each other. You facilitate. No commands needed.
 
 ============================================================
 ## PRINCIPLES
+
+============================================================
+## DOMAIN ISOLATION
+============================================================
+
+Every task belongs to exactly one domain: **Backend**, **Frontend**, **Mobile (iOS)**, **Mobile (Android)**, or **DevOps/System Management**.
+
+Domain knowledge (plans, rules, skills, memory) is stored in isolated subtrees under `.brain/{domain}/{project-name}/`. No domain leaks into another.
+
+If a task spans multiple domains, each domain keeps its own subtree. Cross-domain references use explicit relative links — never duplicate content.
+
+Framework-specific rules/skills go inside the domain folder, scoped to the declared framework (e.g. `backend/laravel/rules/query-optimization.md`, not a generic `backend/rules/`).
 ============================================================
 
 1. **Single Responsibility** — Every agent does one thing.
@@ -61,7 +73,7 @@ They talk to each other. You facilitate. No commands needed.
 **R2** — Review before accepting. Every code change must be reviewed.
 **R3** — Everything is tested. Every change includes or updates tests. If a task has no tests, TESTER asks user to create test template.
 **R4** — Write memory after every session. Decisions, lessons, architecture changes.
-**R5** — No project-specific content in OS files. That belongs in `.brain/memory/`.
+**R5** — No project-specific content in OS files. That belongs in `.brain/{domain}/{project}/memory/`.
 **R6** — Structured output only. Agents return defined schemas.
 **R7** — No circular delegation. Agents cannot call themselves.
 **R8** — Read memory before writing. Past decisions inform current work.
@@ -73,10 +85,10 @@ They talk to each other. You facilitate. No commands needed.
 **R14** — **Escalate after 3 failures.** Don't keep trying the same approach.
 **R15** — **One message at a time.** No parallel conversations per agent.
 **R16** — **Message protocol compliance.** Every message must follow the schema.
-**R17** — **Always read guidelines first.** Read `.brain/memory/guidelines.md` before every task.
-**R18** — **Always read memory before writing.** Check `.brain/memory/INDEX.md`, `.brain/memory/decisions/`, `.brain/memory/lessons/`.
-**R19** — **Update guidelines when architecture changes.** Keep `.brain/memory/guidelines.md` current.
-**R20** — **Never push connection info to Git.** `.brain/memory/connections/` is gitignored.
+**R17** — **Always read guidelines first.** Read `.brain/{domain}/{project}/memory/guidelines.md` before every task.
+**R18** — **Always read memory before writing.** Check `.brain/{domain}/{project}/memory/INDEX.md`, `.brain/{domain}/{project}/memory/decisions/`, `.brain/{domain}/{project}/memory/lessons/`.
+**R19** — **Update guidelines when architecture changes.** Keep `.brain/{domain}/{project}/memory/guidelines.md` current.
+**R20** — **Never push connection info to Git.** `.brain/{domain}/*/connections/` is gitignored (all domain subtrees).
 **R21** — **Always ask before database changes, file deletions, file modifications, or running commands.** Show a full approval box with database actions, commands, files to change, and risks. Wait for explicit yes/no.
 **R22** — **Read-only tasks don't need approval.** Only mutations (database, files, commands).
 **R23** — **Repeat approval if context changes.** If the plan changes significantly after approval, ask again.
@@ -87,17 +99,33 @@ They talk to each other. You facilitate. No commands needed.
 **R28** — **Every task includes tests.** If no tests exist for the feature, TESTER asks "Create template for this?" before generating. Business flows use `.brain/templates/testing/` templates.
 **R29** — **Template-led testing.** `.brain/templates/testing/` is the source of truth for test structure. User says "create template for X" → write to templates. User says "test X" → use existing template.
 **R30** — **Version bump before every push.** Update VERSION, CLAUDE.md header + footer, and README.md before every `git push`. All files must show the same version.
-**R31** — **Always write summaries.** Every task, test, or discussion writes a summary to `.brain/tasks/` or `.brain/tests/`. If user asks for a summary and none exists — create it before responding. Summaries are team-readable with tables, icons, security, perf, DB, clean code.
+**R31** — **Always write summaries.** Every task, test, or discussion writes a summary to `.brain/{domain}/{project}/memory/tasks/` or `.brain/{domain}/{project}/memory/tests/`. If user asks for a summary and none exists — create it before responding. Summaries are team-readable with tables, icons, security, perf, DB, clean code.
+
+### R36 — Domain Identity Required
+Every task must declare its domain (Backend, Frontend, Mobile iOS, Mobile Android, DevOps) before work begins. If the domain is unknown, the Brain must ask the user before proceeding. Never guess or assume the domain.
+
+### R37 — Domain-Isolated Storage
+Plans, rules, skills, and memory for one domain must never be stored in or read from another domain's subtree. Each domain is self-contained under `.brain/{domain}/{project-name}/`.
+
+### R38 — Cross-Domain Reference Protocol
+When a task spans multiple domains, explicitly reference the other domain's subtree using relative links — never duplicate content across domains. Cross-domain references must be explicit, not implicit.
+
+### R39 — Framework-Scoped Rules
+Rules and skills within a domain folder must be scoped to the declared framework (e.g., `backend/laravel/rules/query-optimization.md`, not a generic `backend/rules/query-optimization.md`). If multiple frameworks exist in one domain, each gets its own directory or file prefix.
+
+### R40 — Domain Folder Initialization
+When starting work on a new project in a domain, check if `.brain/{domain}/{project-name}/` exists first. If it doesn't, create it with `plans/`, `rules/`, `skills/`, and `memory/` subdirectories before proceeding. Never write domain knowledge without first verifying the target subtree exists.
+
 **R32** — **Session identity required.** Every session must register before sending/receiving inter-session messages.
 **R33** — **Heartbeat obligation.** Registered sessions must update their heartbeat every 60s.
 **R34** — **Message idempotency.** Inter-session messages must be safe to replay.
 **R35** — **No cross-session circular delegation.** Session A → B → A is rejected.
 
 ## Summary Force Rule
-- User: "Show me summary for X" → check `.brain/tests/` or `.brain/tasks/`
+- User: "Show me summary for X" → check `.brain/{domain}/{project}/memory/tests/` or `.brain/{domain}/{project}/memory/tasks/`
 - If found → read it
 - If not found → create it immediately from available data, save to `.brain/`, then respond
-- User: "Enhance task X based on summary" → read `.brain/tasks/X.md` first, understand past work, then proceed
+- User: "Enhance task X based on summary" → read `.brain/{domain}/{project}/memory/tasks/X.md` first, understand past work, then proceed
 
 ============================================================
 ## THE MESSAGE PROTOCOL
@@ -147,37 +175,44 @@ Every request starts here:
 ```
 [1] Load .brain/brain/MISSION.md, PRINCIPLES.md, RULES.md, LIMITATIONS.md, SYSTEM.md
     |
-[2] Read .brain/memory/INDEX.md          ← What does the project know?
+[2] **DETERMINE DOMAIN** — Ask user or derive from task context
+    |   ├─► Backend / Frontend / Mobile iOS / Mobile Android / DevOps
+    |   └─► If project spans multiple domains, identify primary domain
+    |
+[3] **CHECK DOMAIN FOLDER** — `.brain/{domain}/{project-name}/` exists?
+    |   If not → create with plans/, rules/, skills/, memory/ subdirs
+    |
+[4] Read .brain/INDEX.md                 ← What does the project know?
     |   (if missing, will be created after first session)
     |
-[3] Read .brain/memory/guidelines.md     ← Project conventions & structure
+[5] Read `.brain/{domain}/{project}/memory/guidelines.md`
     |   (if missing → call ARCHITECT to analyze project and create it)
     |
-[4] Read .brain/memory/decisions/        ← Past decisions about this area
+[6] Read `.brain/{domain}/{project}/memory/decisions/`  ← Past decisions
     |
-[5] Read .brain/memory/architecture/     ← Current system map
+[7] Read `.brain/{domain}/{project}/memory/architecture/`  ← System map
     |
-[6] Read .brain/memory/lessons/          ← Known pitfalls
+[8] Read `.brain/{domain}/{project}/memory/lessons/`  ← Known pitfalls
     |
-[7] If task involves database:
-    |   ├─► Read .brain/memory/connections/database.md
+[9] If task involves database:
+    |   ├─► Read `.brain/{domain}/{project}/connections/database.md`
     |   └─► Call DATABASE agent for schema context
     |
-[8] If task involves security:
+[10] If task involves security:
     |   └─► Call SECURITY agent for threat assessment
     |
-[9] If task involves testing:
-    |   ├─► Read `.brain/templates/testing/` for existing test templates
-    |   ├─► Read `.brain/rules/TESTING_RULES.md` for coverage rules
+[11] If task involves testing:
+    |   ├─► Read `.brain/templates/testing/` for test templates
+    |   ├─► Read `.brain/{domain}/{project}/rules/TESTING_RULES.md`
     |   └─► Route to TESTER agent
     |
-[10] **ORCHESTRATOR session init** (every session startup):
+[12] **ORCHESTRATOR session init** (every session startup):
     |   ├─► Register in .brain/sessions/live/{sessionId}.json
     |   ├─► Poll .brain/session-bus/inbox/ for pending messages
     |   ├─► Discover peers in .brain/sessions/live/
     |   └─► Update heartbeat timestamp
     |
-[11] Route to appropriate agent based on task type
+[13] Route to appropriate agent based on task type
 ```
 
 ============================================================
@@ -196,12 +231,12 @@ Every request starts with session lifecycle management:
 Read `.brain/brain/INTER_SESSION.md` for the full protocol.
 
 ### Phase 0a: Project Analysis (ARCHITECT leads)
-If `.brain/memory/guidelines.md` is missing, ARCHITECT analyzes the project:
+If `.brain/{domain}/{project}/memory/guidelines.md` is missing, ARCHITECT analyzes the project:
 - Reads directory structure, configs, existing patterns
 - Identifies architecture pattern, custom commands, middleware
 - Identifies database schema (via DATABASE agent)
-- Creates `.brain/memory/guidelines.md`
-- Creates `.brain/memory/connections/database.md` (gitignored)
+- Creates `.brain/{domain}/{project}/memory/guidelines.md`
+- Creates `.brain/{domain}/{project}/connections/database.md` (gitignored)
 
 Read `.brain/agents/ARCHITECT.md` for the full schema.
 
@@ -219,10 +254,10 @@ Read `.brain/agents/PLANNER.md` for the full schema.
 
 ### Phase 2: Database (DATABASE leads, if needed)
 - Review schema design and migrations
-- Check connection info (stored in `.brain/memory/connections/`)
+- Check connection info (stored in `.brain/{domain}/{project}/connections/`)
 - Analyze queries for missing indexes
 - Flag migration safety issues
-- Update `.brain/memory/connections/database.md` (schema only, no secrets)
+- Update `.brain/{domain}/{project}/connections/database.md` (schema only, no secrets)
 
 Read `.brain/agents/DATABASE.md` for the full schema.
 
@@ -386,15 +421,7 @@ Memory is the project's persistent knowledge. It grows with every session.
 ├── README.md                 ← What .brain/ is
 ├── agents/                   ← Agent definitions (ARCHITECT, PLANNER, etc.)
 ├── brain/                    ← Core system files (MISSION, PRINCIPLES, RULES, SYSTEM)
-├── memory/
-│   ├── guidelines.md         ← Project structure & conventions
-│   ├── decisions/            ← Architecture decisions
-│   ├── architecture/         ← Component maps
-│   ├── lessons/              ← Things learned
-│   ├── sessions/             ← Session summaries
-│   ├── tests/                ← Test summaries (team-ready, per feature)
-│   ├── tasks/                ← Task summaries (files, tests, security, perf)
-│   └── business/             ← Business rules
+├── templates/                ← Summary & testing templates
 ├── session-bus/               ← Inter-session message bus ⚠️ GITIGNORED
 │   ├── inbox/{uuid}/         ← Incoming messages
 │   ├── outbox/{uuid}/        ← Outgoing messages
@@ -402,34 +429,45 @@ Memory is the project's persistent knowledge. It grows with every session.
 ├── sessions/                  ← Session registry
 │   ├── identity.json         ← This session's persistent identity
 │   └── live/                 ← Live session registrations ⚠️ GITIGNORED
-├── skills/                   ← Project code templates
-│   ├── service.md            ← How to create services
-│   ├── controller.md         ← How to create controllers
-│   ├── resource.md           ← How to create API resources
-│   └── crud.md               ← Full CRUD generation
-├── rules/                    ← Project conventions
-├── templates/
-│   ├── summary/              ← Summary templates
-│   └── testing/              ← Test templates
-└── connections/              ← Database connections (gitignored!)
+│
+├── backend/{project}/        ← Backend domain
+│   ├── memory/guidelines.md  ← Project structure & conventions
+│   ├── memory/decisions/     ← Architecture decisions
+│   ├── memory/architecture/  ← Component maps
+│   ├── memory/lessons/       ← Things learned
+│   ├── memory/sessions/      ← Session summaries
+│   ├── memory/tests/         ← Test summaries
+│   ├── memory/tasks/         ← Task summaries
+│   ├── memory/business/      ← Business rules
+│   ├── skills/               ← Code templates
+│   ├── rules/                ← Project conventions
+│   ├── plans/                ← Project plans
+│   └── connections/          ← Database connections ⚠️ GITIGNORED
+│
+├── frontend/{project}/      ← Frontend domain (self-contained)
+│   ├── memory/               ← Frontend knowledge
+│   ├── skills/               ← Frontend code templates
+│   ├── rules/                ← Frontend conventions
+│   └── plans/                ← Frontend plans
+│
+├── mobile-ios/{project}/    ← iOS domain (self-contained)
+├── mobile-android/{project}/← Android domain (self-contained)
+└── devops/{project}/        ← DevOps domain (self-contained)
 ```
 
 ### Git Safety
-- `.brain/agents/`, `.brain/brain/`, `.brain/decisions/`, `.brain/architecture/`,
-  `.brain/lessons/`, `.brain/sessions/` (except `live/`), `.brain/business/`, `.brain/tests/`,
-  `.brain/tasks/`, `.brain/skills/`, `.brain/rules/`, `.brain/templates/`,
-  `.brain/memory/guidelines.md`, `.brain/memory/INDEX.md` — **committed**
-- `.brain/connections/` — **gitignored** (schema data)
+- `.brain/agents/`, `.brain/brain/`, `.brain/backend/*/skills/`, `.brain/backend/*/rules/`, `.brain/backend/*/plans/`, `.brain/backend/*/memory/` (except `connections/`), `.brain/backend/*/memory/decisions/`, `.brain/backend/*/memory/architecture/`, `.brain/backend/*/memory/lessons/`, `.brain/backend/*/memory/sessions/`, `.brain/backend/*/memory/business/`, `.brain/backend/*/memory/tests/`, `.brain/backend/*/memory/tasks/`, `.brain/frontend/*/` (except connections), `.brain/mobile-ios/*/`, `.brain/mobile-android/*/`, `.brain/devops/*/` — **committed**
+- `.brain/backend/*/connections/`, `.brain/frontend/*/connections/`, `.brain/mobile-ios/*/connections/`, `.brain/mobile-android/*/connections/`, `.brain/devops/*/connections/` — **gitignored** (schema data)
 - `.brain/session-bus/` — **gitignored** (ephemeral message queue)
 - `.brain/sessions/live/` — **gitignored** (ephemeral session registrations)
 
 ### Memory Flow
-**Before work:** Read `.brain/memory/INDEX.md` → `.brain/memory/guidelines.md` → `.brain/memory/decisions/` → `.brain/memory/architecture/` → `.brain/memory/lessons/` → `.brain/memory/tests/` → `.brain/memory/tasks/`
-**After work:** MEMORY SCRIBE writes decisions/lessons/sessions/tests/tasks, ARCHITECT updates guidelines, MEMORY SCRIBE updates INDEX.md
+**Before work:** Read `.brain/INDEX.md` → `.brain/{domain}/{project}/memory/guidelines.md` → `.brain/{domain}/{project}/memory/decisions/` → `.brain/{domain}/{project}/memory/architecture/` → `.brain/{domain}/{project}/memory/lessons/` → `.brain/{domain}/{project}/memory/tests/` → `.brain/{domain}/{project}/memory/tasks/`
+**After work:** MEMORY SCRIBE writes decisions/lessons/sessions/tests/tasks, ARCHITECT updates guidelines, MEMORY SCRIBE updates INDEX.md. All writes go to `.brain/{domain}/{project}/memory/`.
 
 **Always write summaries:**
-- After testing → `.brain/memory/tests/{{YYYY-MM-DD}}-{{feature}}.md` (use `.brain/templates/summary/TEST_SUMMARY.md`)
-- After task → `.brain/memory/tasks/{{YYYY-MM-DD}}-{{task-slug}}.md` (use `.brain/templates/summary/TASK_SUMMARY.md`)
+- After testing → `.brain/{domain}/{project}/memory/tests/{{YYYY-MM-DD}}-{{feature}}.md` (use `.brain/templates/summary/TEST_SUMMARY.md`)
+- After task → `.brain/{domain}/{project}/memory/tasks/{{YYYY-MM-DD}}-{{task-slug}}.md` (use `.brain/templates/summary/TASK_SUMMARY.md`)
 - If user asks for summary and none exists → create it before responding
 - These are team-ready: tables, icons, security, perf, DB, clean code, optimizations
 
@@ -483,15 +521,16 @@ Read `.brain/brain/MEMORY_SYSTEM.md` for full protocol.
 ## VERSION
 ============================================================
 
-RAI-Engineering v1.2 — Multi-Session Mesh (ORCHESTRATOR, inter-session bus, session registry)
+RAI-Engineering v1.3 — Domain Isolation Protocol (per-domain plans, rules, skills, memory)
 16 agents: ARCHITECT, PLANNER, ARCHIVIST, DATABASE, SECURITY, EXECUTOR,
            BACKEND QA, CLEAN CODE, TESTER, REVIEWER, MEMORY SCRIBE,
            GITHUB, GITHUB TASKS, SUMMARY, ORCHESTRATOR
-Memory system in .brain/ — AI-tool agnostic, team-wide, auto-summarized
-35 rules (R1-R35) including inter-session rules (R32-R35)
+Domain-isolated .brain/ — per-domain subtrees: backend/, frontend/, mobile-ios/, mobile-android/, devops/
+40 rules (R1-R40) including inter-session rules (R32-R35) and domain isolation rules (R36-R40)
 Testing templates in .brain/templates/testing/ — API, Flow, DB, Performance, Code Quality
-Project skills in .brain/skills/ — service, controller, resource, crud
+Project skills in .brain/{domain}/{project}/skills/ — service, controller, resource, crud
 Multi-session mesh: sessions discover each other, send/receive messages, delegate work
+Domain isolation: Backend, Frontend, Mobile, DevOps knowledge never mixes
 Zero slash commands needed — auto-detect and route
 Update: bash .ai/update.sh or ask me to update
 

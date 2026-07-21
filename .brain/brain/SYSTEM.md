@@ -244,38 +244,46 @@ Every request starts with this sequence before any agent is activated:
 ```
 User request arrives
     |
-[1] BRAIN reads memory/INDEX.md       ← What does the project know?
-    │   (if no INDEX.md, project is new)
+[1] **DETERMINE DOMAIN** — Ask user or derive from task context
+    |   ├─► Backend / Frontend / Mobile iOS / Mobile Android / DevOps
+    |   └─► If project spans multiple domains, identify primary domain
     |
-[2] BRAIN reads memory/guidelines.md  ← What are the project conventions?
-    │   (if no guidelines.md, call ARCHITECT to create from analysis)
+[2] **CHECK DOMAIN FOLDER** — `.brain/{domain}/{project}/` exists?
+    |   If not → create with plans/, rules/, skills/, memory/ subdirs
     |
-[3] BRAIN reads memory/decisions/     ← Past decisions about this area
+[3] BRAIN reads .brain/INDEX.md         ← What does the project know?
+    |   (if no INDEX.md, project is new)
     |
-[4] BRAIN reads memory/architecture/  ← Current system map
+[4] BRAIN reads .brain/{domain}/{project}/memory/guidelines.md
+    |   (if no guidelines.md, call ARCHITECT to create from analysis)
     |
-[5] BRAIN reads memory/lessons/       ← Known pitfalls
+[5] BRAIN reads .brain/{domain}/{project}/memory/decisions/
     |
-[6] If task involves database:
-    ├─► BRAIN reads memory/connections/database.md  ← Schema context
+[6] BRAIN reads .brain/{domain}/{project}/memory/architecture/
+    |
+[7] BRAIN reads .brain/{domain}/{project}/memory/lessons/
+    |
+[8] If task involves database:
+    ├─► BRAIN reads .brain/{domain}/{project}/connections/database.md
     └─► BRAIN calls DATABASE agent
     |
-[7] If task involves security:
-    ├─► BRAIN reads memory/security/  ← Past security audits
+[9] If task involves security:
+    ├─► BRAIN reads .brain/{domain}/{project}/memory/security/
     └─► BRAIN calls SECURITY agent
     |
-[8] BRAIN creates session UUID
+[10] BRAIN creates session UUID
     |
-[9] BRAIN calls ORCHESTRATOR for session init
+[11] BRAIN calls ORCHESTRATOR for session init
     ├── Register in .brain/sessions/live/
     ├── Poll inbox for pending inter-session messages
     └── Discover peers in session registry
     |
-[10] BRAIN routes to PLANNER (or appropriate agent based on task type)
+[12] BRAIN routes to PLANNER (or appropriate agent based on task type)
 ```
 
 **R17** says: Always read guidelines first. If missing, ARCHITECT creates it.
 **R18** says: Always read memory before writing. Check INDEX.md, decisions, lessons.
+**R36** says: Domain must be declared before any work begins.
 
 ## The Workflow
 

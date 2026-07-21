@@ -2,7 +2,7 @@
 
 **An operating system for AI software engineering.**
 
-Instead of behaving like a chatbot, the AI behaves like an **engineering organization** — with specialized agents that plan, build, review, test, audit, and remember.
+Instead of behaving like a chatbot, the AI behaves like an **engineering organization** — with specialized agents that plan, build, review, test, audit, and remember. All project knowledge is organized into **domain-isolated subtrees** so Backend rules never leak into Frontend, and vice versa.
 
 ```
 curl -fsSL https://raw.githubusercontent.com/rmiyoussef/RAI-Engineering/master/setup.sh | bash
@@ -24,13 +24,14 @@ RAI-Engineering is different. It turns your AI into a **disciplined engineering 
 - **Tracks decisions** so nothing is forgotten
 - **Learns project architecture** over time
 - **Optimizes continuously** through self-review loops
+- **Isolates by domain** — Backend, Frontend, Mobile, DevOps each in their own subtree
 - **Can be installed** into any repository, any framework
 
 ---
 
 ## How It Works
 
-The system is built around **9 specialized agents** that talk to each other through the **Brain** (a message broker).
+The system is built around **16 specialized agents** that talk to each other through the **Brain** (a message broker). Before any work begins, the Brain identifies the **domain** (Backend, Frontend, Mobile, or DevOps) and routes to the correct isolated knowledge subtree — so Backend rules never mix with Frontend patterns.
 
 ### The Agent Mesh
 
@@ -39,37 +40,58 @@ The system is built around **9 specialized agents** that talk to each other thro
                     │     ARCHIVIST     │── Knowledge base (reads files)
                     └────────┬──────────┘
                              │
-         ┌───────────────────┼───────────────────┐
-         ▼                   ▼                   ▼
+         ┌───────────────────┼──────────────────────┐
+         ▼                   ▼                      ▼
    ┌──────────┐       ┌──────────┐       ┌──────────┐
    │ PLANNER  │◄─────►│ EXECUTOR │◄─────►│ REVIEWER │
-   └─────┬────┘       └─────┬────┘       └─────┬────┘
+   └─────┬────┘       └─────┬────┘       └────┬─────┘
          │                  │                  │
          ▼                  ▼                  ▼
    ┌──────────┐       ┌──────────┐       ┌──────────┐
-   │  MEMORY  │       │ CLEAN    │       │ BACKEND  │
-   │  SCRIBE  │       │ CODE     │       │   QA     │
-   └──────────┘       └──────────┘       └────┬─────┘
+   │ARCHITECT │       │ CLEAN    │       │ BACKEND  │
+   │          │       │ CODE     │       │   QA     │
+   └─────┬────┘       └──────────┘       └────┬─────┘
          │                                    │
          ▼                                    ▼
-   ┌──────────┐                       ┌──────────┐
-   │  GITHUB  │                       │  TESTER  │
-   └──────────┘                       └──────────┘
+   ┌──────────┐       ┌──────────┐       ┌──────────┐
+   │  MEMORY  │       │ DATABASE │       │ SECURITY │
+   │  SCRIBE  │       │          │       │          │
+   └────┬─────┘       └──────────┘       └──────────┘
+        │                                    │
+        ▼                                    ▼
+   ┌──────────┐     ┌──────────────┐    ┌──────────┐
+   │  GITHUB  │     │ORCHESTRATOR  │    │  TESTER  │
+   │  TASKS   │     │(session mesh)│    │          │
+   └──────────┘     └──────────────┘    └──────────┘
+   │
+   └── GITHUB (PRs & commits)
+
+        ┌─────────────────────────────────┐
+        │   DOMAIN-ISOLATED .brain/       │
+        │  backend/  frontend/            │
+        │  mobile-ios/  android/  devops/ │
+        └─────────────────────────────────┘
 ```
 
 ### The Agents
 
 | Agent | Role | What It Does |
 |-------|------|-------------|
+| **ORCHESTRATOR** | Session Manager | Manages session lifecycle, inter-session message bus, heartbeat, peer discovery |
 | **PLANNER** | Architect | Produces structured plans before any code is written. Lists affected files, risks, dependencies. |
 | **ARCHIVIST** | Librarian | Reads your codebase and answers questions. "What's in the User model?" "What does AuthController do?" |
 | **EXECUTOR** | Builder | Writes code following the plan. Creates/modifies files, runs linters. |
 | **CLEAN CODE** | Refactorer | Fixes SOLID violations, naming, duplication. Extracts services from fat controllers. Never changes behavior. |
 | **BACKEND QA** | Auditor | Deep backend audit: clean code, query optimization (N+1 detection), security (injection, auth, CSRF), test quality. |
+| **SECURITY** | Security Auditor | OWASP Top 10, authentication/authorization audit, input validation, CVSS scoring |
+| **DATABASE** | Database Specialist | Schema design, migration safety, index analysis, query optimization |
 | **TESTER** | Test specialist | Generates tests, fixes brittle tests, ensures coverage. Uses factories, covers edge cases. |
 | **REVIEWER** | Inspector | Scores code 1-10. Checks correctness, performance, security, maintainability. Manages the fix loop. |
 | **MEMORY SCRIBE** | Historian | Writes decisions, lessons, architecture changes to persistent memory. |
+| **SUMMARY** | Documentation Specialist | Produces professional summaries with tables, metrics, security/perf assessments |
+| **ARCHITECT** | System Architect | Creates guidelines, enforces consistency, updates project structure documentation |
 | **GITHUB** | Integrator | Creates branches, commits, and pull requests with full documentation. |
+| **GITHUB TASKS** | Task Manager | Fetches GitHub issues, analyzes requirements, breaks into subtasks, manages delivery |
 
 ### How They Talk to Each Other
 
@@ -77,13 +99,22 @@ Agents don't wait for a pipeline. They **ask each other for help** in real-time:
 
 ```
 PLANNER needs schema info          → calls ARCHIVIST
+PLANNER needs design feedback      → calls REVIEWER, ARCHITECT
 EXECUTOR writes a complex query    → consults BACKEND QA mid-write
 EXECUTOR needs tests               → delegates to TESTER
+EXECUTOR finds messy code          → delegates to CLEAN CODE
+EXECUTOR writes a migration        → consults DATABASE
 REVIEWER finds code quality issues → delegates to CLEAN CODE
-REVIEWER needs security audit      → consults BACKEND QA
+REVIEWER needs security audit      → delegates to SECURITY
+REVIEWER needs DB index review     → consults DATABASE
 BACKEND QA finds missing tests     → delegates to TESTER
+BACKEND QA confirms vulnerability  → escalates to SECURITY for CVSS scoring
 MEMORY SCRIBE needs session data   → calls PLANNER, EXECUTOR, REVIEWER
+ARCHITECT needs project structure  → calls ARCHIVIST for analysis
+GITHUB TASKS breaks down issues    → calls PLANNER, EXECUTOR, REVIEWER
 GITHUB needs PR body               → calls EXECUTOR, REVIEWER, TESTER
+ORCHESTRATOR discovers peers       → registers in session registry
+SUMMARY produces reports           → calls all agents for outputs
 ```
 
 ### The Fix Loop
@@ -91,15 +122,21 @@ GITHUB needs PR body               → calls EXECUTOR, REVIEWER, TESTER
 When code doesn't pass review, the fix loop isn't a simple retry — agents collaborate:
 
 ```
-REVIEWER scores 6/10
+REVIEWER scores 4/10
     │
-    ├─► REVIEWER: "3 issues found"
-    │     ├─► BACKEND QA confirms SQL injection risk
+    ├─► REVIEWER: "5 issues found"
+    │     ├─► SECURITY confirms SQL injection risk (CVSS 9.1)
+    │     ├─► BACKEND QA confirms N+1 query pattern
+    │     ├─► DATABASE recommends composite index
     │     ├─► CLEAN CODE refactors fat controller
     │     └─► TESTER generates missing edge case tests
     │
+    ├─► EXECUTOR fixes all issues
+    │
     └─► REVIEWER re-scores 9/10 → passes
 ```
+
+Max 3 iterations. If still below 7 after 3 rounds, the system escalates to the user.
 
 ---
 
@@ -120,16 +157,16 @@ your-project/
 ├── .ai/                          ← RAI-Engineering
 │   ├── brain/                    ← System definitions
 │   ├── agents/                   ← Agent roles
-│   ├── skills/                   ← Domain knowledge
+│   ├── skills/                   ← Cross-domain skills
 │   ├── rules/                    ← Engineering rules
 │   ├── templates/                ← Memory templates
 │   └── workflows/                ← Workflow references
-└── memory/                       ← YOUR project memory (grows over time)
-    ├── decisions/
-    ├── architecture/
-    ├── lessons/
-    ├── sessions/
-    └── business/
+└── .brain/                       ← YOUR project knowledge — domain-isolated
+    ├── backend/{project}/        ← Backend memory, skills, rules, plans
+    ├── frontend/{project}/       ← Frontend memory, skills, rules, plans
+    ├── mobile-ios/{project}/     ← iOS memory, skills, rules, plans
+    ├── mobile-android/{project}/ ← Android memory, skills, rules, plans
+    └── devops/{project}/         ← DevOps memory, skills, rules, plans
 ```
 
 ### Update
@@ -157,9 +194,9 @@ Then give it a task:
 
 ---
 
-## Project Memory
+## Project Memory — Domain Isolated
 
-Every decision, lesson, test result, and task is saved to `.brain/` — a **team-wide, AI-tool-agnostic** knowledge base. Works with Claude, Cursor, Copilot, Windsurf, and any AI tool.
+Every decision, lesson, test result, and task is saved to `.brain/` — a **team-wide, AI-tool-agnostic** knowledge base organized by **domain**. Works with Claude, Cursor, Copilot, Windsurf, and any AI tool.
 
 ```
 .brain/
@@ -167,25 +204,19 @@ Every decision, lesson, test result, and task is saved to `.brain/` — a **team
 ├── README.md                ← What .brain/ is
 ├── agents/                  ← Agent definitions (ARCHITECT, PLANNER, etc.)
 ├── brain/                   ← Core system files (MISSION, PRINCIPLES, RULES, SYSTEM)
-├── memory/
-│   ├── guidelines.md        ← Architecture, conventions, stack
-│   ├── decisions/           ← Past architecture decisions
-│   ├── architecture/        ← Component maps
-│   ├── lessons/             ← Things learned
-│   ├── sessions/            ← Session summaries
-│   ├── tests/               ← Test summaries (per feature)
-│   ├── tasks/               ← Task summaries (files, tests, security, perf)
-│   └── business/            ← Business rules
-├── skills/                  ← Project code templates
-│   ├── service.md           ← How to create services
-│   ├── controller.md        ← How to create controllers
-│   ├── resource.md          ← How to create API resources
-│   └── crud.md              ← Full CRUD generation
-├── rules/                   ← Project conventions
-├── templates/
-│   ├── summary/             ← Summary templates
-│   └── testing/             ← Test templates
-└── connections/             ← DB schema (gitignored)
+├── templates/               ← Summary & testing templates
+│
+├── backend/{project}/       ← Backend domain
+│   ├── memory/              ← guidelines, decisions, lessons, sessions, tests, tasks
+│   ├── skills/              ← Code templates (service, controller, resource, crud)
+│   ├── rules/               ← Project conventions
+│   ├── plans/               ← Project plans
+│   └── connections/         ← DB schema (gitignored)
+│
+├── frontend/{project}/      ← Frontend domain (isolated)
+├── mobile-ios/{project}/    ← iOS domain (isolated)
+├── mobile-android/{project}/← Android domain (isolated)
+└── devops/{project}/        ← DevOps domain (isolated)
 ```
 
 **Summaries are always written.** Every task, test, and discussion saves a summary. If you ask for a summary and it doesn't exist yet, it's created before responding.
@@ -196,29 +227,29 @@ The Brain reads this before every session so nothing is forgotten.
 
 ## Rules
 
-When installed, your project gets access to domain-agnostic engineering rules:
+When installed, your project gets access to domain-isolated engineering rules:
 
-| Rule File | Covers |
+| Rule File (Domain) | Covers |
 |-----------|--------|
-| `.brain/rules/COMMIT_MESSAGES.md` | Conventional commit format, types, scopes |
-| `.brain/rules/ERROR_HANDLING.md` | Exceptions, logging, fail-fast, HTTP codes |
-| `.brain/rules/NAMING_CONVENTIONS.md` | Classes, methods, variables, tests naming |
-| `.brain/rules/SECURITY.md` | Input validation, SQL injection, XSS, CSRF, auth |
-| `.brain/rules/DATABASE.md` | Migrations, indexing, N+1, pagination, constraints |
-| `.brain/rules/API_DESIGN.md` | RESTful URLs, consistent responses, versioning |
+| `.brain/backend/{project}/rules/COMMIT_MESSAGES.md` | Conventional commit format, types, scopes |
+| `.brain/backend/{project}/rules/ERROR_HANDLING.md` | Exceptions, logging, fail-fast, HTTP codes |
+| `.brain/backend/{project}/rules/NAMING_CONVENTIONS.md` | Classes, methods, variables, tests naming |
+| `.brain/backend/{project}/rules/SECURITY.md` | Input validation, SQL injection, XSS, CSRF, auth |
+| `.brain/backend/{project}/rules/DATABASE.md` | Migrations, indexing, N+1, pagination, constraints |
+| `.brain/backend/{project}/rules/API_DESIGN.md` | RESTful URLs, consistent responses, versioning |
 
-| `.brain/rules/TESTING_RULES.md` | Writing tests — coverage, scenarios, templates |
+| `.brain/backend/{project}/rules/TESTING_RULES.md` | Writing tests — coverage, scenarios, templates |
 
 | Template | When Used |
 |----------|-----------|
 | `.brain/templates/summary/TEST_SUMMARY.md` | Team-ready test summary (icons, tables, security, perf, DB) |
 | `.brain/templates/summary/TASK_SUMMARY.md` | Full task summary (files, tests, security, quality scores) |
-| `.brain/skills/service.md` | Service class — structure, rules, transactions |
-| `.brain/skills/controller.md` | Controller — thin HTTP layer, action methods |
-| `.brain/skills/resource.md` | API Resource — response transformation, field filtering |
-| `.brain/skills/crud.md` | Full CRUD — migration, model, service, controller, routes, tests |
+| `.brain/backend/{project}/skills/service.md` | Service class — structure, rules, transactions |
+| `.brain/backend/{project}/skills/controller.md` | Controller — thin HTTP layer, action methods |
+| `.brain/backend/{project}/skills/resource.md` | API Resource — response transformation, field filtering |
+| `.brain/backend/{project}/skills/crud.md` | Full CRUD — migration, model, service, controller, routes, tests |
 
-Rules are loaded automatically based on what the task touches.
+Rules are loaded automatically based on what domain the task touches.
 
 ---
 
@@ -226,11 +257,11 @@ Rules are loaded automatically based on what the task touches.
 
 | Skill | When Used |
 |-------|-----------|
-| `.brain/skills/CODE_REVIEW.md` | Reviewing code |
-| `.brain/skills/TESTING.md` | Writing or reviewing tests |
-| `.brain/skills/GIT.md` | Committing, branching, PRs |
-| `.brain/skills/MEMORY.md` | Writing to project memory |
-| `.brain/skills/BACKEND_ENGINEERING.md` | Backend QA audit or query work |
+| `skills/CODE_REVIEW.md` | Reviewing code (framework-agnostic) |
+| `skills/TESTING.md` | Writing or reviewing tests (framework-agnostic) |
+| `skills/GIT.md` | Committing, branching, PRs (framework-agnostic) |
+| `skills/MEMORY.md` | Writing to project memory (framework-agnostic) |
+| `skills/BACKEND_ENGINEERING.md` | Backend QA audit or query work |
 
 ---
 
@@ -243,7 +274,7 @@ Key design decisions:
 - **The Brain is a message broker.** It routes messages between agents — it never writes code.
 - **Agents ask for help.** Unsure about architecture? Call ARCHIVIST. Unsure about a query? Call BACKEND QA.
 - **Structured outputs.** Every agent returns a defined schema, not free-form text.
-- **Memory is project-specific.** The OS provides the interface; `memory/` lives in your project.
+- **Domain-isolated memory.** `.brain/backend/`, `.brain/frontend/`, `.brain/mobile-ios/`, `.brain/mobile-android/`, `.brain/devops/` are fully isolated subtrees.
 - **Framework-agnostic.** The OS knows engineering patterns; domain knowledge lives in Skills.
 - **Model-locked.** All agents run on `deepseek-v4-flash`. No exceptions.
 
@@ -356,6 +387,51 @@ R29: Template-led testing. Templates are the source of truth.
 
 ---
 
+## Domain Isolation Protocol — v1.3
+
+Every task belongs to exactly one domain: **Backend**, **Frontend**, **Mobile (iOS)**, **Mobile (Android)**, or **DevOps/System Management**. Domain knowledge is stored in isolated subtrees — no cross-contamination.
+
+### Structure
+
+```
+.brain/
+├── backend/{project}/         ← Backend domain
+│   ├── plans/                 ← Project plans
+│   ├── rules/                 ← Framework-specific rules (laravel, express, django...)
+│   ├── skills/                ← Code templates (service, controller, resource, crud)
+│   └── memory/                ← Guidelines, decisions, lessons, sessions, tests, tasks
+│
+├── frontend/{project}/        ← Frontend domain (isolated)
+│   ├── plans/                 ← Project plans
+│   ├── rules/                 ← Framework-specific rules (react, vue, angular...)
+│   ├── skills/                ← Component templates, UI patterns
+│   └── memory/                ← Frontend-specific knowledge
+│
+├── mobile-ios/{project}/      ← iOS domain (isolated)
+├── mobile-android/{project}/  ← Android domain (isolated)
+└── devops/{project}/          ← DevOps domain (isolated)
+```
+
+### Isolation Rules
+
+| Rule | Description |
+|------|-------------|
+| **R36** | **Domain Identity Required** — Every task declares its domain before work begins |
+| **R37** | **Domain-Isolated Storage** — Plans, rules, skills, memory never cross domains |
+| **R38** | **Cross-Domain Reference Protocol** — Use relative links, never duplicate content |
+| **R39** | **Framework-Scoped Rules** — Rules are scoped to the declared framework |
+| **R40** | **Domain Folder Initialization** — Create domain subdirs before writing knowledge |
+
+### Why Isolate?
+
+| Problem | Without Isolation | With Isolation |
+|---------|-----------------|----------------|
+| Full-stack project | Backend rules apply to React code | Backend and Frontend have separate rule sets |
+| Multi-project repo | All memory in one flat folder | Each project gets its own domain subtree |
+| New team member | Unclear which patterns apply where | Domain folder tells the AI what to use |
+
+---
+
 ## Version Roadmap
 
 | Version | Focus | Status |
@@ -370,8 +446,9 @@ R29: Template-led testing. Templates are the source of truth.
 | v0.8 | **R30 Version Bump Rule** — enforce version sync before every push | ✅ Done |
 | v0.9 | **`.brain/` Project Brain** — team-wide AI knowledge base with skills, memory, rules | ✅ Done |
 | v1.0 | **Stable** — battle-tested, documented, versioned | 🔲 Planned |
-
----
+| v1.1 | **Multi-Session Mesh** — ORCHESTRATOR, inter-session bus, session registry | ✅ Done |
+| v1.2 | **Multi-Session Mesh (v1.1 release)** | ✅ Done |
+| v1.3 | **Domain Isolation Protocol** — per-domain plans, rules, skills, memory | ✅ Done |
 
 ---
 
@@ -383,7 +460,7 @@ R29: Template-led testing. Templates are the source of truth.
       <b>Rami Youssef</b>
     </a>
     <br>
-    <small>RAI-Engineering — v1.1</small>
+    <small>RAI-Engineering — v1.3</small>
   </sub>
   <br>
 </div>

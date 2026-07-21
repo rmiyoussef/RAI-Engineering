@@ -21,6 +21,12 @@ GREEN='\033[0;32m'
 CYAN='\033[0;36m'
 NC='\033[0m'
 
+# Box-drawing characters for tree output
+TREE_BRANCH="├── "
+TREE_LEAF="└── "
+TREE_VLINE="│   "
+RIGHT="←"
+
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo -e "${CYAN}  RAI-Engineering — Brain Installer${NC}"
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
@@ -58,28 +64,96 @@ echo ""
 
 # Create directories
 mkdir -p "$AI_DIR"/{brain,agents,skills,rules,templates,workflows}
-mkdir -p ".brain"/{memory/{decisions,architecture,lessons,sessions,tests,tasks,business},skills,rules,connections}
+
+# Determine project name from directory
+PROJECT_NAME=$(basename "$(pwd)" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]/-/g')
+
+# Interactive domain selection
+echo -e "   ${CYAN}Which domain does your project belong to? (10s timeout → Backend)${NC}"
+echo -e "   ${CYAN}  1) Backend${NC}"
+echo -e "   ${CYAN}  2) Frontend${NC}"
+echo -e "   ${CYAN}  3) Mobile iOS${NC}"
+echo -e "   ${CYAN}  4) Mobile Android${NC}"
+echo -e "   ${CYAN}  5) DevOps / System Management${NC}"
+echo -e "   ${CYAN}  6) Full Stack (Backend + Frontend)${NC}"
+echo -e "   ${CYAN}(default: 1)${NC}"
+read -r -t 10 DOMAIN_CHOICE || DOMAIN_CHOICE="1"
+DOMAIN_CHOICE="${DOMAIN_CHOICE:-1}"
+
+DOMAINS=()
+case "$DOMAIN_CHOICE" in
+    2) DOMAINS=("frontend") ;;
+    3) DOMAINS=("mobile-ios") ;;
+    4) DOMAINS=("mobile-android") ;;
+    5) DOMAINS=("devops") ;;
+    6) DOMAINS=("backend" "frontend") ;;
+    *) DOMAINS=("backend") ;;
+esac
+
+DOMAIN_LABEL=$(IFS=,; echo "${DOMAINS[*]}")
+echo -e "   ${GREEN}✓${NC} Domain(s): ${CYAN}$DOMAIN_LABEL${NC}, Project: ${CYAN}$PROJECT_NAME${NC}"
+
+# Create domain-isolated .brain/ structure
+for DOMAIN in "${DOMAINS[@]}"; do
+    DOMAIN_DIR=".brain/${DOMAIN}/${PROJECT_NAME}"
+    mkdir -p "$DOMAIN_DIR/memory"/{decisions,architecture,lessons,sessions,tests,tasks,business}
+    mkdir -p "$DOMAIN_DIR/skills"
+    mkdir -p "$DOMAIN_DIR/rules"
+    mkdir -p "$DOMAIN_DIR/plans"
+    mkdir -p "$DOMAIN_DIR/connections"
+
+    # Write domain README
+    cat > "$DOMAIN_DIR/README.md" << READMEEOF
+# ${DOMAIN^} — ${PROJECT_NAME}
+
+> Domain-isolated knowledge base.
+> Plans, rules, skills, and memory live here — never cross domains.
+
+## Structure
+
+\`\`\`
+${DOMAIN}/${PROJECT_NAME}/
+├── plans/       ← Project plans
+├── rules/       ← Framework-specific rules
+├── skills/      ← Code templates
+└── memory/      ← Guidelines, decisions, lessons, sessions, tests, tasks
+\`\`\`
+
+## Isolation Rule
+
+${DOMAIN^} plans, rules, skills, and memory must never be stored in or read from another domain's subtree.
+READMEEOF
+
+    echo -e "   ${GREEN}✓${NC} Created ${DOMAIN}/${PROJECT_NAME}/ subtree"
+done
+
 mkdir -p ".claude"
 
-# Add .brain/connections/ to .gitignore (never push connection info)
+# Add domain connections/ to .gitignore (never push connection info)
+GITIGNORE_LINES=$(cat << 'GITEOF'
+# RAI-Engineering — Database connections (domain-isolated, schema only)
+.brain/*/*/connections/
+.brain/session-bus/
+.brain/sessions/live/
+GITEOF
+)
+
 if [ -f ".gitignore" ]; then
-    if ! grep -q ".brain/connections/" ".gitignore" 2>/dev/null; then
+    if ! grep -q "brain/connections" ".gitignore" 2>/dev/null; then
         echo "" >> ".gitignore"
-        echo "# RAI-Engineering — Database connections (schema only, no secrets)" >> ".gitignore"
-        echo ".brain/connections/" >> ".gitignore"
-        echo -e "   ${GREEN}✓${NC} Added .brain/connections/ to .gitignore"
+        echo "$GITIGNORE_LINES" >> ".gitignore"
+        echo -e "   ${GREEN}✓${NC} Added domain connection paths to .gitignore"
     fi
 else
-    echo "# RAI-Engineering — Database connections (schema only, no secrets)" > ".gitignore"
-    echo ".brain/connections/" >> ".gitignore"
-    echo -e "   ${GREEN}✓${NC} Created .gitignore with .brain/connections/ excluded"
+    echo "$GITIGNORE_LINES" > ".gitignore"
+    echo -e "   ${GREEN}✓${NC} Created .gitignore with domain connection paths excluded"
 fi
 
 download_file() {
     local src="$1"
     local dest="$2"
     if [ "$LOCAL_FILES" = true ]; then
-        cp "$SCRIPT_DIR/$src" "$dest"
+        cp "$(dirname "${_LOCAL_CHECK:-.}")/$src" "$dest"
     else
         curl -fsSL "https://raw.githubusercontent.com/$REPO/$BRANCH/$src" -o "$dest"
     fi
@@ -200,7 +274,7 @@ fi
 
 # ── Done ─────────────────────────────────────────────────────────
 echo ""
-echo -e "${GREEN}✅  RAI-Engineering installed successfully!${NC}"
+echo -e "${GREEN}✅  RAI-Engineering v1.3 — Domain Isolation Protocol installed!${NC}"
 echo ""
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo "  Project structure:"
@@ -216,25 +290,22 @@ echo "  │   ├── templates/                   ← Memory templates"
 echo "  │   └── workflows/                   ← Workflow references"
 echo "  ├── .caveman.json                    ← Token compression (ULTRA)"
 echo "  ├── AGENTS.md                        ← Caveman per-repo rules"
-	echo "  └── .brain/                  ← Team-wide AI knowledge base (any AI tool)"
-	echo "      ├── INDEX.md                     ← Auto-maintained"
-	echo "      ├── README.md                    ← What .brain/ is"
-	echo "      ├── memory/"
-	echo "      │   ├── guidelines.md            ← Project structure & conventions"
-	echo "      │   ├── decisions/"
-	echo "      │   ├── architecture/"
-	echo "      │   ├── lessons/"
-	echo "      │   ├── sessions/"
-	echo "      │   ├── tests/                   ← Test summaries"
-	echo "      │   ├── tasks/                   ← Task summaries"
-	echo "      │   └── business/"
-	echo "      ├── skills/                      ← Project code templates"
-	echo "      │   ├── service.md"
-	echo "      │   ├── controller.md"
-	echo "      │   ├── resource.md"
-	echo "      │   └── crud.md"
-	echo "      ├── rules/                       ← Project conventions"
-	echo "      └── connections/ (gitignored)"
+echo -e "  $TREE_LEAF.brain/                  $RIGHT Domain-isolated knowledge base (any AI tool)"
+echo -e "      $TREE_BRANCH${DOMAINS[0]}/${PROJECT_NAME}/"
+echo -e "      $TREE_VLINE"
+echo -e "      $TREE_VLINE   $TREE_BRANCH memory/"
+echo -e "      $TREE_VLINE   $TREE_VLINE   $TREE_BRANCH guidelines.md"
+echo -e "      $TREE_VLINE   $TREE_VLINE   $TREE_BRANCH decisions/"
+echo -e "      $TREE_VLINE   $TREE_VLINE   $TREE_BRANCH lessons/"
+echo -e "      $TREE_VLINE   $TREE_VLINE   $TREE_BRANCH sessions/"
+echo -e "      $TREE_VLINE   $TREE_VLINE   $TREE_BRANCH tests/"
+echo -e "      $TREE_VLINE   $TREE_VLINE   $TREE_BRANCH tasks/"
+echo -e "      $TREE_VLINE   $TREE_VLINE   $TREE_LEAF business/"
+echo -e "      $TREE_VLINE   $TREE_BRANCH skills/"
+echo -e "      $TREE_VLINE   $TREE_BRANCH rules/"
+echo -e "      $TREE_VLINE   $TREE_BRANCH plans/"
+echo -e "      $TREE_VLINE   $TREE_LEAF connections/ (gitignored)"
+echo -e "      ..."
 echo ""
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo "  Next steps:"

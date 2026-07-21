@@ -7,32 +7,16 @@
 
 ---
 
-## Memory Layout
+## Domain-Isolated Memory Layout
+
+Knowledge is organized into **domain-isolated subtrees**. Each domain is self-contained.
 
 ```
 .brain/
 ├── INDEX.md                         ← Master index (auto-maintained)
-├── guidelines.md                    ← Project structure & conventions
-├── decisions/                       ← Architecture decisions
-│   └── 2026-07-10-jwt-auth.md
-├── architecture/                    ← Component maps
-│   └── auth-system.md
-├── lessons/                         ← Things learned
-│   └── 2026-07-10-n-plus-one-fix.md
-├── sessions/                        ← Every interaction, task, discussion
-│   ├── 2026-07-10-implement-auth.md
-│   └── 2026-07-10-discussion-api-design.md
-├── tests/                           ← Team-ready test summaries (per feature)
-│   └── 2026-07-13-onboarding-api.md
-├── tasks/                           ← Full task summaries (files, tests, security, perf)
-│   └── 2026-07-13-create-onboarding.md
-├── templates/                       ← Project code templates
-│   ├── service.md
-│   ├── controller.md
-│   ├── resource.md
-│   └── crud.md
-├── business/                        ← Business rules
-│   └── two-factor-auth.md
+├── agents/                          ← Agent definitions (framework-agnostic)
+├── brain/                           ← Core OS files (MISSION, PRINCIPLES, RULES, SYSTEM)
+├── templates/                       ← Summary & testing templates
 ├── session-bus/                     ← Inter-session message bus ⚠️ GITIGNORED
 │   ├── inbox/{uuid}/                ← Incoming messages
 │   ├── outbox/{uuid}/               ← Outgoing messages
@@ -40,39 +24,41 @@
 ├── sessions/                        ← Session registry
 │   ├── identity.json                ← This session's persistent identity
 │   └── live/                        ← Live session registrations ⚠️ GITIGNORED
-└── connections/                     ← Database connections ⚠️ GITIGNORED
-    └── database.md
+│
+└── backend/{project}/              ← Backend domain
+│   ├── memory/
+│   │   ├── guidelines.md            ← Project structure & conventions
+│   │   ├── INDEX.md                 ← Domain-specific index (auto-maintained)
+│   │   ├── decisions/               ← Architecture decisions
+│   │   ├── architecture/            ← Component maps
+│   │   ├── lessons/                 ← Things learned
+│   │   ├── sessions/                ← Every interaction, task, discussion
+│   │   ├── tests/                   ← Team-ready test summaries (per feature)
+│   │   ├── tasks/                   ← Full task summaries
+│   │   └── business/                ← Business rules
+│   ├── skills/                      ← Domain code templates
+│   ├── rules/                       ← Domain conventions
+│   ├── plans/                       ← Domain plans
+│   └── connections/                 ← Database connections ⚠️ GITIGNORED
+│
+├── frontend/{project}/             ← Frontend domain (same structure)
+├── mobile-ios/{project}/            ← iOS domain (same structure)
+├── mobile-android/{project}/        ← Android domain (same structure)
+└── devops/{project}/                ← DevOps domain (same structure)
 ```
 
-### Why `.brain/` (not `.claude/memory/`)?
+### Why Domain Isolation?
 
 | Reason | Explanation |
 |--------|-------------|
-| **Any AI tool** | Not tied to Claude. Cursor, Copilot, Windsurf — all can read `.brain/` |
-| **Team-wide** | Commit to repo. Every developer and every AI sees the same knowledge |
-| **Clean root** | Single `.brain/` folder is self-documenting |
-| **No lock-in** | Switch AI tools without losing project memory |
-
-### Session Entry — Every Interaction
-
-**Every single interaction** — task, discussion, question, exploration — must write a session entry into `.brain/sessions/`. This ensures:
-
-- If you close the terminal, you can resume exactly where you left off
-- Nothing is lost between sessions
-- The BRAIN reads past sessions before starting new work
-- Continuity is maintained across days
-
-A session entry is written after:
-- ✅ Completing a task
-- ✅ Having a design discussion
-- ✅ Exploring the codebase
-- ✅ Answering a question
-- ✅ Making any decision
-- ✅ Any interaction that produced value
+| **No cross-contamination** | Backend rules never apply to frontend code |
+| **Multi-project clarity** | Each project in a domain has its own subtree |
+| **Framework-agnostic core** | `.brain/agents/` and `.brain/brain/` stay framework-agnostic |
+| **Future-proof** | Add new domains without restructuring |
 
 ### guidelines.md
 
-The `.brain/guidelines.md` file holds the project's architecture, conventions, commands, middleware, database rules, and security setup. Created by ARCHITECT on first install.
+The `.brain/{domain}/{project}/memory/guidelines.md` file holds the project's architecture, conventions, commands, middleware, database rules, and security setup. Created by ARCHITECT on first install.
 
 ### Test & Task Summaries
 
@@ -80,8 +66,8 @@ The `.brain/guidelines.md` file holds the project's architecture, conventions, c
 
 | Summary | Location | When | Template |
 |---------|----------|------|----------|
-| 🧪 Test Summary | `.brain/tests/{{date}}-{{feature}}.md` | After every test session | `templates/summary/TEST_SUMMARY.md` |
-| 📋 Task Summary | `.brain/tasks/{{date}}-{{task}}.md` | After every completed task | `templates/summary/TASK_SUMMARY.md` |
+| 🧪 Test Summary | `.brain/{domain}/{project}/memory/tests/{date}-{feature}.md` | After every test session | `templates/summary/TEST_SUMMARY.md` |
+| 📋 Task Summary | `.brain/{domain}/{project}/memory/tasks/{date}-{task}.md` | After every completed task | `templates/summary/TASK_SUMMARY.md` |
 
 If you ask for a summary and none exists, I create it before responding.
 
@@ -89,48 +75,41 @@ If you ask for a summary and none exists, I create it before responding.
 
 | Path | Committed? | Why |
 |------|-----------|-----|
-| `.brain/decisions/` | ✅ Committed | Architecture decisions are project knowledge |
-| `.brain/architecture/` | ✅ Committed | Component maps are part of the project |
-| `.brain/lessons/` | ✅ Committed | Lessons benefit the whole team |
-| `.brain/sessions/` | ✅ Committed | Session history helps resume work |
-| `.brain/tests/` | ✅ Committed | Test summaries are team knowledge |
-| `.brain/tasks/` | ✅ Committed | Task records show what was done |
-| `.brain/skills/` | ✅ Committed | Code templates are project standards |
-| `.brain/business/` | ✅ Committed | Business rules are project knowledge |
-| `.brain/guidelines.md` | ✅ Committed | Project structure is shared knowledge |
-| `.brain/INDEX.md` | ✅ Committed | Master index helps everyone navigate |
-| `.brain/connections/` | ❌ **Never** | Contains schema info — never push secrets |
+| `.brain/{domain}/{project}/memory/decisions/` | ✅ Committed | Architecture decisions are project knowledge |
+| `.brain/{domain}/{project}/memory/architecture/` | ✅ Committed | Component maps are part of the project |
+| `.brain/{domain}/{project}/memory/lessons/` | ✅ Committed | Lessons benefit the whole team |
+| `.brain/{domain}/{project}/memory/sessions/` | ✅ Committed | Session history helps resume work |
+| `.brain/{domain}/{project}/memory/tests/` | ✅ Committed | Test summaries are team knowledge |
+| `.brain/{domain}/{project}/memory/tasks/` | ✅ Committed | Task records show what was done |
+| `.brain/{domain}/{project}/skills/` | ✅ Committed | Code templates are project standards |
+| `.brain/{domain}/{project}/memory/business/` | ✅ Committed | Business rules are project knowledge |
+| `.brain/{domain}/{project}/memory/guidelines.md` | ✅ Committed | Project structure is shared knowledge |
+| `.brain/{domain}/{project}/connections/` | ❌ **Never** | Contains schema info — never push secrets |
 
 ---
 
 ## INDEX.md — The Master Index
 
-The `.brain/INDEX.md` file is the **entry point for all memory queries**. Auto-maintained by MEMORY SCRIBE after every session.
+The `.brain/INDEX.md` file is the **entry point for all memory queries**. Auto-maintained by MEMORY SCRIBE after every session. It points to domain-specific subtrees.
 
 ### Format
 
 ```markdown
 # Memory Index
 
-> Auto-maintained. Last updated: 2026-07-13
+> Auto-maintained. Last updated: 2026-07-21
 
 ## Active Decisions
-- [JWT Authentication](decisions/2026-07-10-jwt-auth.md) — Using JWT over session auth
+- [JWT Authentication](backend/{project}/memory/decisions/2026-07-10-jwt-auth.md)
 
 ## Architecture
-- [Auth System](architecture/auth-system.md) — Login, register, password reset
+- [Auth System](backend/{project}/memory/architecture/auth-system.md)
 
 ## Lessons
-- [N+1 Query Fix](lessons/2026-07-10-n-plus-one-fix.md) — Eager loading posts
+- [N+1 Query Fix](backend/{project}/memory/lessons/2026-07-10-n-plus-one-fix.md)
 
 ## Sessions
-- [Implement JWT Auth](sessions/2026-07-10-implement-auth.md) — Completed score 9/10
-
-## Test Summaries
-- [Onboarding API](tests/2026-07-13-onboarding-api.md) — 15 tests, all pass
-
-## Task Summaries
-- [Create Onboarding](tasks/2026-07-13-create-onboarding.md) — 4 files, 15 tests
+- [Implement JWT Auth](backend/{project}/memory/sessions/2026-07-10-implement-auth.md)
 ```
 
 ### How it's maintained
@@ -138,12 +117,12 @@ The `.brain/INDEX.md` file is the **entry point for all memory queries**. Auto-m
 After every session, MEMORY SCRIBE calls:
 ```
 MEMORY SCRIBE: "I need to update INDEX.md"
-  ├─► List files in .brain/decisions/ → add new ones
-  ├─► List files in .brain/lessons/ → add new ones
-  ├─► List files in .brain/sessions/ → add new ones
-  ├─► List files in .brain/tests/ → add new ones
-  ├─► List files in .brain/tasks/ → add new ones
-  └─► List files in .brain/architecture/ → add new ones
+  ├─► List files in .brain/{domain}/{project}/memory/decisions/ → add new ones
+  ├─► List files in .brain/{domain}/{project}/memory/lessons/ → add new ones
+  ├─► List files in .brain/{domain}/{project}/memory/sessions/ → add new ones
+  ├─► List files in .brain/{domain}/{project}/memory/tests/ → add new ones
+  ├─► List files in .brain/{domain}/{project}/memory/tasks/ → add new ones
+  └─► List files in .brain/{domain}/{project}/memory/architecture/ → add new ones
 ```
 
 ---
@@ -155,28 +134,32 @@ MEMORY SCRIBE: "I need to update INDEX.md"
 ```
 BRAIN receives task
     │
-    ├─► Read .brain/INDEX.md          ← What does the project know?
-    ├─► Read .brain/guidelines.md     ← Project conventions
-    ├─► Read .brain/decisions/        ← Past decisions
-    ├─► Read .brain/architecture/     ← Current component map
-    ├─► Read .brain/lessons/          ← Known pitfalls
-    ├─► Read .brain/tests/            ← Past test results (for context)
-    ├─► Read .brain/tasks/            ← Past task summaries (for context)
-    └─► Read .brain/connections/      ← Database schema (if needed)
+    ├─► DETERMINE DOMAIN — Ask user or derive from task
+    ├─► CHECK DOMAIN FOLDER — .brain/{domain}/{project}/ exists?
+    │   If not → create with plans/, rules/, skills/, memory/
+    │
+    ├─► Read .brain/INDEX.md                 ← What does the project know?
+    ├─► Read .brain/{domain}/{project}/memory/guidelines.md
+    ├─► Read .brain/{domain}/{project}/memory/decisions/
+    ├─► Read .brain/{domain}/{project}/memory/architecture/
+    ├─► Read .brain/{domain}/{project}/memory/lessons/
+    ├─► Read .brain/{domain}/{project}/memory/tests/
+    ├─► Read .brain/{domain}/{project}/memory/tasks/
+    └─► Read .brain/{domain}/{project}/connections/ (if needed)
 ```
 
-### After Any Work (Always)
+### After Any Work (Always — in the correct domain)
 
 ```
 Task/Discussion/Question complete — ALWAYS write
     │
-    ├─► MEMORY SCRIBE writes sessions/ ← WHAT happened (ALWAYS)
-    ├─► MEMORY SCRIBE writes tests/    ← Test summary (if testing done)
-    ├─► MEMORY SCRIBE writes tasks/    ← Task summary (always)
-    ├─► MEMORY SCRIBE writes decisions/ ← WHAT was decided (if applicable)
-    ├─► MEMORY SCRIBE writes lessons/  ← WHAT was learned (if applicable)
-    ├─► ARCHITECT updates guidelines/  ← Did architecture change?
-    └─► MEMORY SCRIBE updates INDEX.md ← Keep index in sync
+    ├─► MEMORY SCRIBE writes .brain/{domain}/{project}/memory/sessions/
+    ├─► MEMORY SCRIBE writes .brain/{domain}/{project}/memory/tests/
+    ├─► MEMORY SCRIBE writes .brain/{domain}/{project}/memory/tasks/
+    ├─► MEMORY SCRIBE writes .brain/{domain}/{project}/memory/decisions/
+    ├─► MEMORY SCRIBE writes .brain/{domain}/{project}/memory/lessons/
+    ├─► ARCHITECT updates .brain/{domain}/{project}/memory/guidelines/
+    └─► MEMORY SCRIBE updates .brain/INDEX.md
 ```
 
 ---
@@ -191,6 +174,8 @@ This is the most important rule. Every interaction writes a session entry.
 # Session: 2026-07-10 — Discussion about API Design
 
 **Date:** 2026-07-10
+**Domain:** Backend
+**Project:** my-project
 **Type:** Task | Discussion | Exploration | Question
 **Duration:** ~15 min
 
@@ -229,6 +214,8 @@ Summary of the conversation, decisions, findings.
 # Decision: {{title}}
 
 **Date:** {{date}}
+**Domain:** Backend | Frontend | Mobile iOS | Mobile Android | DevOps
+**Project:** {{project-name}}
 **Context:** {{why this decision was needed}}
 
 ## Options Considered
@@ -254,6 +241,8 @@ Summary of the conversation, decisions, findings.
 # Lesson: {{title}}
 
 **Date:** {{date}}
+**Domain:** Backend | Frontend | Mobile iOS | Mobile Android | DevOps
+**Project:** {{project-name}}
 **What:** {{what happened}}
 **Impact:** {{low | medium | high}}
 **Root Cause:** {{why it happened}}
@@ -267,8 +256,8 @@ Summary of the conversation, decisions, findings.
 
 | Template | Purpose | Output Location |
 |----------|---------|----------------|
-| `templates/summary/TEST_SUMMARY.md` | Test results with icons, tables, perf, DB, security | `.brain/tests/` |
-| `templates/summary/TASK_SUMMARY.md` | Full task record with quality assessment | `.brain/tasks/` |
+| `templates/summary/TEST_SUMMARY.md` | Test results with icons, tables, perf, DB, security | `.brain/{domain}/{project}/memory/tests/` |
+| `templates/summary/TASK_SUMMARY.md` | Full task record with quality assessment | `.brain/{domain}/{project}/memory/tasks/` |
 
 Use these templates to ensure consistent, team-readable summaries every time.
 
@@ -278,18 +267,18 @@ Use these templates to ensure consistent, team-readable summaries every time.
 
 | Agent | Reads | Writes |
 |-------|-------|--------|
-| **BRAIN** | INDEX.md, guidelines.md — before any task | Creates session UUID |
-| **PLANNER** | decisions/, architecture/, guidelines.md | Nothing — passes to MEMORY SCRIBE |
-| **ARCHITECT** | guidelines.md, architecture/ | guidelines.md |
-| **EXECUTOR** | architecture/, connections/ | Nothing — passes to MEMORY SCRIBE |
-| **REVIEWER** | decisions/ (for precedent) | Nothing — passes to MEMORY SCRIBE |
-| **BACKEND QA** | architecture/ | Nothing — passes to MEMORY SCRIBE |
-| **DATABASE** | connections/ | connections/ (schema only) |
-| **SECURITY** | architecture/ | Nothing — passes to MEMORY SCRIBE |
-| **TESTER** | templates/testing/ | test files + test summaries |
-| **MEMORY SCRIBE** | All stores (to build index) | decisions/, lessons/, sessions/, tests/, tasks/, INDEX.md |
+| **BRAIN** | INDEX.md — before any task | Creates session UUID |
+| **PLANNER** | {domain}/{project}/memory/decisions/, architecture/, guidelines.md | Nothing — passes to MEMORY SCRIBE |
+| **ARCHITECT** | {domain}/{project}/memory/guidelines.md | {domain}/{project}/memory/guidelines.md |
+| **EXECUTOR** | {domain}/{project}/memory/architecture/, connections/ | Nothing — passes to MEMORY SCRIBE |
+| **REVIEWER** | {domain}/{project}/memory/decisions/ (for precedent) | Nothing — passes to MEMORY SCRIBE |
+| **BACKEND QA** | {domain}/{project}/memory/architecture/ | Nothing — passes to MEMORY SCRIBE |
+| **DATABASE** | {domain}/{project}/connections/ | {domain}/{project}/connections/ (schema only) |
+| **SECURITY** | {domain}/{project}/memory/architecture/ | Nothing — passes to MEMORY SCRIBE |
+| **TESTER** | templates/testing/ | test files + test summaries in {domain}/{project}/memory/tests/ |
+| **MEMORY SCRIBE** | All domain stores (to build index) | {domain}/{project}/memory/decisions/, lessons/, sessions/, tests/, tasks/, INDEX.md |
 | **GITHUB** | decisions/, INDEX.md | Nothing |
-| **SUMMARY** | All agent outputs | tests/, tasks/ summaries |
+| **SUMMARY** | All agent outputs | {domain}/{project}/memory/tests/, tasks/ summaries |
 
 ---
 

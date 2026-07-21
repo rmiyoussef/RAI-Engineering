@@ -65,6 +65,10 @@ else
     echo -e "   ${YELLOW}This will update .ai/ files. Your .brain/ directory will NOT be touched.${NC}"
     echo -e "   ${YELLOW}Existing .ai/ files will be overwritten.${NC}"
     echo ""
+    echo -e "   ${CYAN}Note:${NC} If upgrading from v1.2 or earlier, your .brain/ may need"
+    echo -e "   ${CYAN}      migration to the domain-isolated structure.${NC}"
+    echo -e "   ${CYAN}      Run 'bash .ai/setup.sh --migrate' after update if needed.${NC}"
+    echo ""
     read -rp "   Proceed with update? (y/N): " CONFIRM
     if [ "$CONFIRM" != "y" ] && [ "$CONFIRM" != "Y" ]; then
         echo -e "   ${RED}Update cancelled.${NC}"
@@ -208,16 +212,20 @@ download_file "update.sh"   "$AI_DIR/update.sh"
 chmod +x "$AI_DIR/update.sh"
 
 echo ""
-echo -e "${GREEN}✅  RAI-Engineering updated successfully!${NC}"
+echo -e "${GREEN}✅  RAI-Engineering updated to v1.3 — Domain Isolation Protocol!${NC}"
 echo ""
 
 NEW_VERSION=$(cat "$AI_DIR/VERSION")
 echo -e "   Version: ${GREEN}$NEW_VERSION${NC}"
 echo ""
 echo -e "   ${CYAN}Changes:${NC}"
-echo -e "   Check https://github.com/$REPO/releases for changelog."
+echo -e "   - All project knowledge now domain-isolated under .brain/{domain}/{project}/"
+echo -e "   - 5 domain isolation rules (R36-R40) added"
+echo -e "   - Backend, Frontend, Mobile, DevOps knowledge never mixes"
 echo ""
-echo -e "   ${YELLOW}Note:${NC} .brain/ directory was not modified."
+echo -e "   ${YELLOW}Note:${NC} .ai/ files updated. Your .brain/ directory was NOT modified."
+echo -e "   ${YELLOW}      To migrate existing .brain/ to domain-isolated structure:${NC}"
+echo -e "   ${YELLOW}      git mv .brain/memory .brain/backend/{project}/memory/${NC}"
 if [ -f "$AI_DIR/VERSION.bak" ]; then
     rm "$AI_DIR/VERSION.bak"
 fi

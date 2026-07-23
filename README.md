@@ -24,6 +24,7 @@ RAI-Engineering is different. It turns your AI into a **disciplined engineering 
 - **Tracks decisions** so nothing is forgotten
 - **Learns project architecture** over time
 - **Optimizes continuously** through self-review loops
+- **Orchestrates complex tasks** — decomposes multi-domain work, dispatches in parallel, verifies autonomously
 - **Isolates by domain** — Backend, Frontend, Mobile, DevOps each in their own subtree
 - **Can be installed** into any repository, any framework
 
@@ -31,52 +32,57 @@ RAI-Engineering is different. It turns your AI into a **disciplined engineering 
 
 ## How It Works
 
-The system is built around **16 specialized agents** that talk to each other through the **Brain** (a message broker). Before any work begins, the Brain identifies the **domain** (Backend, Frontend, Mobile, or DevOps) and routes to the correct isolated knowledge subtree — so Backend rules never mix with Frontend patterns.
+The system is built around **17 specialized agents** that talk to each other through the **Brain** (a message broker). Before any work begins, the Brain identifies the **domain** (Backend, Frontend, Mobile, or DevOps) and routes to the correct isolated knowledge subtree — so Backend rules never mix with Frontend patterns.
+
+For complex or multi-domain tasks, the **ORCHESTRATOR ENGINE** takes over: it decomposes the work into independent sub-tasks, dispatches them in parallel across domain agents, relays cross-agent requests in real-time, and runs an autonomous verify loop — all without waiting for a pipeline.
 
 ### The Agent Mesh
 
 ```
-                    ┌───────────────────┐
-                    │     ARCHIVIST     │── Knowledge base (reads files)
-                    └────────┬──────────┘
-                             │
-         ┌───────────────────┼──────────────────────┐
-         ▼                   ▼                      ▼
-   ┌──────────┐       ┌──────────┐           ┌──────────┐
-   │ PLANNER  │◄─────►│ EXECUTOR │◄─────────►│ REVIEWER │
-   └─────┬────┘       └─────┬────┘           └────┬─────┘
-         │                  │                     │
-         ▼                  ▼                     ▼
-   ┌──────────┐       ┌──────────┐           ┌──────────┐
-   │ARCHITECT │       │ CLEAN    │           │ BACKEND  │
-   │          │       │ CODE     │           │   QA     │
-   └─────┬────┘       └──────────┘           └────┬─────┘
-         │                                        │
-         ▼                                        ▼
-   ┌──────────┐       ┌──────────┐           ┌──────────┐
-   │  MEMORY  │       │ DATABASE │           │ SECURITY │
-   │  SCRIBE  │       │          │           │          │
-   └────┬─────┘       └──────────┘           └──────────┘
-        │                                        │
-        ▼                                        ▼
-   ┌──────────┐     ┌──────────────┐         ┌──────────┐
-   │  GITHUB  │     │ ORCHESTRATOR │         │  TESTER  │
-   │  TASKS   │     │(session mesh)│         │          │
-   └──────────┘     └──────────────┘         └──────────┘
-        │
-        └── GITHUB (PRs & commits)
+                    ╔═══════════════════════════════════╗
+                    ║   ORCHESTRATOR ENGINE             ║── Decomposes → dispatches → verifies
+                    ║   (task orchestration)            ║
+                    ╚══════════════════╤════════════════╝
+                                       │  decomposes & dispatches
+           ┌───────────────────────────┼───────────────────────────┐
+           ▼                           ▼                           ▼
+    ┌──────────────┐           ┌──────────────┐           ┌──────────────┐
+    │   PLANNER    │           │   EXECUTOR   │           │   REVIEWER   │
+    │ (architect)  │◄─────────►│  (builder)   │◄─────────►│ (inspector)  │
+    └──────┬───────┘           └──────┬───────┘           └──────┬───────┘
+           │                          │                          │
+           ▼                          ▼                          ▼
+    ┌──────────────┐           ┌──────────────┐           ┌──────────────┐
+    │  ARCHIVIST   │           │  CLEAN CODE  │           │  BACKEND QA  │
+    │ (librarian)  │           │ (refactorer) │           │  (auditor)   │
+    └──────┬───────┘           └──────────────┘           └──────┬───────┘
+           │                                                      │
+           ▼                                                      ▼
+    ┌──────────────┐     ┌──────────────┐                 ┌──────────────┐
+    │ MEMORY SCRIBE│     │   DATABASE   │                 │   SECURITY   │
+    │ (historian)  │     │    (DBA)     │                 │  (auditor)   │
+    └──────┬───────┘     └──────────────┘                 └──────┬───────┘
+           │                                                      │
+           ▼                                                      ▼
+    ┌──────────────┐     ┌──────────────┐                 ┌──────────────┐
+    │   GITHUB     │     │ ORCHESTRATOR  │                 │    TESTER    │
+    │   TASKS      │     │(session mesh) │                 │              │
+    └──────┬───────┘     └──────────────┘                 └──────────────┘
+           │
+           └── GITHUB (PRs & commits)
 
-        ┌─────────────────────────────────┐
-        │   DOMAIN-ISOLATED .brain/       │
-        │  backend/  frontend/            │
-        │  mobile-ios/  android/  devops/ │
-        └─────────────────────────────────┘
+    ╔═══════════════════════════════════════════════════════════════════════════╗
+    ║              DOMAIN-ISOLATED .brain/                                       ║
+    ║  backend/ │ frontend/ │ mobile-ios/ │ android/ │ devops/                   ║
+    ╚═══════════════════════════════════════════════════════════════════════════╝
+
 ```
 
 ### The Agents
 
 | Agent | Role | What It Does |
 |-------|------|-------------|
+| **ORCHESTRATOR ENGINE** | Task Orchestrator | Decomposes complex tasks into sub-tasks, dispatches across domain agents in parallel, relays cross-agent requests, runs autonomous verify loop (R41-R45) |
 | **ORCHESTRATOR** | Session Manager | Manages session lifecycle, inter-session message bus, heartbeat, peer discovery |
 | **PLANNER** | Architect | Produces structured plans before any code is written. Lists affected files, risks, dependencies. |
 | **ARCHIVIST** | Librarian | Reads your codebase and answers questions. "What's in the User model?" "What does AuthController do?" |
@@ -92,6 +98,17 @@ The system is built around **16 specialized agents** that talk to each other thr
 | **ARCHITECT** | System Architect | Creates guidelines, enforces consistency, updates project structure documentation |
 | **GITHUB** | Integrator | Creates branches, commits, and pull requests with full documentation. |
 | **GITHUB TASKS** | Task Manager | Fetches GitHub issues, analyzes requirements, breaks into subtasks, manages delivery |
+
+### Orchestration Engine
+
+For complex or multi-domain tasks, the **ORCHESTRATOR ENGINE** takes the helm. It doesn't write code — it **orchestrates** the other agents:
+
+1. **Decompose** — Breaks the task into the smallest independent sub-tasks, mapping each to its domain (Backend, Frontend, Mobile, DevOps)
+2. **Dispatch** — Launches independent sub-tasks in parallel across domain agents. Serializes only where real dependencies exist
+3. **Relay** — Routes cross-agent requests in real-time so sub-agents never block waiting for information
+4. **Verify** — Checks that everything fits together, re-dispatches if gaps are found, repeats until done (max 3 cycles — R45)
+
+This replaces sequential pipelines with a **dependency graph resolved into parallel waves** — sub-tasks with no dependencies run concurrently, only what blocks waits.
 
 ### How They Talk to Each Other
 
@@ -114,6 +131,10 @@ ARCHITECT needs project structure  → calls ARCHIVIST for analysis
 GITHUB TASKS breaks down issues    → calls PLANNER, EXECUTOR, REVIEWER
 GITHUB needs PR body               → calls EXECUTOR, REVIEWER, TESTER
 ORCHESTRATOR discovers peers       → registers in session registry
+ORCHESTRATOR ENGINE decomposes task → calls PLANNER for each sub-task
+ORCHESTRATOR ENGINE dispatches work → sends sub-tasks to domain agents in parallel
+ORCHESTRATOR ENGINE relays between agents → routes requests so sub-agents don't block
+ORCHESTRATOR ENGINE verifies result → runs autonomous loop (max 3 cycles)
 SUMMARY produces reports           → calls all agents for outputs
 ```
 
@@ -294,7 +315,7 @@ Key design decisions:
 - **Agents ask for help.** Unsure about architecture? Call ARCHIVIST. Unsure about a query? Call BACKEND QA.
 - **Structured outputs.** Every agent returns a defined schema, not free-form text.
 - **Domain-isolated memory.** `.brain/backend/`, `.brain/frontend/`, `.brain/mobile-ios/`, `.brain/mobile-android/`, `.brain/devops/` are fully isolated subtrees.
-- **Framework-agnostic.** The OS knows engineering patterns; domain knowledge lives in Skills.
+- **Framework-agnostic.** The system knows engineering patterns; domain knowledge lives in Skills.
 - **Model-locked.** All agents run on `deepseek-v4-flash`. No exceptions.
 
 ---

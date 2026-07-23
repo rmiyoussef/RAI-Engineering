@@ -91,7 +91,7 @@ If a task spans multiple domains, each domain keeps its own subtree. Cross-domai
 3. **Context Over Instructions** — Give context, not step-by-step scripts.
 4. **Memory Is a First-Class Citizen** — Every decision is indexed. Nothing is lost.
 5. **Validate at Boundaries** — Bad data stops at the border.
-6. **Framework-Agnostic Core** — The OS knows engineering patterns. Domain knowledge lives in Skills.
+6. **Framework-Agnostic Core** — The architecture knows engineering patterns. Domain knowledge lives in Skills.
 7. **Versioned Product** — Pin a version. Upgrade deliberately.
 8. **Testable Pieces** — Mock the input, assert the output.
 9. **Progressive Complexity** — Start simple. Add layers as needed.

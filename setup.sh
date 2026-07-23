@@ -191,18 +191,18 @@ download_file ".brain/agents/ORCHESTRATOR_ENGINE.md" "$AI_DIR/agents/ORCHESTRATO
 echo -e "   ├── Installing skills..."
 download_file ".brain/skills/CODE_REVIEW.md"    "$AI_DIR/skills/CODE_REVIEW.md"
 download_file ".brain/skills/TESTING.md"        "$AI_DIR/skills/TESTING.md"
-download_file ".brain.skills/GIT.md"            "$AI_DIR/skills/GIT.md"
-download_file ".brain.skills/MEMORY.md"         "$AI_DIR/skills/MEMORY.md"
-download_file ".brain.skills/BACKEND_ENGINEERING.md" "$AI_DIR/skills/BACKEND_ENGINEERING.md"
+download_file ".brain/skills/GIT.md"            "$AI_DIR/skills/GIT.md"
+download_file ".brain/skills/MEMORY.md"         "$AI_DIR/skills/MEMORY.md"
+download_file ".brain/skills/BACKEND_ENGINEERING.md" "$AI_DIR/skills/BACKEND_ENGINEERING.md"
 
 echo -e "   ├── Installing rules..."
-download_file ".brain.rules/COMMIT_MESSAGES.md" "$AI_DIR/rules/COMMIT_MESSAGES.md"
-download_file ".brain.rules/ERROR_HANDLING.md"  "$AI_DIR/rules/ERROR_HANDLING.md"
-download_file ".brain.rules/NAMING_CONVENTIONS.md" "$AI_DIR/rules/NAMING_CONVENTIONS.md"
-download_file ".brain.rules/SECURITY.md"        "$AI_DIR/rules/SECURITY.md"
-download_file ".brain.rules/DATABASE.md"        "$AI_DIR/rules/DATABASE.md"
-download_file ".brain.rules/API_DESIGN.md"      "$AI_DIR/rules/API_DESIGN.md"
-download_file ".brain.rules/GIT_SAFETY.md"      "$AI_DIR/rules/GIT_SAFETY.md"
+download_file ".brain/rules/COMMIT_MESSAGES.md" "$AI_DIR/rules/COMMIT_MESSAGES.md"
+download_file ".brain/rules/ERROR_HANDLING.md"  "$AI_DIR/rules/ERROR_HANDLING.md"
+download_file ".brain/rules/NAMING_CONVENTIONS.md" "$AI_DIR/rules/NAMING_CONVENTIONS.md"
+download_file ".brain/rules/SECURITY.md"        "$AI_DIR/rules/SECURITY.md"
+download_file ".brain/rules/DATABASE.md"        "$AI_DIR/rules/DATABASE.md"
+download_file ".brain/rules/API_DESIGN.md"      "$AI_DIR/rules/API_DESIGN.md"
+download_file ".brain/rules/GIT_SAFETY.md"      "$AI_DIR/rules/GIT_SAFETY.md"
 
 # Install orchestration rules to the first domain's rule folder
 FIRST_DOMAIN="${DOMAINS[0]}"
@@ -212,11 +212,11 @@ if [ -n "$FIRST_DOMAIN" ]; then
 fi
 
 echo -e "   ├── Installing templates..."
-download_file ".brain.templates/MEMORY_DECISION.md" "$AI_DIR/templates/MEMORY_DECISION.md"
-download_file ".brain.templates/GUIDELINES.md"      "$AI_DIR/templates/GUIDELINES.md"
+download_file ".brain/templates/MEMORY_DECISION.md" "$AI_DIR/templates/MEMORY_DECISION.md"
+download_file ".brain/templates/GUIDELINES.md"      "$AI_DIR/templates/GUIDELINES.md"
 
 echo -e "   ├── Installing workflows..."
-download_file "workflows/STANDARD.md"    "$AI_DIR/workflows/STANDARD.md" 2>/dev/null || true
+download_file ".brain/workflows/STANDARD.md"    "$AI_DIR/workflows/STANDARD.md" 2>/dev/null || true
 
 echo -e "   └── Installing CLAUDE.md..."
 download_file "$CLAUDE_FILE"            "$AI_DIR/CLAUDE.md"

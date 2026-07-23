@@ -470,6 +470,7 @@ Every task belongs to exactly one domain: **Backend**, **Frontend**, **Mobile (i
 | v1.3 | **Domain Isolation Protocol** — per-domain plans, rules, skills, memory | ✅ Done |
 | v1.4 | **Orchestration Engine** — task decomposition, parallel dispatch, verify loop | ✅ Done |
 | v1.5 | **Skill Library Import** — 34 skills from 6 external repos, 4 rule merges | ✅ Done |
+| v1.5.1 | **Path separator fix** — `.brain.` → `.brain/` in setup.sh & update.sh download paths | ✅ Done |
 
 ---
 
@@ -481,7 +482,7 @@ Every task belongs to exactly one domain: **Backend**, **Frontend**, **Mobile (i
       <b>Rami Youssef</b>
     </a>
     <br>
-    <small>RAI-Engineering — v1.5</small>
+    <small>RAI-Engineering — v1.5.1</small>
   </sub>
   <br>
 </div>

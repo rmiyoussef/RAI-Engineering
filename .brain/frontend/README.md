@@ -2,6 +2,8 @@
 
 > Domain-isolated knowledge base for Frontend projects.
 > Plans, rules, skills, and memory live in `.brain/frontend/{project-name}/`.
+> Skills: 7 (Mantine, UI eng, design, devtools, animations, Apple design, browser testing)
+> Reference: [Mantine UI](reference/mantine.md) — full docs at mantine.dev/llms-full.txt (~4MB)
 
 ## Structure
 

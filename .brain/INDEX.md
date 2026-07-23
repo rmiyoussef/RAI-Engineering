@@ -38,7 +38,11 @@ RAI-Engineering organizes knowledge into **domain-isolated subtrees**.
 │
 ├── frontend/                             ← Frontend domain
 │   ├── README.md
-│   └── skills/                           ← UI eng, design, devtools, animations
+│   ├── INDEX.md                          ← Frontend skills, rules & reference
+│   ├── FRONTEND_BEST_PRACTICES.md        ← Human-readable guide (11 rule sets)
+│   ├── skills/                           ← UI eng, design, devtools, animations, Mantine
+│   ├── rules/                            ← 11 rule files (component, state, perf, a11y, etc.)
+│   └── reference/                        ← Mantine UI docs & integration guide
 │
 ├── mobile-ios/                           ← iOS domain (for future projects)
 ├── mobile-android/                       ← Android domain (for future projects)
@@ -118,7 +122,10 @@ RAI-Engineering organizes knowledge into **domain-isolated subtrees**.
 | Create an API resource | `.brain/backend/skills/resource.md` |
 | Generate a full CRUD | `.brain/backend/skills/crud.md` |
 | Browse ALL cross-domain skills | `.brain/shared/skills/` (27 skills) |
-| Browse frontend skills | `.brain/frontend/skills/` (6 skills) |
+| Browse frontend skills | `.brain/frontend/skills/` (7 skills) |
+| Browse frontend rules | `.brain/frontend/rules/` (11 rules) |
+| Browse frontend best practices | `.brain/frontend/FRONTEND_BEST_PRACTICES.md` |
+| Browse Mantine UI reference | `.brain/frontend/reference/mantine.md` |
 | Browse devops skills | `.brain/devops/skills/` (1 skill) |
 | Follow project conventions | `.brain/backend/rules/project-rules.md` |
 | Check DB schema | `.brain/backend/connections/database.md` |
@@ -132,6 +139,7 @@ RAI-Engineering organizes knowledge into **domain-isolated subtrees**.
 - [Super TESTER Upgrade](backend/memory/decisions/super-tester-upgrade.md) — 5 testing modes
 - [.brain/ Migration](backend/memory/decisions/brain-migration.md) — Team-wide AI knowledge base
 - [Orchestration Engine](backend/memory/decisions/2026-07-23-orchestration-engine.md) — Parallel execution engine
+- [Mantine UI Reference](frontend/memory/decisions/mantine-reference.md) — Mantine added to frontend domain
 
 ## Lessons
 

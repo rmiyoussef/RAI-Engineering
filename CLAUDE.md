@@ -36,7 +36,7 @@ Skill Trigger Table:
 
 | Task signal | Domain | Skill to load |
 |---|---|---|
-| React/Vue/Angular component, styling, layout, UI | Frontend | UI / Frontend Skill |
+| React/Vue/Angular component, styling, layout, UI, Mantine | Frontend | UI / Frontend Skill + frontend rules (`.brain/frontend/rules/`) — load relevant rules based on sub-task: `COMPONENT_ARCHITECTURE.md` for components, `STATE_MANAGEMENT.md` for state, `PERFORMANCE.md` for perf, `ACCESSIBILITY.md` for a11y, `STYLING.md` for CSS, `ERROR_LOADING_UX.md` for loading/error states, `API_INTEGRATION.md` for data fetching, `TESTING.md` for tests, `SECURITY.md` for security, `FORMS_AND_INPUT.md` for forms, `BUILD_TOOLING.md` for build config |
 | API, DB schema, server route, auth, background jobs | Backend | Backend Skill |
 | Swift/Kotlin/Flutter/React Native code | Mobile | Mobile (iOS/Android) Skill |
 | Terraform, Docker, CI/CD, deploy, server config | DevOps | DevOps Skill |

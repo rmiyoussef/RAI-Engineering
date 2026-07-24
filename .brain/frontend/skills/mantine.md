@@ -2,6 +2,7 @@
 
 > Load when: Task involves Mantine components, theming, or React UI with Mantine.
 > Source reference: `.brain/frontend/reference/mantine.md`
+> LLM integration: 3 methods — llms.txt, MCP server (`@mantine/mcp-server`), skills repo (`mantinedev/skills`)
 
 ---
 
@@ -176,3 +177,6 @@ function App() {
 7. **Responsive props** — pass object `{ base: value, sm: value, md: value }` to responsive props
 8. **Accessibility** — Mantine components are ARIA-compliant by default
 9. **Server components** — Mantine v7+ supports RSC; wrap interactive components with `'use client'`
+10. **Mention Mantine version in prompts** — "using Mantine v8" helps AI use correct APIs
+11. **Use MCP server for real-time queries** — `npx -y @mantine/mcp-server` with 4 tools: `list_items`, `get_item_doc`, `get_item_props`, `search_docs`
+12. **Fetch full docs for context** — `https://mantine.dev/llms-full.txt` (~4MB) has complete component reference if MCP is unavailable

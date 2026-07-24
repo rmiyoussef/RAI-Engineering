@@ -288,7 +288,12 @@ Every decision, lesson, test result, and task is saved to `.brain/` — a **team
 │
 ├── mobile-ios/    ← iOS domain (isolated)
 ├── mobile-android/← Android domain (isolated)
-└── devops/        ← DevOps domain (isolated)
+├── devops/        ← DevOps domain (isolated)
+│   ├── DEVOPS_BEST_PRACTICES.md ← Human-readable guide
+│   ├── skills/               ← CI/CD automation
+│   ├── rules/                ← 13 devops engineering rules
+│   ├── reference/            ← External docs (coming soon)
+│   └── memory/               ← Coming soon
 ```
 
 **Summaries are always written.** Every task, test, and discussion saves a summary. If you ask for a summary and it doesn't exist yet, it's created before responding.
@@ -329,6 +334,24 @@ When installed, your project gets access to domain-isolated engineering rules:
 | `frontend/rules/FORMS_AND_INPUT.md` | Validation, autocomplete, confirmation patterns |
 | `frontend/rules/BUILD_TOOLING.md` | CI pipeline, TypeScript strict, pre-commit hooks |
 
+**DevOps (13 rules):**
+
+| Rule File | Covers |
+|-----------|--------|
+| `devops/rules/CONTAINERS.md` | Multi-stage builds, layer ordering, image scanning |
+| `devops/rules/KUBERNETES.md` | Pod spec, probes, network policies, HPA, cluster security |
+| `devops/rules/CI_CD.md` | Pipeline perf, caching, secrets, branch protection |
+| `devops/rules/INFRASTRUCTURE_AS_CODE.md` | Terraform state, modules, CI for IaC |
+| `devops/rules/CLOUD_SERVICES.md` | Multi-AZ, VPC, IAM, storage, cost optimization |
+| `devops/rules/MONITORING_OBSERVABILITY.md` | RED metrics, structured logging, alerting, SLO |
+| `devops/rules/DEVOPS_SECURITY.md` | Supply chain, secrets, runtime security, compliance |
+| `devops/rules/NETWORKING_DNS.md` | VPC design, DNS, TLS, load balancers, WAF |
+| `devops/rules/DATABASE_OPS.md` | DB provisioning, connection pooling, zero-downtime migrations |
+| `devops/rules/BACKUP_DR_INCIDENT.md` | DR tiers, incident response, postmortem template |
+| `devops/rules/COST_OPTIMIZATION.md` | Right-sizing, pricing models, budget alerts |
+| `devops/rules/RELEASE_MANAGEMENT.md` | Deploy process, rollback, feature flags, semver |
+| `devops/rules/AUTOMATION_SCRIPTING.md` | Shell script standards, idempotency, Makefiles |
+
 | Template | When Used |
 |----------|-----------|
 | `.brain/templates/summary/TEST_SUMMARY.md` | Team-ready test summary (icons, tables, security, perf, DB) |
@@ -352,6 +375,7 @@ Rules are loaded automatically based on what domain the task touches.
 | `skills/MEMORY.md` | Writing to project memory (framework-agnostic) |
 | `skills/BACKEND_ENGINEERING.md` | Backend QA audit or query work |
 | `frontend/skills/mantine.md` | Mantine UI component reference, form patterns, theming |
+| `devops/skills/ci-cd-and-automation.md` | CI/CD pipeline setup and automation patterns |
 
 ---
 
@@ -543,6 +567,7 @@ Every task belongs to exactly one domain: **Backend**, **Frontend**, **Mobile (i
 | v1.5 | **Skill Library Import** — 34 skills from 6 external repos, 4 rule merges | ✅ Done |
 | v1.5.1 | **Path separator fix** — `.brain.` → `.brain/` in setup.sh & update.sh download paths | ✅ Done |
 | v1.5.2 | **Frontend Rules System** — 11 engineering rules, Mantine reference, human-readable guide | ✅ Done |
+| v1.5.3 | **DevOps Rules System** — 13 engineering rules, CI/CD skill, human-readable guide | ✅ Done |
 
 ---
 
@@ -554,7 +579,7 @@ Every task belongs to exactly one domain: **Backend**, **Frontend**, **Mobile (i
       <b>Rami Youssef</b>
     </a>
     <br>
-    <small>RAI-Engineering — v1.5.2</small>
+    <small>RAI-Engineering — v1.5.3</small>
   </sub>
   <br>
 </div>

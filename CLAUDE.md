@@ -1,7 +1,7 @@
 # RAI-Engineering — CLAUDE.md
 
 > **Model Lock:** All operations run on `deepseek-v4-flash`. No exceptions.
-> **Version:** v1.5.2 — Frontend Rules System (11 rules + Mantine + human guide)
+> **Version:** v1.5.3 — DevOps Rules System (13 rules + handbook)
 
 ============================================================
 ## SYSTEM IDENTITY
@@ -39,7 +39,7 @@ Skill Trigger Table:
 | React/Vue/Angular component, styling, layout, UI, Mantine | Frontend | UI / Frontend Skill + frontend rules (`.brain/frontend/rules/`) — load relevant rules based on sub-task: `COMPONENT_ARCHITECTURE.md` for components, `STATE_MANAGEMENT.md` for state, `PERFORMANCE.md` for perf, `ACCESSIBILITY.md` for a11y, `STYLING.md` for CSS, `ERROR_LOADING_UX.md` for loading/error states, `API_INTEGRATION.md` for data fetching, `TESTING.md` for tests, `SECURITY.md` for security, `FORMS_AND_INPUT.md` for forms, `BUILD_TOOLING.md` for build config |
 | API, DB schema, server route, auth, background jobs | Backend | Backend Skill |
 | Swift/Kotlin/Flutter/React Native code | Mobile | Mobile (iOS/Android) Skill |
-| Terraform, Docker, CI/CD, deploy, server config | DevOps | DevOps Skill |
+| Terraform, Docker, CI/CD, deploy, server config | DevOps | DevOps Skill + devops rules (`.brain/devops/rules/`) — load relevant rules based on sub-task: `CONTAINERS.md` for Docker, `KUBERNETES.md` for K8s, `CI_CD.md` for pipelines, `INFRASTRUCTURE_AS_CODE.md` for Terraform, `CLOUD_SERVICES.md` for cloud architecture, `MONITORING_OBSERVABILITY.md` for observability, `DEVOPS_SECURITY.md` for security, `NETWORKING_DNS.md` for networking, `DATABASE_OPS.md` for DB ops, `BACKUP_DR_INCIDENT.md` for DR, `COST_OPTIMIZATION.md` for cost, `RELEASE_MANAGEMENT.md` for releases, `AUTOMATION_SCRIPTING.md` for scripts |
 | "review this PR", "check this code", "audit this" | Any | Code Review Skill |
 
 Confirm at the start of each task which Skill(s), if any, you're applying before you begin.
@@ -607,7 +607,7 @@ Read `.brain/brain/MEMORY_SYSTEM.md` for full protocol.
 ## VERSION
 ============================================================
 
-RAI-Engineering v1.5.2 — Frontend Rules System (11 rules + Mantine + human guide)
+RAI-Engineering v1.5.3 — DevOps Rules System (13 rules + handbook)
 17 agents: ARCHITECT, PLANNER, ARCHIVIST, DATABASE, SECURITY, EXECUTOR,
            BACKEND QA, CLEAN CODE, TESTER, REVIEWER, MEMORY SCRIBE,
            GITHUB, GITHUB TASKS, SUMMARY, ORCHESTRATOR, ORCHESTRATOR ENGINE

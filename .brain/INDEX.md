@@ -49,7 +49,10 @@ RAI-Engineering organizes knowledge into **domain-isolated subtrees**.
 │
 └── devops/                               ← DevOps domain
     ├── README.md
-    └── skills/                           ← DevOps patterns
+    ├── DEVOPS_BEST_PRACTICES.md           ← Team-readable guide (13 rule sets)
+    ├── skills/                            ← CI/CD automation
+    ├── rules/                             ← 13 devops engineering rules
+    └── reference/                         ← External docs (coming soon)
 ```
 
 ---
@@ -126,6 +129,9 @@ RAI-Engineering organizes knowledge into **domain-isolated subtrees**.
 | Browse frontend rules | `.brain/frontend/rules/` (11 rules) |
 | Browse frontend best practices | `.brain/frontend/FRONTEND_BEST_PRACTICES.md` |
 | Browse Mantine UI reference | `.brain/frontend/reference/mantine.md` |
+| Browse devops skills | `.brain/devops/skills/` (1 skill) |
+| Browse devops rules | `.brain/devops/rules/` (13 rules) |
+| Browse devops best practices | `.brain/devops/DEVOPS_BEST_PRACTICES.md` |
 | Browse devops skills | `.brain/devops/skills/` (1 skill) |
 | Follow project conventions | `.brain/backend/rules/project-rules.md` |
 | Check DB schema | `.brain/backend/connections/database.md` |

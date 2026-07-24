@@ -1,47 +1,97 @@
 {
-  "version": 1,
-  "skills": {
-    "cavecrew": {
-      "source": "JuliusBrussee/caveman",
-      "sourceType": "github",
-      "skillPath": "skills/cavecrew/SKILL.md",
-      "computedHash": "c5527c994fbd4c22b36714e3b124a0f167a533d114ab164fb1d35e2123533917"
+  "version": 3,
+  "upstream_repos": {
+    "mattpocock/skills": {
+      "url": "https://github.com/mattpocock/skills",
+      "ref": "main",
+      "sha": "HEAD",
+      "skills_adapted": [
+        "test-driven-development",
+        "codebase-design",
+        "domain-modeling",
+        "research",
+        "prototype",
+        "resolving-merge-conflicts",
+        "code-review",
+        "improve-codebase-architecture"
+      ]
     },
-    "caveman": {
-      "source": "JuliusBrussee/caveman",
-      "sourceType": "github",
-      "skillPath": "skills/caveman/SKILL.md",
-      "computedHash": "d18cdf73a5f5c496d681a43a6846336b110223bdffa6817b8992529c57f1a815"
+    "anthropics/skills": {
+      "url": "https://github.com/anthropics/skills",
+      "ref": "main",
+      "sha": "HEAD",
+      "skills_adapted": [
+        "frontend-design-principles"
+      ]
     },
-    "caveman-commit": {
-      "source": "JuliusBrussee/caveman",
-      "sourceType": "github",
-      "skillPath": "skills/caveman-commit/SKILL.md",
-      "computedHash": "790a4eeace0be35c6691faf923518ba5bd50f1f1305d1101d09dd4971be94e00"
+    "addyosmani/agent-skills": {
+      "url": "https://github.com/addyosmani/agent-skills",
+      "ref": "main",
+      "sha": "HEAD",
+      "source_skills": [
+        "context-engineering",
+        "writing-plans",
+        "incremental-implementation",
+        "source-driven-development",
+        "spec-driven-development",
+        "code-simplification",
+        "documentation-and-adrs",
+        "deprecation-and-migration",
+        "performance-optimization",
+        "shipping-and-launch",
+        "observability-and-instrumentation",
+        "systematic-debugging",
+        "frontend-ui-engineering",
+        "browser-testing-with-devtools"
+      ],
+      "merged_into_rules": {
+        "git-workflow": "backend/rules/GIT_SAFETY.md",
+        "api-design": "backend/rules/API_DESIGN.md",
+        "security-hardening": "backend/rules/SECURITY.md",
+        "ci-cd-automation": "devops/skills/ci-cd-and-automation.md"
+      }
     },
-    "caveman-compress": {
-      "source": "JuliusBrussee/caveman",
-      "sourceType": "github",
-      "skillPath": "skills/caveman-compress/SKILL.md",
-      "computedHash": "84517cd4cf7a49d8d2bc1baf00f61bc359306c6ad9389756b6937eff958bd374"
+    "obra/superpowers": {
+      "url": "https://github.com/obra/superpowers",
+      "ref": "main",
+      "sha": "HEAD",
+      "skills_adapted": [
+        "verification-before-completion",
+        "subagent-driven-development",
+        "dispatching-parallel-agents",
+        "executing-plans",
+        "writing-plans",
+        "brainstorming",
+        "using-git-worktrees",
+        "finishing-a-development-branch",
+        "systematic-debugging"
+      ]
     },
-    "caveman-help": {
-      "source": "JuliusBrussee/caveman",
-      "sourceType": "github",
-      "skillPath": "skills/caveman-help/SKILL.md",
-      "computedHash": "dd85267e76baad76995157e7b9f762dfa557cd58951ee92af0c283f48aa26537"
+    "emilkowalski/skills": {
+      "url": "https://github.com/emilkowalski/skills",
+      "ref": "main",
+      "sha": "HEAD",
+      "skills_adapted": [
+        "design-engineering",
+        "animation-vocabulary",
+        "apple-design-principles"
+      ]
     },
-    "caveman-review": {
-      "source": "JuliusBrussee/caveman",
-      "sourceType": "github",
-      "skillPath": "skills/caveman-review/SKILL.md",
-      "computedHash": "fb7214a1c5793bae6ba8b1be4329e2e6f40dbec6dd911dfb335ad29f09c316a1"
-    },
-    "caveman-stats": {
-      "source": "JuliusBrussee/caveman",
-      "sourceType": "github",
-      "skillPath": "skills/caveman-stats/SKILL.md",
-      "computedHash": "47ce2de3d6cb39a75047b5c962e4eb3da15594e7397c94103e9a104d42626553"
+    "nextlevelbuilder/ui-ux-pro-max": {
+      "url": "https://github.com/nextlevelbuilder/ui-ux-pro-max",
+      "ref": "main",
+      "sha": "HEAD",
+      "skills_adapted": [],
+      "merged_into_rules": {},
+      "note": "Design intelligence patterns integrated into frontend rule files (palettes, typography, UX guidelines)"
     }
+  },
+  "upgrade_check": {
+    "last_checked": "2026-07-24",
+    "command": "bash .ai/skills-diff.sh"
+  },
+  "caveman_skills_optional": {
+    "note": "These skills are installed at runtime by update.sh via npx github:JuliusBrussee/caveman. They are not stored on disk and cannot be hash-checked locally.",
+    "source": "https://github.com/JuliusBrussee/caveman"
   }
 }

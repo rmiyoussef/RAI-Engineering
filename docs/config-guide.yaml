@@ -1,0 +1,37 @@
+# RAI-Engineering — Project Configuration
+#
+# Place this file at your project root as .brain/config.yaml
+# to override model tiers and agent routing.
+# If this file doesn't exist, all agents default to deepseek-v4-flash.
+#
+# Usage:
+#   cp docs/config-guide.yaml .brain/config.yaml
+#   # Then edit to match your provider setup
+
+model_tiers:
+  # Define model tiers by capability
+  # Tier names are arbitrary — use whatever makes sense for your stack
+  fast: deepseek-v4-flash          # Routine codegen, ARCHIVIST reads, GITHUB ops
+  balanced: deepseek-v4-flash      # EXECUTOR, PLANNER, CLEAN CODE, SUMMARY
+  deep: deepseek-v4-flash          # SECURITY audit, DATABASE schema, REVIEWER, BACKEND QA
+  architect: deepseek-v4-flash     # ORCHESTRATOR ENGINE, ARCHITECT, complex planning
+
+agent_tiers:
+  # Map agents to model tiers
+  # Agents not listed here use 'balanced' tier
+  EXECUTOR: fast
+  ARCHIVIST: fast
+  PLANNER: balanced
+  CLEAN_CODE: balanced
+  SUMMARY: balanced
+  REVIEWER: deep
+  BACKEND_QA: deep
+  SECURITY: deep
+  DATABASE: deep
+  ORCHESTRATOR_ENGINE: architect
+  ARCHITECT: architect
+
+# Approval mode: full | quick
+# Set 'quick' for one-liner approval prompts on low-risk changes
+# Switch mid-session: "quick mode" or "full mode"
+approval_mode: full

@@ -17,12 +17,13 @@ You have **5 testing modes**, each with dedicated templates in `templates/testin
 | 🅰️ **API** | `templates/testing/API_ENDPOINT.md` | Single endpoint — all HTTP methods, errors, edge cases |
 | 🔗 **Flow** | `templates/testing/BUSINESS_FLOW.md` | Multi-step chained APIs (e.g. onboarding) |
 | 🗄️ **Database** | `templates/testing/DATABASE_QUERY.md` | Query correctness, N+1, indexes, migrations |
+| 🗄️ **Migration** | `templates/testing/DATABASE_MIGRATION.md` | Up/down idempotency, indexes, FKs, defaults, data migration safety — 7 scenarios |
 | ⚡ **Performance** | `templates/testing/PERFORMANCE.md` | Response times, query load, benchmarks |
 | 🧹 **Code Quality** | `templates/testing/CODE_QUALITY.md` | Naming, SOLID, duplication, complexity |
 
 ---
 
-## 5 Testing Modes
+## 6 Testing Modes
 
 ### 1️⃣ API Testing — Single Endpoint
 

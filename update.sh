@@ -264,6 +264,16 @@ if [ "$NEEDS_UPDATE" = true ]; then
     echo -e "   ├── Updating workflows..."
     download_file ".brain/workflows/STANDARD.md"    "$AI_DIR/workflows/STANDARD.md" 2>/dev/null || true
 
+    echo -e "   ├── Updating tools..."
+    download_file ".ai/memory-timeline.py"    "$AI_DIR/memory-timeline.py"
+    download_file ".ai/skills-diff.sh"        "$AI_DIR/skills-diff.sh"
+
+    echo -e "   ├── Updating config guide..."
+    download_file "docs/config-guide.yaml"    "$AI_DIR/docs/config-guide.yaml" 2>/dev/null || true
+
+    echo -e "   ├── Updating migration test template..."
+    download_file ".brain/templates/testing/DATABASE_MIGRATION.md" "$AI_DIR/templates/testing/DATABASE_MIGRATION.md" 2>/dev/null || true
+
     echo -e "   └── Updating CLAUDE.md..."
     download_file "CLAUDE.install.md"        "$AI_DIR/CLAUDE.md"
 
@@ -339,20 +349,20 @@ download_file "update.sh" "$AI_DIR/update.sh"
 chmod +x "$AI_DIR/update.sh"
 
 echo ""
-echo -e "${GREEN}✅  RAI-Engineering updated to v1.5 — Orchestration & Parallel Execution!${NC}"
+echo -e "${GREEN}✅  RAI-Engineering updated to v1.6!${NC}"
 echo ""
 
-NEW_VERSION=$(cat "$AI_DIR/VERSION")
-echo -e "   Version: ${GREEN}$NEW_VERSION${NC}"
+echo -e "   Version: ${GREEN}v1.6.0${NC}"
 echo ""
-echo -e "   ${CYAN}New in v1.5:${NC}"
-echo -e "   - Orchestration Engine — parallel multi-domain task execution"
-echo -e "   - ORCHESTRATOR ENGINE agent — task decomposition, dispatch, relay, verify"
-echo -e "   - R41-R45 orchestration rules"
-echo -e "   - Flat .brain/{domain}/ structure (no project-name nesting)"
-echo -e "   - Inter-agent request relay protocol"
-echo -e "   - Autonomous completion loop (max 3 cycles)"
-echo -e "   - Conflict auto-resolution by project rules"
+echo -e "   ${CYAN}New in v1.6:${NC}"
+echo -e "   - Lazy-load boot system — CLAUDE.md cut from 36KB → 8KB"
+echo -e "   - Consolidated rules — R3+R28 merged, canonical RULES.md only"
+echo -e "   - Model Tiering Protocol — configurable model per agent role"
+echo -e "   - Approval modes — quick one-liner + full detailed box"
+echo -e "   - Memory Timeline — cross-reference decisions/lessons/sessions by date"
+echo -e "   - Skills Drift Checker — compare local vs upstream hashes"
+echo -e "   - Migration testing template — 7 scenarios"
+echo -e "   - Skills-lock.json v2 — tracks upstream repos + commit SHAs"
 echo ""
 if [ "$MIGRATION_NEEDED" = true ]; then
     echo -e "   ${GREEN}✓ .brain/ structure migrated to flat format${NC}"

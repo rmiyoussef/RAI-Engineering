@@ -165,6 +165,8 @@ Four rule files were **upgraded with merged content** from external repos. They 
 | Add polish animations | design-engineering | Frontend |
 | Debug layout issues | browser-testing-with-devtools | Frontend |
 | Design a landing page | frontend-design-principles | Frontend |
+| Test a migration | DATABASE_MIGRATION.md | Backend |
+| Review code quality | CODE_QUALITY.md | Backend |
 | Set up GitHub Actions | ci-cd-and-automation | DevOps |
 
 ---

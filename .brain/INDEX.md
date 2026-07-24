@@ -1,6 +1,5 @@
-# 🧠 Project Brain Index
+# 📋 Memory System & Template Index
 
-> **Last updated:** 2026-07-23
 > **Purpose:** Everything an AI tool needs to understand this project.
 > **How to use:** Start here, identify which domain your task belongs to, then read the relevant subtree.
 
@@ -8,12 +7,11 @@
 
 ## Domain-Isolated Structure
 
-RAI-Engineering organizes knowledge into **domain-isolated subtrees**.
-
 ```
 .brain/
 ├── INDEX.md                              ← You are here
 ├── README.md                             ← What this folder is
+├── TIMELINE.md                           ← Auto-generated memory timeline (run .ai/memory-timeline.py)
 ├── agents/                               ← Agent definitions (framework-agnostic)
 ├── brain/                                ← Core system files
 ├── templates/                            ← Summary & testing templates
@@ -59,9 +57,7 @@ RAI-Engineering organizes knowledge into **domain-isolated subtrees**.
 
 ## 🧩 Skills Library
 
-> Newly imported from 6 GitHub repos (mattpocock, anthropics, addyosmani, obra, emilkowalski, nextlevelbuilder).
-
-### Shared Skills `.brain/shared/skills/`
+### Shared Skills — `.brain/shared/skills/`
 
 | Skill | Source | Use When |
 |-------|--------|----------|
@@ -93,72 +89,122 @@ RAI-Engineering organizes knowledge into **domain-isolated subtrees**.
 | using-git-worktrees | obra | Isolated workspaces for parallel agents |
 | finishing-a-development-branch | obra | Merging/pushing/discarding branches |
 
-### Frontend Skills `.brain/frontend/skills/`
+### Frontend Skills — `.brain/frontend/skills/`
 
 | Skill | Source | Use When |
 |-------|--------|----------|
 | frontend-ui-engineering | addyosmani | Production-quality, accessible UIs |
-| frontend-design-principles | anthropics | Creating distinctive visual identities |
-| browser-testing-with-devtools | addyosmani | Live browser testing and debugging |
-| design-engineering | emilkowalski | Animation-focused UI engineering |
-| apple-design-principles | emilkowalski | Apple WWDC design principles for web |
-| animation-vocabulary | emilkowalski | Precise animation terminology for agents |
+| design-engineering | emilkowalski | Design-system-driven, animation-rich UIs |
+| animation-vocabulary | emilkowalski | CSS transitions, Framer Motion, gestures |
+| apple-design-principles | emilkowalski | iOS/macOS design language |
+| frontend-design-principles | anthropics | UI design fundamentals |
+| browser-testing-with-devtools | addyosmani | Testing UI in browser devtools |
+| mantine | — | Mantine UI component reference, theming |
 
-### DevOps Skills `.brain/devops/skills/`
+### Backend Skills — `.brain/backend/skills/`
 
-| Skill | Source | Use When |
-|-------|--------|----------|
-| ci-cd-and-automation | addyosmani | Setting up CI/CD pipelines and automation |
+| Skill | Use When |
+|-------|----------|
+| service.md | Creating a service class with transactions |
+| controller.md | Creating a thin HTTP controller |
+| resource.md | Creating an API resource transformer |
+| crud.md | Generating full CRUD (migration → model → service → controller → routes → tests) |
 
----
+### DevOps Skills — `.brain/devops/skills/`
 
-## Quick Start
-
-| If you want to... | Read this |
-|-------------------|-----------|
-| Understand project architecture | `.brain/backend/memory/guidelines.md` |
-| Check past decisions | `.brain/backend/memory/decisions/` |
-| Learn from past mistakes | `.brain/backend/memory/lessons/` |
-| See what was done recently | `.brain/backend/memory/tasks/` |
-| Create a service | `.brain/backend/skills/service.md` |
-| Create a controller | `.brain/backend/skills/controller.md` |
-| Create an API resource | `.brain/backend/skills/resource.md` |
-| Generate a full CRUD | `.brain/backend/skills/crud.md` |
-| Browse ALL cross-domain skills | `.brain/shared/skills/` (27 skills) |
-| Browse frontend skills | `.brain/frontend/skills/` (7 skills) |
-| Browse frontend rules | `.brain/frontend/rules/` (11 rules) |
-| Browse frontend best practices | `.brain/frontend/FRONTEND_BEST_PRACTICES.md` |
-| Browse Mantine UI reference | `.brain/frontend/reference/mantine.md` |
-| Browse devops skills | `.brain/devops/skills/` (1 skill) |
-| Browse devops rules | `.brain/devops/rules/` (13 rules) |
-| Browse devops best practices | `.brain/devops/DEVOPS_BEST_PRACTICES.md` |
-| Browse devops skills | `.brain/devops/skills/` (1 skill) |
-| Follow project conventions | `.brain/backend/rules/project-rules.md` |
-| Check DB schema | `.brain/backend/connections/database.md` |
-| Browse plans | `.brain/backend/plans/` |
+| Skill | Use When |
+|-------|----------|
+| ci-cd-and-automation.md | Setting up CI/CD pipelines, automation scripts |
 
 ---
 
-## Active Decisions
+## 📝 Template Catalog
 
-- [Caveman ULTRA Install](backend/memory/decisions/caveman-ultra-install.md) — 67% token compression
-- [Super TESTER Upgrade](backend/memory/decisions/super-tester-upgrade.md) — 5 testing modes
-- [.brain/ Migration](backend/memory/decisions/brain-migration.md) — Team-wide AI knowledge base
-- [Orchestration Engine](backend/memory/decisions/2026-07-23-orchestration-engine.md) — Parallel execution engine
-- [Mantine UI Reference](frontend/memory/decisions/mantine-reference.md) — Mantine added to frontend domain
+### Testing Templates — `.brain/templates/testing/`
 
-## Lessons
+| Template | Use When | Scenarios |
+|----------|----------|-----------|
+| API_ENDPOINT.md | Testing a single API endpoint | Happy path, validation, auth, not found, edge cases, idempotency (15+) |
+| BUSINESS_FLOW.md | Testing a multi-step business flow | Full flow, partial failures, auth per step, final DB state |
+| DATABASE_QUERY.md | Testing database queries | N+1 detection, index checks, migration safety, query performance |
+| DATABASE_MIGRATION.md | Testing database migrations | Up/down idempotency, index integrity, foreign keys, defaults, data migration safety (7 scenarios) |
+| PERFORMANCE.md | Performance benchmarking | Response time benchmarks, query load tests, cache hit ratios |
+| CODE_QUALITY.md | Code quality audit | Naming, SOLID, method length, docblocks, duplication |
 
-- [Version Bump Before Push](backend/memory/lessons/version-bump-before-push.md) — R30
+### Summary Templates — `.brain/templates/summary/`
 
-## Task Summaries
+| Template | Use When |
+|----------|----------|
+| TEST_SUMMARY.md | After every test session — team-ready output |
+| TASK_SUMMARY.md | After every completed task — full record |
 
-- [Super TESTER Upgrade](backend/memory/tasks/2026-07-13-super-tester-upgrade.md)
-- [.brain/ Migration](backend/memory/tasks/2026-07-13-brain-migration.md)
+### Memory Templates — `.brain/templates/`
 
-## Plans
+| Template | Use When |
+|----------|----------|
+| MEMORY_DECISION.md | Recording an architecture decision |
+| GUIDELINES.md | Creating project guidelines |
 
-- [Multi-Session Mesh](backend/plans/2026-07-19-multi-session-architecture.md)
-- [Domain Isolation Protocol](backend/plans/2026-07-21-domain-isolation-protocol.md)
-- [Orchestration & Parallel Execution](backend/plans/2026-07-23-orchestration-parallel-execution.md)
-- [Flatten Domain Structure](backend/plans/2026-07-23-flatten-domain-structure.md)
+---
+
+## 🔧 Tools & Scripts
+
+| Script | Location | Purpose | Usage |
+|--------|----------|---------|-------|
+| 📊 Memory Timeline | `.ai/memory-timeline.py` | Cross-reference decisions, lessons, sessions by date | `python3 .ai/memory-timeline.py [--days N] [--domain X] [--all]` |
+| 🔍 Skills Drift Check | `.ai/skills-diff.sh` | Compare local skills against upstream repos | `bash .ai/skills-diff.sh [--verbose]` |
+| ⚡ Smart Update | `.ai/update.sh` | Refresh all skills from upstream | `bash .ai/update.sh` |
+
+---
+
+## Memory Flow
+
+### Before Any Work
+
+```
+BRAIN receives task
+    │
+    ├─► DETERMINE DOMAIN — Ask user or derive from task
+    ├─► CHECK DOMAIN FOLDER — .brain/{domain}/ exists?
+    │   If not → create with plans/, rules/, skills/, memory/
+    │
+    ├─► Read .brain/INDEX.md               ← What does the project know?
+    ├─► Read .brain/{domain}/memory/guidelines.md
+    ├─► Read .brain/{domain}/memory/decisions/
+    ├─► Read .brain/{domain}/memory/architecture/
+    ├─► Read .brain/{domain}/memory/lessons/
+    ├─► Read .brain/{domain}/memory/tests/
+    ├─► Read .brain/{domain}/memory/tasks/
+    └─► Read .brain/{domain}/connections/ (if needed)
+```
+
+### After Any Work (Always — in the correct domain)
+
+```
+Task/Discussion/Question complete — ALWAYS write
+    │
+    ├─► MEMORY SCRIBE writes .brain/{domain}/memory/sessions/
+    ├─► MEMORY SCRIBE writes .brain/{domain}/memory/tests/
+    ├─► MEMORY SCRIBE writes .brain/{domain}/memory/tasks/
+    ├─► MEMORY SCRIBE writes .brain/{domain}/memory/decisions/
+    ├─► MEMORY SCRIBE writes .brain/{domain}/memory/lessons/
+    ├─► ARCHITECT updates .brain/{domain}/memory/guidelines/
+    └─► MEMORY SCRIBE updates .brain/INDEX.md
+```
+
+---
+
+## Git Safety
+
+| Path | Committed? | Why |
+|------|-----------|-----|
+| `.brain/{domain}/memory/decisions/` | ✅ | Architecture decisions are project knowledge |
+| `.brain/{domain}/memory/architecture/` | ✅ | Component maps are part of the project |
+| `.brain/{domain}/memory/lessons/` | ✅ | Lessons benefit the whole team |
+| `.brain/{domain}/memory/sessions/` | ✅ | Session history helps resume work |
+| `.brain/{domain}/memory/tests/` | ✅ | Test summaries are team knowledge |
+| `.brain/{domain}/memory/tasks/` | ✅ | Task records show what was done |
+| `.brain/{domain}/memory/business/` | ✅ | Business rules are project knowledge |
+| `.brain/{domain}/skills/` | ✅ | Code templates are project standards |
+| `.brain/{domain}/memory/guidelines.md` | ✅ | Project structure is shared knowledge |
+| `.brain/{domain}/connections/` | ❌ **Never** | Contains schema info — never push secrets |

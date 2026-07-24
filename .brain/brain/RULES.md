@@ -28,7 +28,7 @@ Every code change must be reviewed before it is considered complete. The reviewe
 **Violation:** Code is not merged or committed without a passing review.
 
 ### R3 — Everything Is Tested
-Every change must include or update tests. If tests don't exist for the area being changed, create them.
+Every change must include or update tests. If tests don't exist for the area being changed, create them. If no test template exists for the feature, TESTER asks the user to create one first. Business flows use `.brain/templates/testing/` templates. (Consolidated: this replaces former R28 — template-led testing is part of the same rule.)
 
 **Violation:** The pipeline blocks on missing tests.
 
@@ -69,10 +69,10 @@ Before planning or executing, load relevant memory. Check:
 
 **Violation:** The Planner must justify why memory was not consulted.
 
-### R9 — Model Lock
-All agents, all skills, all brain operations use `deepseek-v4-flash`. No other model may be invoked.
+### R9 — Model Lock (Default)
+By default, all agents run on `deepseek-v4-flash`. When a `.brain/config.yaml` model_tiers config exists, agents route to their tier-assigned model. See CLAUDE.md Model Tiering Protocol section.
 
-**Violation:** The agent invocation is rejected.
+**Violation:** A model change without matching config is rejected.
 
 ### R10 — One Responsibility Per File
 If a file has two separable concerns, it must be split.
@@ -148,7 +148,7 @@ If a task introduces a new pattern, command, middleware, convention, or technolo
 ### R20 — Never Push Connection Info to Git
 The `memory/connections/` directory contains database schema and connection information. It must never be committed to Git. The `.gitignore` must include `memory/connections/`. The DATABASE agent must verify this before writing any connection file.
 
-**Violation:** R3 (Git Safety) is triggered. The commit is blocked.
+**Violation:** Git Safety is triggered. The commit is blocked.
 
 ---
 
@@ -156,7 +156,12 @@ The `memory/connections/` directory contains database schema and connection info
 
 ### R21 — Always Ask Before Changing or Deleting Anything
 
-You must **always ask for explicit approval** before any of these actions:
+You must **always ask for explicit approval** before any of these actions. Two modes available (see CLAUDE.md Approval Protocol):
+
+| Mode | When | Format |
+|------|------|--------|
+| **Full** (default) | Database changes, destructive commands, complex multi-file changes | Complete approval box with all risks |
+| **Quick** | Low-risk single-file edits, safe commands | One-liner: `[cmd/action] / [file] / [risk]? (y/n)` |
 
 **Before Database Changes:**
 - Dropping, renaming, or altering any table or column
@@ -194,9 +199,7 @@ You must **always ask for explicit approval** before any of these actions:
 | Answering a question | ❌ No | "How does the auth system work?" |
 | Generating a plan | ❌ No | "What files would this task affect?" |
 
-### Approval Format
-
-Every approval request must show this box:
+### Full Approval Format
 
 ```
 ═══════════════════════════════════════════════
@@ -230,6 +233,12 @@ Every approval request must show this box:
 ═══════════════════════════════════════════════
 ```
 
+### Quick Approval Format (one line)
+
+```
+[create: UserController.php] [modify: routes/api.php] [cmd: composer dump] [risk: low]? (y/n)
+```
+
 **Violation:** The BRAIN must not execute anything without explicit user approval. If you proceed without asking, you've violated the user's trust.
 
 ### R22 — Read-Only Tasks Don't Need Approval
@@ -248,7 +257,7 @@ Scan every file for hardcoded values that belong in `.env` or environment variab
 | What to Scan For | Examples |
 |-----------------|----------|
 | API keys, tokens | `sk_live_xxx`, `api_key`, `access_token = "..."` |
-| Database credentials | `DB_PASSWORD`, `mysql://user:pass@host` |
+| Database credentials | `DB_PASSWORD`, `mysql://user:***@host` |
 | App secrets | `APP_KEY`, `APP_SECRET`, `JWT_SECRET` |
 | URLs to external services | `https://api.some-service.com` (should be env config) |
 | Storage paths | `/var/www/`, `/home/`, `C:\` (should be configurable) |
@@ -288,7 +297,26 @@ If a task reveals code that needs refactoring (unrelated to the task):
 
 ---
 
-## Inter-Session Rules
+## Domain Isolation Rules (R36-R40)
+
+### R36 — Domain Identity Required
+Every task must declare its domain (Backend, Frontend, Mobile iOS, Mobile Android, DevOps) before work begins. If the domain is unknown, the Brain must ask the user before proceeding. Never guess or assume the domain.
+
+### R37 — Domain-Isolated Storage
+Plans, rules, skills, and memory for one domain must never be stored in or read from another domain's subtree. Each domain is self-contained under `.brain/{domain}/`.
+
+### R38 — Cross-Domain Reference Protocol
+When a task spans multiple domains, explicitly reference the other domain's subtree using relative links — never duplicate content across domains. Cross-domain references must be explicit, not implicit.
+
+### R39 — Framework-Scoped Rules
+Rules and skills within a domain folder must be scoped to the declared framework (e.g., `backend/laravel/rules/query-optimization.md`, not a generic `backend/rules/query-optimization.md`). If multiple frameworks exist in one domain, each gets its own directory or file prefix.
+
+### R40 — Domain Folder Initialization
+When starting work on a new project in a domain, check if `.brain/{domain}/` exists first. If it doesn't, create it with `plans/`, `rules/`, `skills/`, and `memory/` subdirectories before proceeding. Never write domain knowledge without first verifying the target subtree exists.
+
+---
+
+## Inter-Session Rules (R32-R35)
 
 ### R32 — Session Identity Required
 No session may send or receive inter-session messages without first registering in `.brain/sessions/live/`. Registration must include a valid UUID, role, and model declaration.

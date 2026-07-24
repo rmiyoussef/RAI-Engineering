@@ -1,12 +1,29 @@
 # RAI-Engineering
 
-**Your project's AI brain.**
+**Your project's AI brain — v1.6.0**
 
 Instead of behaving like a chatbot, the AI behaves like an **engineering organization** — with specialized agents that plan, build, review, test, audit, and remember. All project knowledge is organized into **domain-isolated subtrees** so Backend rules never leak into Frontend, and vice versa.
 
 ```
 curl -fsSL https://raw.githubusercontent.com/rmiyoussef/RAI-Engineering/master/setup.sh | bash
 ```
+
+---
+
+## What's New in v1.6
+
+| Feature | Description |
+|---------|-------------|
+| ⚡ **Lazy-load boot** | CLAUDE.md cut from 36KB → 8KB. Agents load on demand |
+| 📋 **Consolidated rules** | R3/R28 merged. R41-R45 canonical in RULES.md only |
+| 🎯 **Model Tiering** | Route agents to different models via `.brain/config.yaml` |
+| ✅ **Approval modes** | Quick one-liner + full approval box, switchable mid-session |
+| 📊 **Memory Timeline** | `python3 .ai/memory-timeline.py` — cross-reference all memory by date |
+| 🔍 **Skills Drift Check** | `bash .ai/skills-diff.sh` — compare local vs upstream hashes |
+| 🗄️ **Migration Testing** | New 7-scenario migration test template |
+| 📦 **Skills-lock v2** | Tracks upstream repos + commit SHAs for all 34 imported skills |
+
+See [docs/architecture.md](docs/architecture.md) for full details.
 
 ---
 
@@ -390,7 +407,7 @@ Key design decisions:
 - **Structured outputs.** Every agent returns a defined schema, not free-form text.
 - **Domain-isolated memory.** `.brain/backend/`, `.brain/frontend/`, `.brain/mobile-ios/`, `.brain/mobile-android/`, `.brain/devops/` are fully isolated subtrees.
 - **Framework-agnostic.** The system knows engineering patterns; domain knowledge lives in Skills.
-- **Model-locked.** All agents run on `deepseek-v4-flash`. No exceptions.
+- **Model-locked by default.** All agents default to `deepseek-v4-flash`. Config-driven tiering available via `.brain/config.yaml`.
 
 ---
 
@@ -449,7 +466,7 @@ Caveman compresses AI agent output by eliminating filler while preserving every 
 
 ## Super TESTER — Comprehensive Testing
 
-TESTER agent now handles **5 testing modes** with reusable templates in `.brain/templates/testing/`.
+TESTER agent handles **6 testing modes** with reusable templates in `.brain/templates/testing/`.
 
 ### Testing Modes
 
@@ -458,6 +475,7 @@ TESTER agent now handles **5 testing modes** with reusable templates in `.brain/
 | 🅰️ **API** | `.brain/templates/testing/API_ENDPOINT.md` | 15+ scenarios: happy path, validation, auth, edge cases |
 | 🔗 **Flow** | `.brain/templates/testing/BUSINESS_FLOW.md` | Multi-step chained APIs (full flow + per-step auth) |
 | 🗄️ **Database** | `.brain/templates/testing/DATABASE_QUERY.md` | N+1 detection, index checks, migration safety |
+| 🗄️ **Migration** | `.brain/templates/testing/DATABASE_MIGRATION.md` | Up/down idempotency, index integrity, foreign keys, defaults, data safety — 7 scenarios |
 | ⚡ **Performance** | `.brain/templates/testing/PERFORMANCE.md` | Response time benchmarks, query load tests |
 | 🧹 **Code Quality** | `.brain/templates/testing/CODE_QUALITY.md` | Naming, SOLID, method length, docblocks |
 
@@ -568,6 +586,7 @@ Every task belongs to exactly one domain: **Backend**, **Frontend**, **Mobile (i
 | v1.5.1 | **Path separator fix** — `.brain.` → `.brain/` in setup.sh & update.sh download paths | ✅ Done |
 | v1.5.2 | **Frontend Rules System** — 11 engineering rules, Mantine reference, human-readable guide | ✅ Done |
 | v1.5.3 | **DevOps Rules System** — 13 engineering rules, CI/CD skill, human-readable guide | ✅ Done |
+| **v1.6.0** | **Lazy-load boot, consolidated rules, model tiering, approval modes, memory timeline, skills-diff, migration testing** | ✅ Done |
 
 ---
 
@@ -579,7 +598,7 @@ Every task belongs to exactly one domain: **Backend**, **Frontend**, **Mobile (i
       <b>Rami Youssef</b>
     </a>
     <br>
-    <small>RAI-Engineering — v1.5.3</small>
+    <small>RAI-Engineering — v1.6.0</small>
   </sub>
   <br>
 </div>

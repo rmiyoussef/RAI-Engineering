@@ -1,6 +1,6 @@
 # RAI-Engineering
 
-**Your project's AI brain — v1.8.2**
+**Your project's AI brain — v1.8.3**
 
 Instead of behaving like a chatbot, the AI behaves like an **engineering organization** — with specialized agents that plan, build, review, test, audit, and remember. All project knowledge is organized by **purpose** — planning, test cases, summaries, memory, knowledge, rules — so a multi-area task lives in one plan with area tags, never scattered across domain folders.
 
@@ -9,6 +9,12 @@ curl -fsSL https://raw.githubusercontent.com/rmiyoussef/RAI-Engineering/master/s
 ```
 
 ---
+
+## What's New in v1.8.3
+
+| Feature | Description |
+|---------|-------------|
+| 📌 **AGENTS.md no-bypass guard** | Canonical adapter gains one line: no parallel planning/memory/testing system. Identity, agent index, routing stay in `.brain/` only |
 
 ## What's New in v1.8.2
 
@@ -27,7 +33,7 @@ curl -fsSL https://raw.githubusercontent.com/rmiyoussef/RAI-Engineering/master/s
 | Feature | Description |
 |---------|-------------|
 | 🧠 **Mandatory RAI workflow** | Thin vendor-neutral entrypoints (CLAUDE.md 66 lines, AGENTS.md pointer). AI tools discover `.brain/INSTRUCTIONS.md` + `ARCHITECTURE.md` and follow them |
-| 🔄 **Non-destructive update.sh** | Versioned (`state/version`), manifest conflicts (`.new`), pre-migration backups, `migrations.log`, idempotent re-runs, 61-test suite |
+| 🔄 **Non-destructive update.sh** | Versioned (`state/version`), manifest conflicts (`.new`), pre-migration backups, `migrations.log`, idempotent re-runs, 65-test suite |
 | 📋 **plans/ primary** | Planning directory renamed per convention; plan dirs gain `TEST-PLAN.md`; thresholds define when planning is required vs skippable |
 | 🤖 **Model neutrality** | R9: host default model, optional tiers. No hard-coded vendor model anywhere |
 
@@ -585,6 +591,7 @@ Every plan (`plans/active/PLAN-XXXX/`) ships with tasks, acceptance criteria, an
 | **v1.8.0** | **Mandatory vendor-neutral OS** — thin entrypoints, model neutrality, non-destructive versioned update.sh (manifest/backup/log), plans/ primary, planning thresholds | ✅ Done |
 | **v1.8.1** | **AGENTS.md bootstrap enforcement** — install/update prepend .brain pointer to pre-existing custom AGENTS.md, user content preserved, idempotent | ✅ Done |
 | **v1.8.2** | **Updater self-refresh** — installed `.ai/update.sh` copies refresh from source every run, updater fixes reach existing installs | ✅ Done |
+| **v1.8.3** | **AGENTS.md no-bypass guard** — canonical adapter carries the no-parallel-system rule, rest stays in `.brain/` | ✅ Done |
 
 ---
 
@@ -596,7 +603,7 @@ Every plan (`plans/active/PLAN-XXXX/`) ships with tasks, acceptance criteria, an
       <b>Rami Youssef</b>
     </a>
     <br>
-    <small>RAI-Engineering — v1.8.2</small>
+    <small>RAI-Engineering — v1.8.3</small>
   </sub>
   <br>
 </div>

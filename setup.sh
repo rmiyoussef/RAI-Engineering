@@ -127,6 +127,8 @@ CAVEMAN ULTRA — max compression. Active every response. No revert.
 
 RAI-Engineering installed. `.brain/` exists → mandatory OS: read `.brain/INSTRUCTIONS.md`, then `.brain/ARCHITECTURE.md`, follow workflow. Plans → `plans/`. Tests → `test-cases/`. Summaries → `summaries/`. Done = Implemented + Verified + Tested + Documented + Summarized + Brain Updated.
 
+Do NOT create parallel planning/memory/testing system. Use `plans/` `test-cases/` `summaries/` `memory/`.
+
 Rules:
 - Drop articles (a/an/the), filler (just/really/basically/actually/simply), pleasantries, hedging, conjunctions when order unambiguous
 - Fragments OK. One word when enough. State each fact once.
@@ -166,7 +168,7 @@ fi
 
 # ── Done ─────────────────────────────────────────────────────────
 echo ""
-echo -e "${GREEN}✅  RAI-Engineering v1.8.2 — Vendor-neutral engineering OS installed!${NC}"
+echo -e "${GREEN}✅  RAI-Engineering v1.8.3 — Vendor-neutral engineering OS installed!${NC}"
 echo ""
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo "  Project structure:"

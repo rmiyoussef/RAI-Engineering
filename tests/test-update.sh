@@ -211,6 +211,15 @@ BEFORE_HASH="$(sha256sum "$T/.ai/update.sh" | awk '{print $1}')"
 [ "$(sha256sum "$T/.ai/update.sh" | awk '{print $1}')" = "$BEFORE_HASH" ] \
     && pass "self-update: repair idempotent" || fail "self-update: repair idempotent"
 
+echo "== 12. canonical AGENTS.md carries brain pointer + no-bypass guard =="
+assert_contains "$ROOT/AGENTS.md" ".brain/INSTRUCTIONS.md" "canonical AGENTS.md: brain pointer"
+assert_contains "$ROOT/AGENTS.md" "Do NOT create parallel" "canonical AGENTS.md: no-bypass guard"
+assert_contains "$ROOT/setup.sh" "Do NOT create parallel" "setup.sh template: no-bypass guard"
+T="$(new_tmp)"
+touch "$T/composer.json"
+(cd "$T" && bash "$ROOT/setup.sh" >/dev/null 2>&1)
+assert_contains "$T/AGENTS.md" "Do NOT create parallel" "fresh setup AGENTS.md: no-bypass guard"
+
 echo ""
 echo "─────────────────────────────────"
 echo "PASS: $PASS  FAIL: $FAIL"

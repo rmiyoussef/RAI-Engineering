@@ -1,7 +1,7 @@
 # RAI-Engineering — CLAUDE.md
 
 > **Model:** host default. RAI is model-neutral (R9); optional tiers via `.brain/config.yaml`.
-> **Version:** v1.8.2 — updater self-refresh for installed .ai/update.sh copies
+> **Version:** v1.8.3 — AGENTS.md rewrite with no-bypass guard
 > **This file:** Symlinked from `.ai/CLAUDE.md` to project root
 > **Memory:** `.brain/` — persists across sessions
 > **Boot Size:** ~8KB (was 36KB) — loads detail files on demand
@@ -152,6 +152,6 @@ Memory lives in `.brain/` — purpose-organized (domains are `domains:` metadata
 ## VERSION
 ============================================================
 
-RAI-Engineering v1.8.2 — updater self-refresh for installed .ai/update.sh copies
+RAI-Engineering v1.8.3 — AGENTS.md rewrite with no-bypass guard
 17 agents, 45 rules, 6 testing templates, 39 skills
 Update: `bash .ai/update.sh` or ask me

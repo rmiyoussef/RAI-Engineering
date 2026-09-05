@@ -1,9 +1,10 @@
 # State — plans
 
-next_plan_id: PLAN-0010
+next_plan_id: PLAN-0011
 active: []
 blocked: []
 recently_completed:
+  - PLAN-0010
   - PLAN-0009
   - PLAN-0008
   - PLAN-0007

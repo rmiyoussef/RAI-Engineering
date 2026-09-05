@@ -3,6 +3,9 @@
 active_tasks: []
 blocked_tasks: []
 recently_done:
+  - PLAN-0009/T1
+  - PLAN-0009/T2
+  - PLAN-0009/T3
   - PLAN-0008/T1
   - PLAN-0008/T2
   - PLAN-0008/T3

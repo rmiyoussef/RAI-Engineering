@@ -197,6 +197,20 @@ run_update "$T" >/dev/null 2>&1
 [ "$(sha256sum "$T/AGENTS.md" | awk '{print $1}')" = "$BEFORE_HASH" ] \
     && pass "existing AGENTS.md: repair idempotent" || fail "existing AGENTS.md: repair idempotent"
 
+echo "== 11. updater self-refresh in consumer layout (.ai/update.sh) =="
+T="$(new_tmp)"
+mkdir -p "$T/.ai"
+cp "$ROOT/update.sh" "$T/.ai/update.sh"
+echo "# STALE MARKER — must be replaced by self-refresh" >> "$T/.ai/update.sh"
+(cd "$T" && RAI_SOURCE_DIR="$ROOT" bash "$T/.ai/update.sh" --yes --local >/dev/null 2>&1)
+assert_contains "$T/.ai/update.sh" "agents-bootstrap" "self-update: updater refreshed with latest logic"
+grep -q "STALE MARKER" "$T/.ai/update.sh" && fail "self-update: stale content gone" || pass "self-update: stale content gone"
+assert_file "$T/.ai/update.sh.bak" "self-update: backup kept"
+BEFORE_HASH="$(sha256sum "$T/.ai/update.sh" | awk '{print $1}')"
+(cd "$T" && RAI_SOURCE_DIR="$ROOT" bash "$T/.ai/update.sh" --yes --local >/dev/null 2>&1)
+[ "$(sha256sum "$T/.ai/update.sh" | awk '{print $1}')" = "$BEFORE_HASH" ] \
+    && pass "self-update: repair idempotent" || fail "self-update: repair idempotent"
+
 echo ""
 echo "─────────────────────────────────"
 echo "PASS: $PASS  FAIL: $FAIL"

@@ -1,6 +1,6 @@
 # RAI-Engineering
 
-**Your project's AI brain — v1.8.1**
+**Your project's AI brain — v1.8.2**
 
 Instead of behaving like a chatbot, the AI behaves like an **engineering organization** — with specialized agents that plan, build, review, test, audit, and remember. All project knowledge is organized by **purpose** — planning, test cases, summaries, memory, knowledge, rules — so a multi-area task lives in one plan with area tags, never scattered across domain folders.
 
@@ -9,6 +9,12 @@ curl -fsSL https://raw.githubusercontent.com/rmiyoussef/RAI-Engineering/master/s
 ```
 
 ---
+
+## What's New in v1.8.2
+
+| Feature | Description |
+|---------|-------------|
+| 🔄 **Updater self-refresh** | Every run refreshes the installed `.ai/update.sh` copy from source. Updater fixes propagate to existing installs. One `.bak` kept, fetch failures never fail the run |
 
 ## What's New in v1.8.1
 
@@ -21,7 +27,7 @@ curl -fsSL https://raw.githubusercontent.com/rmiyoussef/RAI-Engineering/master/s
 | Feature | Description |
 |---------|-------------|
 | 🧠 **Mandatory RAI workflow** | Thin vendor-neutral entrypoints (CLAUDE.md 66 lines, AGENTS.md pointer). AI tools discover `.brain/INSTRUCTIONS.md` + `ARCHITECTURE.md` and follow them |
-| 🔄 **Non-destructive update.sh** | Versioned (`state/version`), manifest conflicts (`.new`), pre-migration backups, `migrations.log`, idempotent re-runs, 57-test suite |
+| 🔄 **Non-destructive update.sh** | Versioned (`state/version`), manifest conflicts (`.new`), pre-migration backups, `migrations.log`, idempotent re-runs, 61-test suite |
 | 📋 **plans/ primary** | Planning directory renamed per convention; plan dirs gain `TEST-PLAN.md`; thresholds define when planning is required vs skippable |
 | 🤖 **Model neutrality** | R9: host default model, optional tiers. No hard-coded vendor model anywhere |
 
@@ -578,6 +584,7 @@ Every plan (`plans/active/PLAN-XXXX/`) ships with tasks, acceptance criteria, an
 | **v1.7.0** | **Purpose-organized brain** — ARCHITECTURE.md + INSTRUCTIONS.md, plan-test-summary lifecycle, completion contract, domains as metadata | ✅ Done |
 | **v1.8.0** | **Mandatory vendor-neutral OS** — thin entrypoints, model neutrality, non-destructive versioned update.sh (manifest/backup/log), plans/ primary, planning thresholds | ✅ Done |
 | **v1.8.1** | **AGENTS.md bootstrap enforcement** — install/update prepend .brain pointer to pre-existing custom AGENTS.md, user content preserved, idempotent | ✅ Done |
+| **v1.8.2** | **Updater self-refresh** — installed `.ai/update.sh` copies refresh from source every run, updater fixes reach existing installs | ✅ Done |
 
 ---
 
@@ -589,7 +596,7 @@ Every plan (`plans/active/PLAN-XXXX/`) ships with tasks, acceptance criteria, an
       <b>Rami Youssef</b>
     </a>
     <br>
-    <small>RAI-Engineering — v1.8.1</small>
+    <small>RAI-Engineering — v1.8.2</small>
   </sub>
   <br>
 </div>

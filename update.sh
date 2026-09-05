@@ -813,6 +813,41 @@ ensure_adapters() {
     fi
 }
 
+# ── Updater self-refresh (installed .ai/update.sh copies) ──────────────
+refresh_self() {
+    # Installed projects run <proj>/.ai/update.sh — a stale copy that never
+    # refreshes itself (it is not in SYSTEM_FILES/AI_FILES). Without this,
+    # updater fixes never reach existing installs. The updater is RAI-owned,
+    # so overwrite is safe; one .bak is kept and fetch failures never fail the run.
+    # Guard: only act when running as an installed copy (parent dir .ai) or
+    # in --local mode. Never write into a bare cwd (curl-pipe runs) or clobber
+    # a repo workspace from remote.
+    if [ "$(basename "$SCRIPT_DIR")" != ".ai" ] && [ "$LOCAL_SRC" != true ]; then
+        return 0
+    fi
+    local dest="$SCRIPT_DIR/update.sh"
+    local tmp
+    tmp="$(mktemp)"
+    if ! fetch_source "update.sh" > "$tmp" 2>/dev/null; then
+        rm -f "$tmp"
+        add_warning "self-update skipped: fetch failed"
+        return 0
+    fi
+    if [ -f "$dest" ] && cmp -s "$tmp" "$dest"; then
+        rm -f "$tmp"
+        return 0
+    fi
+    if [ -f "$dest" ] && [ ! -f "$dest.bak" ]; then
+        cp "$dest" "$dest.bak"
+    fi
+    mkdir -p "$(dirname "$dest")"
+    cat "$tmp" > "$dest"
+    chmod +x "$dest"
+    rm -f "$tmp"
+    ok "updater self-refresh (.ai/update.sh)"
+    migrate_log "self-update" "refreshed running updater copy"
+}
+
 # ── Main dispatch ──────────────────────────────────────────────────────
 case "$STATE" in
     fresh)
@@ -871,6 +906,8 @@ case "$STATE" in
         ensure_adapters
         ;;
 esac
+
+refresh_self
 
 # ── Entrypoint sanity ──────────────────────────────────────────────────
 if [ ! -f "$BRAIN_DIR/INSTRUCTIONS.md" ] || [ ! -f "$BRAIN_DIR/ARCHITECTURE.md" ]; then

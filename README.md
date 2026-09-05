@@ -10,12 +10,18 @@ curl -fsSL https://raw.githubusercontent.com/rmiyoussef/RAI-Engineering/master/s
 
 ---
 
+## What's New in v1.8.1
+
+| Feature | Description |
+|---------|-------------|
+| 📌 **AGENTS.md bootstrap enforcement** | Install/update prepend the `.brain/` pointer to pre-existing custom `AGENTS.md`. User content preserved verbatim, idempotent re-runs, logged to `migrations.log` |
+
 ## What's New in v1.8
 
 | Feature | Description |
 |---------|-------------|
 | 🧠 **Mandatory RAI workflow** | Thin vendor-neutral entrypoints (CLAUDE.md 66 lines, AGENTS.md pointer). AI tools discover `.brain/INSTRUCTIONS.md` + `ARCHITECTURE.md` and follow them |
-| 🔄 **Non-destructive update.sh** | Versioned (`state/version`), manifest conflicts (`.new`), pre-migration backups, `migrations.log`, idempotent re-runs, 53-test suite |
+| 🔄 **Non-destructive update.sh** | Versioned (`state/version`), manifest conflicts (`.new`), pre-migration backups, `migrations.log`, idempotent re-runs, 57-test suite |
 | 📋 **plans/ primary** | Planning directory renamed per convention; plan dirs gain `TEST-PLAN.md`; thresholds define when planning is required vs skippable |
 | 🤖 **Model neutrality** | R9: host default model, optional tiers. No hard-coded vendor model anywhere |
 

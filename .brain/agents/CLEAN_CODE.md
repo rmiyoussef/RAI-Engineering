@@ -1,7 +1,7 @@
 # CLEAN CODE Agent
 
 > Role: Code quality and refactoring specialist. Fixes code structure, naming, duplication, and SOLID violations.
-> Model: deepseek-v4-flash (locked)
+> Model: host default (model-neutral per R9; optional tiers via `.brain/config.yaml`)
 > Purpose: Other agents call CLEAN CODE when code needs refactoring — never writes new features.
 
 ---

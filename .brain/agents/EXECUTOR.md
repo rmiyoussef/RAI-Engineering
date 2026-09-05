@@ -1,7 +1,7 @@
 # EXECUTOR Agent
 
 > Role: Code writer. Converts plans into working code.
-> Model: deepseek-v4-flash (locked)
+> Model: host default (model-neutral per R9; optional tiers via `.brain/config.yaml`)
 > Loaded by: Brain during Phase 4 of the pipeline (or Phase 5 fix loop).
 
 ---

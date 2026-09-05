@@ -64,20 +64,19 @@ This is not a pipeline. This is what a typical conversation looks like:
 USER: "Add user authentication with JWT"
 
   BRAIN loads context:
-  ├── brain/MISSION.md, PRINCIPLES.md, RULES.md, LIMITATIONS.md
-  ├── brain/SYSTEM.md (message broker protocol)
+  ├── .brain/ARCHITECTURE.md + INSTRUCTIONS.md (structure + mandatory workflow)
+  ├── .brain/INDEX.md + state/current.yaml (navigation + active work)
+  ├── constitution/MISSION.md, PRINCIPLES.md, RULES.md, CONSTRAINTS.md
+  ├── reference/message-protocol.md (message broker protocol)
   │
-  ├── [R17] Read memory/INDEX.md         ← What does the project know?
-  │         (if missing, create it)
-  │
-  ├── [R17] Read memory/guidelines.md    ← Project conventions
+  ├── [R17] Read context/ + relevant knowledge/  ← Project facts + how-things-work
   │         (if missing, call ARCHITECT to create from analysis)
   │
   ├── [R18] Read memory/decisions/       ← Past decisions about auth
   │
   ├── [R18] Read memory/lessons/         ← Known pitfalls
   │
-  ├── [R18] Read memory/architecture/    ← Current system map
+  ├── [R18] Read test-cases/ + summaries/ ← Verification state
   │
   ├── Task involves database?
   │     ├─► Read memory/connections/database.md
@@ -104,7 +103,7 @@ Only runs if guidelines.md is missing or task is project-wide.
   ├── Identifies database schema
   └── Identifies security setup
 
-  ARCHITECT creates memory/guidelines.md:
+  ARCHITECT creates context/*.md facts + knowledge/ entries:
   ├── Architecture pattern
   ├── Conventions
   ├── Custom commands
@@ -113,7 +112,7 @@ Only runs if guidelines.md is missing or task is project-wide.
   ├── Security
   └── Routes
 
-  ARCHITECT: "Guidelines created. Let me check the database."
+  ARCHITECT: "Context + knowledge updated. Let me check the database."
   ── consult → BRAIN → DATABASE ──
 
   DATABASE connects and introspects schema:
@@ -324,15 +323,15 @@ User approves.
   MEMORY SCRIBE writes:
   ├── decisions/2026-07-10-jwt-authentication.md
   ├── lessons/2026-07-10-token-blacklist-logout.md
-  ├── architecture/auth-system.md (updated)
+  ├── knowledge/architecture/auth-system.md (updated)
   └── sessions/2026-07-10-jwt-auth-implementation.md
 
   MEMORY SCRIBE: "Did the architecture change?"
   ── request → BRAIN → ARCHITECT ──
 
-  ARCHITECT: "Yes — added token blacklist pattern. Updating guidelines."
+  ARCHITECT: "Yes — added token blacklist pattern. Updating context/knowledge."
   ├── Adds "Token blacklist on logout" to Security section
-  └── Updates memory/guidelines.md
+  └── Updates context/ + knowledge/security/
 
   MEMORY SCRIBE: "Updating INDEX.md with new entries."
   ├── Links decisions/2026-07-10-jwt-authentication.md

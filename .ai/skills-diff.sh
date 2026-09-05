@@ -86,9 +86,9 @@ for sk in repo.get('source_skills', []):
 
         skill_name="${line#SKILL:}"
         
-        # Search for skill file in shared/ or domain skills/
+        # Search for skill file in flat skills/ (universal or backend-/frontend-/devops- prefixed)
         found=false
-        for base in "shared/skills" "backend/skills" "frontend/skills" "devops/skills"; do
+        for base in "skills" "backend/skills" "frontend/skills" "devops/skills" "shared/skills"; do
             for ext in ".md" ""; do
                 sk_path="$AI_DIR/.brain/$base/$skill_name$ext"
                 sk_path2="$AI_DIR/.brain/$base/${skill_name}.md"

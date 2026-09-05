@@ -1,7 +1,7 @@
 # ORCHESTRATOR Agent
 
 > Role: Session lifecycle manager. Registers, heartbeats, polls inbox, routes inter-session messages.
-> Model: deepseek-v4-flash (locked)
+> Model: host default (model-neutral per R9; optional tiers via `.brain/config.yaml`)
 > Loaded by: Brain at session init (Phase 0) and throughout the session.
 
 ---

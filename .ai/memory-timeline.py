@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
 RAI-Engineering — Memory Timeline Aggregator
-Cross-references decisions, lessons, sessions, tests, and tasks by date.
+Cross-references memory, summaries, and plans by date.
 Produces a chronological timeline of project activity.
 
 Usage:
     python3 .ai/memory-timeline.py              # Show last 30 days
     python3 .ai/memory-timeline.py --days 7     # Show last 7 days
-    python3 .ai/memory-timeline.py --domain backend  # Filter by domain
+    python3 .ai/memory-timeline.py --domain backend  # Filter by domains: metadata tag
     python3 .ai/memory-timeline.py --all        # Show everything
 
 Output: Markdown timeline written to .brain/TIMELINE.md
@@ -58,72 +58,83 @@ def extract_title_from_content(content: str):
             return line[2:].strip()
     return None
 
-def collect_from_dir(dir_path: Path, category: str, entries: list):
-    """Recursively collect markdown files from a directory"""
+def extract_date(content: str, file_path: Path):
+    """Date from filename, else `Date:`/`Created:` field, else file mtime."""
+    date = extract_date_from_filename(file_path.name)
+    if date:
+        return date
+    m = re.search(r'(?:Date|Created):\s*(\d{4}-\d{2}-\d{2})', content)
+    if m:
+        return m.group(1)
+    return datetime.fromtimestamp(file_path.stat().st_mtime).strftime('%Y-%m-%d')
+
+
+def extract_domains(content: str):
+    """Read `domains:` frontmatter metadata (new) or legacy path (old files)."""
+    m = re.search(r'^domains:\s*\[(.*?)\]', content, re.MULTILINE)
+    if m:
+        return m.group(1).strip() or "all"
+    return "all"
+
+
+def collect_from_dir(dir_path: Path, category: str, entries: list, recursive_dirs=False):
+    """Collect markdown files from a directory (optionally one level of subdirs, e.g. PLAN-XXXX/)."""
     if not dir_path.exists():
         return
-    
+
+    candidates = []
     for f in sorted(dir_path.iterdir()):
-        if not f.is_file() or f.suffix not in ('.md', '.mdx'):
+        if f.is_dir() and recursive_dirs and not f.name.startswith(('_', '.')):
+            candidates += sorted([c for c in f.iterdir() if c.is_file() and c.suffix in ('.md', '.mdx')])
+        elif f.is_file() and f.suffix in ('.md', '.mdx'):
+            candidates.append(f)
+
+    for f in candidates:
+        # Plan scaffolding (STATUS/TASKS/CONTEXT/DECISIONS) is not timeline-worthy — only PLAN.md
+        if f.name in ('STATUS.md', 'TASKS.md', 'CONTEXT.md', 'DECISIONS.md'):
             continue
-        
-        date = extract_date_from_filename(f.name)
-        if not date:
-            continue
-        
+        content = f.read_text(encoding='utf-8', errors='replace')
+        date = extract_date(content, f)
+
         # Apply days filter
         if not SHOW_ALL:
             file_dt = datetime.strptime(date, '%Y-%m-%d')
             if file_dt < datetime.now() - timedelta(days=DAYS_BACK):
                 continue
-        
-        content = f.read_text(encoding='utf-8', errors='replace')[:500]
-        title = extract_title_from_content(content) or f.stem
-        
+
+        title = extract_title_from_content(content[:800]) or f.stem
+
         entries.append({
             'date': date,
             'category': category,
             'title': title,
             'file': str(f.relative_to(BRAIN_DIR.parent)),
-            'domain': extract_domain(f, dir_path),
+            'domain': extract_domains(content[:800]),
         })
-
-def extract_domain(file_path: Path, base_dir: Path):
-    """Extract domain from path like .brain/backend/memory/..."""
-    parts = file_path.relative_to(BRAIN_DIR).parts
-    if len(parts) > 0:
-        domain = parts[0]
-        if domain in ('backend', 'frontend', 'mobile-ios', 'mobile-android', 'devops'):
-            # Check if it's inside memory/
-            if 'memory' in parts:
-                idx = parts.index('memory')
-                if idx + 1 < len(parts):
-                    return f"{domain}/{parts[idx + 1]}"
-            return domain
-    return "shared"
 
 def main():
     parse_args()
     
     entries = []
-    
-    # Find all domain directories
-    domains = ['backend', 'frontend', 'mobile-ios', 'mobile-android', 'devops']
-    
-    for domain in domains:
-        domain_base = BRAIN_DIR / domain
-        if not domain_base.exists():
-            continue
-        
-        memory_dir = domain_base / "memory"
-        if not memory_dir.exists():
-            continue
-        
-        # Collect from each memory subdirectory
-        for sub in ['decisions', 'lessons', 'sessions', 'tests', 'tasks', 'architecture', 'business']:
-            sub_dir = memory_dir / sub
-            if sub_dir.exists():
-                collect_from_dir(sub_dir, f"📋 {sub.capitalize()}", entries)
+
+    # Purpose-organized sources: (path, category, recurse_into_subdirs?)
+    sources = [
+        ("memory/decisions", "📋 Decisions", False),
+        ("memory/discoveries", "🔍 Discoveries", False),
+        ("memory/lessons", "📝 Lessons", False),
+        ("memory/incidents", "🚨 Incidents", False),
+        ("memory/sessions", "💬 Sessions", False),
+        ("summaries/active", "📦 Summaries", False),
+        ("summaries/completed", "📦 Summaries", False),
+        ("summaries/archived", "📦 Summaries", False),
+        ("plans/active", "🗺️ Plans", True),
+        ("plans/completed", "🗺️ Plans", True),
+        ("plans/blocked", "🗺️ Plans", True),
+        ("plans/archived", "🗺️ Plans", True),
+        ("test-cases/completed", "🧪 Test Cases", True),
+    ]
+    for rel, category, recursive in sources:
+        collect_from_dir(BRAIN_DIR / rel, category, entries, recursive_dirs=recursive)
     
     # Sort by date (newest first)
     entries.sort(key=lambda e: e['date'], reverse=True)
@@ -134,7 +145,7 @@ def main():
     
     if not entries:
         print(f"No memory entries found{' for domain: ' + DOMAIN_FILTER if DOMAIN_FILTER else ''}.")
-        print(f"Searched {DAYS_BACK} days in .brain/*/memory/*/")
+        print(f"Searched {DAYS_BACK} days in .brain/memory/, .brain/summaries/, .brain/plans/")
         return
     
     # Group by date
@@ -162,7 +173,7 @@ def main():
         lines.append("")
         
         for e in day_entries:
-            domain_tag = f"`{e['domain']}`" if e['domain'] != 'shared' else ""
+            domain_tag = f"`{e['domain']}`" if e['domain'] not in ('all', '') else ""
             lines.append(f"- **{e['category']}** — [{e['title']}]({e['file']}) {domain_tag}")
         
         lines.append("")

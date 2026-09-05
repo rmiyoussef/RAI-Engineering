@@ -1,7 +1,7 @@
 # RAI-Engineering — Architecture
 
-> Version 1.6.0 — Lazy-load boot, consolidated rules, model tiering, approval modes, memory timeline, skills-diff, migration testing templates
-> **17 agents, 45 rules, domain isolation, inter-session mesh, 6 testing templates, 34 imported skills**
+> Version 1.7.0 — Purpose-organized brain, plan-test-summary lifecycle, completion contract
+> **17 agents, 45 rules, purpose-organized brain, inter-session mesh, 6 testing templates, 39 skills**
 
 ---
 
@@ -17,14 +17,17 @@ The Brain does exactly three things:
 Agents talk to each other. The Brain facilitates. No slash commands or special prefixes — the system auto-detects what agents to call based on the task.
 
 The Brain is defined by:
-- `.brain/brain/SYSTEM.md` — Message broker protocol and routing rules
-- `.brain/brain/MISSION.md` — The system's purpose (immutable)
-- `.brain/brain/PRINCIPLES.md` — Design values that guide all decisions
-- `.brain/brain/LIMITATIONS.md` — Hard boundaries the system must not cross
-- `.brain/brain/RULES.md` — Enforceable rules (R1-R45)
-- `.brain/brain/ORCHESTRATION.md` — Parallel dispatch and multi-agent orchestration protocol
-- `.brain/brain/INTER_SESSION.md` — Multi-session mesh communication protocol
-- `.brain/brain/MEMORY_SYSTEM.md` — Memory indexing, storage, and retrieval protocol
+- `.brain/ARCHITECTURE.md` — Structural authority: what lives where, lifecycles, conventions
+- `.brain/INSTRUCTIONS.md` — Operational authority: mandatory workflow, completion contract
+- `.brain/INDEX.md` — Navigation map for progressive disclosure
+- `.brain/constitution/MISSION.md` — The system's purpose (immutable)
+- `.brain/constitution/PRINCIPLES.md` — Design values that guide all decisions
+- `.brain/constitution/RULES.md` — Enforceable rules (R1-R45)
+- `.brain/constitution/CONSTRAINTS.md` — Hard boundaries the system must not cross
+- `.brain/constitution/QUALITY.md` — Quality bar enforced by review
+- `.brain/reference/message-protocol.md` — Message broker protocol and routing rules
+- `.brain/reference/orchestration-protocol.md` — Parallel dispatch and multi-agent orchestration protocol
+- `.brain/reference/inter-session-protocol.md` — Multi-session mesh communication protocol
 
 All system files live under `.brain/`, making it compatible with any AI tool — Claude Code, Cursor, Windsurf, Copilot.
 
@@ -46,8 +49,8 @@ Skills are **mandatory**, not optional. Before any task starts, the Brain checks
 
 ### Skill Locations
 
-- **Shared skills** (`.brain/shared/skills/`) — 27 framework-agnostic skills from 6 upstream repos
-- **Domain skills** — `.brain/{domain}/skills/` (backend templates, frontend UI, devops automation)
+- **Universal skills** (`.brain/skills/`, untagged) — 27 how-to-work skills from 6 upstream repos
+- **Area-tagged skills** — `.brain/skills/backend-*`, `frontend-*`, `devops-*` (carry `domains:` frontmatter)
 - **Full catalog:** `.brain/INDEX.md` and `SKILLS.md`
 
 ---
@@ -62,8 +65,8 @@ Agents communicate through the Brain using the **Message Protocol**. Any agent c
 
 | Agent | Role | Returns | Can Call |
 |-------|------|---------|----------|
-| `ARCHITECT` | System architect — guidelines, patterns, consistency | `{ guidelines, architecturePattern, conventions }` | Any agent |
-| `PLANNER` | Designer — produces structured plans | `{ goal, affectedFiles, risks, dependencies, executionPlan, questions }` | ARCHIVIST, MEMORY, REVIEWER |
+| `ARCHITECT` | System architect — context, knowledge, patterns, consistency | `{ guidelines, architecturePattern, conventions }` | Any agent |
+| `PLANNER` | Designer — produces plans + test strategy | `{ goal, affectedFiles, risks, dependencies, executionPlan, questions, testCases }` | ARCHIVIST, MEMORY, REVIEWER |
 | `ARCHIVIST` | Librarian — reads files, answers questions | `{ answers, relevantFiles, relatedDecisions, status }` | *(read-only)* |
 | `DATABASE` | DB specialist — schema, migrations, queries, indexes | `{ schema, migrations, indexes, risks }` | ARCHIVIST |
 | `SECURITY` | Security auditor — OWASP, CVSS, STRIDE, LLM/SSRF | `{ vulnerabilities, scores, mitigations }` | ARCHIVIST, DATABASE |
@@ -72,12 +75,12 @@ Agents communicate through the Brain using the **Message Protocol**. Any agent c
 | `CLEAN CODE` | Refactorer — SOLID, naming, duplication | `{ refactored, violationsFixed, qualityScore }` | ARCHIVIST, TESTER |
 | `TESTER` | Test specialist — 6 testing modes (incl. migration) | `{ generatedTests, testResults, coverage, status }` | ARCHIVIST, EXECUTOR |
 | `REVIEWER` | Inspector — scores code 1-10, manages fix loop | `{ issues, suggestions, performance, security, score }` | BACKEND QA, TESTER, CLEAN CODE, ARCHIVIST, MEMORY, SECURITY, DATABASE |
-| `MEMORY SCRIBE` | Historian — persists decisions, lessons, index | `{ decisions, lessons, architectureChanges, sessionSummary }` | PLANNER, EXECUTOR, REVIEWER, TESTER |
+| `MEMORY SCRIBE` | Historian — persists decisions, lessons, summaries, state | `{ decisions, lessons, architectureChanges, sessionSummary }` | PLANNER, EXECUTOR, REVIEWER, TESTER |
 | `GITHUB` | Integrator — branches, commits, PRs | `{ branch, commits, prUrl, prBody, status }` | EXECUTOR, REVIEWER, TESTER, MEMORY |
 | `GITHUB TASKS` | GitHub task manager — issues to delivery | `{ subTasks, plan, branch, summary }` | All agents |
 | `SUMMARY` | Documentation specialist — professional summaries | `{ document, metrics, tables }` | All agents |
 | `ORCHESTRATOR` | Session manager — registration, heartbeat, inter-session | `{ registered, peers, messages }` | All agents |
-| `ORCHESTRATOR ENGINE` | Task orchestrator — decomposition, parallel dispatch, verification | `{ decomposition, waves, results, conflicts, status }` | All domain agents |
+| `ORCHESTRATOR ENGINE` | Task orchestrator — decomposition, parallel dispatch, verification | `{ decomposition, waves, results, conflicts, status }` | All agents |
 | `BRAIN` | Message broker — routes, validates, persists | Routes and validates | *(broker, all agents)* |
 
 ---
@@ -100,12 +103,12 @@ Set via `.brain/config.yaml` at project root or per-session override.
 
 | Tier | Use For | Example Models |
 |---|---|---|
-| `fast` | Routine codegen, ARCHIVIST reads, GITHUB ops | `deepseek-v4-flash` |
-| `balanced` | EXECUTOR, PLANNER, CLEAN CODE, SUMMARY | `deepseek-v4-flash` |
-| `deep` | SECURITY audit, DATABASE schema, REVIEWER, BACKEND QA | `deepseek-v4-flash` |
-| `architect` | ORCHESTRATOR ENGINE, ARCHITECT, complex planning | `deepseek-v4-flash` |
+| `fast` | Routine codegen, ARCHIVIST reads, GITHUB ops | host default |
+| `balanced` | EXECUTOR, PLANNER, CLEAN CODE, SUMMARY | host default |
+| `deep` | SECURITY audit, DATABASE schema, REVIEWER, BACKEND QA | host default |
+| `architect` | ORCHESTRATOR ENGINE, ARCHITECT, complex planning | host default |
 
-When no config exists, all agents use `deepseek-v4-flash` (backward compatible, zero disruption).
+Tiers are optional labels; without `.brain/config.yaml` every agent uses the host default model (R9).
 
 ---
 
@@ -122,38 +125,18 @@ Read-only tasks need no approval (R22).
 
 ---
 
-## 7. Domain Isolation
+## 7. Purpose-Organized Brain (domains as metadata)
 
-Every task belongs to exactly one domain. **Domain knowledge never leaks** between domains.
+A task routinely spans many technical areas, so knowledge is organized by purpose —
+constitution, context, knowledge, memory, planning, test-cases, summaries, agents,
+skills, rules, reference, templates, state — and technical areas are `domains:`
+frontmatter metadata, never directories. Retired domain-first layout documented in
+`.brain/_deprecated/DOMAINS_MIGRATION.md`.
 
-### Domain Subtrees
-
-```
-.brain/
-├── backend/                   ← Backend domain
-│   ├── memory/                ← decisions, architecture, lessons, sessions, tests, tasks, business
-│   │   ├── guidelines.md      ← Project structure & conventions
-│   │   ├── decisions/         ← Architecture Decision Records (ADRs)
-│   │   ├── architecture/      ← System component maps
-│   │   ├── lessons/           ← Things learned
-│   │   ├── sessions/          ← Session summaries
-│   │   ├── tests/             ← Test summaries
-│   │   ├── tasks/             ← Task summaries
-│   │   └── business/          ← Business rules & glossary
-│   ├── rules/                 ← Framework-scoped conventions
-│   ├── skills/                ← Code templates (controller, service, resource, crud)
-│   ├── plans/                 ← Project plans
-│   └── connections/           ← DB connections ⚠️ GITIGNORED
-│
-├── frontend/                  ← Frontend domain (self-contained)
-├── mobile-ios/                ← iOS domain (self-contained)
-├── mobile-android/            ← Android domain (self-contained)
-├── devops/                    ← DevOps domain (self-contained)
-└── shared/                    ← Cross-domain shared skills
-    └── skills/                ← 27+ framework-agnostic skills
-```
-
----
+Every plan follows `PLAN → TASKS → TEST CASES → IMPLEMENTATION → TEST EXECUTION →
+VALIDATION → SUMMARY → COMPLETE`, gated by the completion contract in
+`.brain/INSTRUCTIONS.md` §8. Traceability runs plan → tasks → test cases → results →
+summary → decisions → knowledge, by ID.
 
 ## 8. Tools & Automation (NEW in v1.6.0)
 
@@ -189,8 +172,8 @@ Every task belongs to exactly one domain. **Domain knowledge never leaks** betwe
 ## 10. Rule System Consolidation (v1.6.0)
 
 - **R3 consolidated** with former R28 — testing + template-led testing is now one rule
-- **R41-R45** — canonical source is `.brain/brain/RULES.md`; CLAUDE.md references them but no longer duplicates the full text
-- **R9 updated** — model lock is now the default; config-driven tiering can override
+- **R41-R45** — canonical source is `.brain/constitution/RULES.md`; CLAUDE.md references them but no longer duplicates the full text
+- **R9 updated (v1.8.0)** — model neutrality; host default model, optional tier config
 - **R21 updated** — dual-mode approval (full/quick)
 
 ---

@@ -1,7 +1,7 @@
 # SUMMARY Agent
 
 > Role: Professional documentation specialist. Produces polished, formatted summaries of all changes with tables, metrics, and visual structure.
-> Model: deepseek-v4-flash (locked)
+> Model: host default (model-neutral per R9; optional tiers via `.brain/config.yaml`)
 > Purpose: After every task, produces a comprehensive, well-documented summary that can be shared with the team or attached to a PR.
 
 ---
@@ -238,13 +238,16 @@ You produce a **single structured document** with this layout:
 
 ## Summary Types
 
+### Plan Summary (required per plan)
+Use `templates/summary/PLAN_SUMMARY.md` for the final record. Write to `summaries/completed/PLAN-XXXX.md`. A future agent must understand the work without reading the plan or session history. Traceability: link plan ↔ tasks ↔ TCs ↔ decisions.
+
 ### Test Summary
-Use `templates/summary/TEST_SUMMARY.md` when documenting test results for a feature. Write to `.brain/tests/{{YYYY-MM-DD}}-{{feature}}.md`.
+Use `templates/summary/TEST_SUMMARY.md` when documenting test results for a feature. Write to `summaries/active/PLAN-XXXX-test-{{feature}}.md`.
 
 Includes: endpoint spec, params, headers, auth, validation, security, database (tables/queries/N+1), performance (p50/p95/p99), clean code, optimization suggestions, full scenario table, coverage pie chart.
 
 ### Task Summary
-Use `templates/summary/TASK_SUMMARY.md` when documenting a completed task. Write to `.brain/tasks/{{YYYY-MM-DD}}-{{task-slug}}.md`.
+Use `templates/summary/TASK_SUMMARY.md` when documenting a completed task. Write alongside the plan summary under `summaries/completed/`.
 
 Includes: files changed, test results across all modes, security audit, performance benchmarks, code quality scores, optimizations, memory written, overall assessment radar chart.
 
@@ -257,4 +260,4 @@ Includes: files changed, test results across all modes, security audit, performa
 5. **Include the branch name.** The branch is how the team finds the code.
 6. **One page, scannable.** The summary should be readable in 30 seconds. Use sections, tables, spacing.
 7. **All agents contribute.** Don't miss any agent's output. If an agent wasn't called, note it.
-8. **Always write test summaries** to `.brain/tests/` and task summaries to `.brain/tasks/` after completion.
+8. **Always write summaries** to `summaries/` after completion: plan summary per completed plan, test verdicts in the owning TC files. No summary ⇒ plan not complete (INSTRUCTIONS.md §8).

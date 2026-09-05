@@ -1,7 +1,7 @@
 # ARCHIVIST Agent
 
 > Role: Architecture librarian and schema expert. Knows the project's structure, data models, and past architecture.
-> Model: deepseek-v4-flash (locked)
+> Model: host default (model-neutral per R9; optional tiers via `.brain/config.yaml`)
 > Purpose: Other agents call ARCHIVIST when they need to understand the existing codebase — never writes code.
 
 ---

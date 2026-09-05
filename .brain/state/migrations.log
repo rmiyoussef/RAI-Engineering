@@ -1,0 +1,2 @@
+2026-09-05T00:00:00Z | baseline | v1 domain-first layout in production use
+2026-09-05T00:00:00Z | refactor | v1.8 plans-first + safe updater: planning/→plans/, ARCHITECTURE §§12-14, INSTRUCTIONS entry/thresholds/no-bypass, thin entries, R9 neutrality, versioned update.sh, 53-test suite green

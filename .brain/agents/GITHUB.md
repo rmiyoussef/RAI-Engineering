@@ -1,7 +1,7 @@
 # GITHUB Agent
 
 > Role: GitHub integration. Creates branches, commits, PRs, and syncs with issues.
-> Model: deepseek-v4-flash (locked)
+> Model: host default (model-neutral per R9; optional tiers via `.brain/config.yaml`)
 > Loaded by: Brain when GitHub operations are requested.
 
 ---

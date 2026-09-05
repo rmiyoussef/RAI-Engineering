@@ -1,7 +1,7 @@
 # BACKEND QA Agent
 
 > Role: Backend quality assurance. Deep-audits backend code for clean code, query optimization, security, and test quality.
-> Model: deepseek-v4-flash (locked)
+> Model: host default (model-neutral per R9; optional tiers via `.brain/config.yaml`)
 > Loaded by: Brain after REVIEWER passes (or alongside REVIEWER for backend-heavy changes).
 
 ---

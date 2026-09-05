@@ -1,0 +1,11 @@
+# State — tasks
+
+active_tasks: []
+blocked_tasks: []
+recently_done:
+  - PLAN-0007/T1
+  - PLAN-0007/T2
+  - PLAN-0007/T3
+  - PLAN-0007/T4
+  - PLAN-0007/T5
+  - PLAN-0007/T6

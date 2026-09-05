@@ -1,0 +1,14 @@
+# State — plans
+
+next_plan_id: PLAN-0008
+active: []
+blocked: []
+recently_completed:
+  - PLAN-0007
+  - PLAN-0006
+archived:
+  - PLAN-0001  # multi-session-architecture (pre-lifecycle, see plans/archived/PLAN-0001/STATUS.md)
+  - PLAN-0002  # domain-isolation-protocol (pre-lifecycle)
+  - PLAN-0003  # flatten-domain-structure (pre-lifecycle)
+  - PLAN-0004  # orchestration-parallel-execution (pre-lifecycle)
+  - PLAN-0005  # update-setup-scripts (pre-lifecycle)

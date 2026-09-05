@@ -2,7 +2,7 @@
 #
 # Place this file at your project root as .brain/config.yaml
 # to override model tiers and agent routing.
-# If this file doesn't exist, all agents default to deepseek-v4-flash.
+# If this file doesn't exist, all agents use the host tool's default model (R9).
 #
 # Usage:
 #   cp docs/config-guide.yaml .brain/config.yaml
@@ -11,10 +11,10 @@
 model_tiers:
   # Define model tiers by capability
   # Tier names are arbitrary — use whatever makes sense for your stack
-  fast: deepseek-v4-flash          # Routine codegen, ARCHIVIST reads, GITHUB ops
-  balanced: deepseek-v4-flash      # EXECUTOR, PLANNER, CLEAN CODE, SUMMARY
-  deep: deepseek-v4-flash          # SECURITY audit, DATABASE schema, REVIEWER, BACKEND QA
-  architect: deepseek-v4-flash     # ORCHESTRATOR ENGINE, ARCHITECT, complex planning
+  fast: null                       # Routine codegen, ARCHIVIST reads, GITHUB ops (null = host default)
+  balanced: null                   # EXECUTOR, PLANNER, CLEAN CODE, SUMMARY
+  deep: null                       # SECURITY audit, DATABASE schema, REVIEWER, BACKEND QA
+  architect: null                  # ORCHESTRATOR ENGINE, ARCHITECT, complex planning
 
 agent_tiers:
   # Map agents to model tiers

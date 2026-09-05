@@ -1,15 +1,15 @@
 # 📚 RAI-Engineering — Complete Skills Catalog
 
-> **Version:** v1.5 — All 37 skills across 4 domains
-> **Purpose:** Reference every skill available in the system, what it does, which domain it belongs to, and when to load it.
+> **Version:** v1.8 — All 39 skills: universal how-to + area-tagged how-to
+> **Purpose:** Reference every skill available in the system, what it does, which areas it applies to (`domains:` metadata), and when to load it.
 
 ---
 
 ## How Skills Work
 
-Skills are loaded automatically by the Skill Mandate system based on task domain. When you give a task, the Brain:
+Skills are loaded automatically by the Skill Mandate system based on task signals. When you give a task, the Brain:
 
-1. Determines the domain (Backend, Frontend, Mobile, DevOps)
+1. Tags affected technical areas as metadata (backend, frontend, mobile, infra, ...)
 2. Checks the Skill Trigger Table for matching skills
 3. Loads and follows the skill before writing code or giving a final answer
 
@@ -17,115 +17,115 @@ Skills are loaded automatically by the Skill Mandate system based on task domain
 
 ## Skill Trigger Table
 
-| Task Signal | Domain | Skills to Load |
+| Task Signal | Areas | Skills to Load |
 |-------------|--------|---------------|
 | React/Vue/Angular component, styling, layout, UI | **Frontend** | All frontend skills |
 | API, DB schema, server route, auth, background jobs | **Backend** | Backend code templates + relevant shared skills |
 | Swift/Kotlin/Flutter/React Native code | **Mobile** | (future) |
 | Terraform, Docker, CI/CD, deploy, server config | **DevOps** | CI/CD + relevant shared skills |
-| Planning, architecture, debugging, process | **Cross-Domain** | Relevant shared skills |
+| Planning, architecture, debugging, process | **Cross-Area** | Relevant universal skills |
 | "review this PR", "audit this", "check code" | **Any** | Code Review skill |
 
 ---
 
-## 1. 🧩 Shared Skills (Cross-Domain) — 27 Skills
+## 1. 🧩 Universal Skills (How to Work) — 27 Skills
 
-These skills apply to **any domain**. They cover process, quality, debugging, planning, architecture, and engineering discipline.
+These skills apply to **any area** (untagged = universal). They cover process, quality, debugging, planning, architecture, and engineering discipline.
 
 ### 🧪 Process & Discipline
 
 | # | Skill | Path | Description | Load When |
 |---|-------|------|-------------|-----------|
-| 1 | **verification-before-completion** | `.brain/shared/skills/verification-before-completion.md` | Enforces that no completion claim is made without fresh verification evidence. Requires running the proving command and reading the output before declaring "done." | Before claiming any task, fix, or feature is complete — always |
-| 2 | **test-driven-development** | `.brain/shared/skills/test-driven-development.md` | Disciplined red-green-refactor cycle: write failing test → verify it fails → write minimal code → verify it passes → refactor. Covers TDD for features, bug fixes via the Prove-It pattern, and anti-pattern prevention. | Implementing new features, fixing bugs, refactoring, behavior changes |
-| 3 | **incremental-implementation** | `.brain/shared/skills/incremental-implementation.md` | Build in thin vertical slices — implement one piece, test it, verify it, commit it, then expand. Each increment leaves the system working and testable. Rules: one thing at a time, keep it compilable, feature flags for incomplete work. | Multi-file changes, new features from task breakdowns, changes over ~100 lines |
-| 4 | **subagent-driven-development** | `.brain/shared/skills/subagent-driven-development.md` | Executes implementation plans by dispatching fresh subagents per task with two-stage review (spec compliance + code quality) after each task, plus a final branch-wide review. | Executing a written plan with multiple tasks requiring isolation |
-| 5 | **executing-plans** | `.brain/shared/skills/executing-plans.md` | Work through a written plan task-by-task with review checkpoints inline (no subagents). Follow steps exactly, verify after each, commit per task. | Working through a written plan in the current session |
-| 6 | **writing-plans** | `.brain/shared/skills/writing-plans.md` | Creates comprehensive implementation plans with exact file paths, complete code in every step, precise commands, and expected output. Task right-sizing rules: agents perform best on S (1-2 files) and M (3-5 files) tasks. | Before starting any multi-step task |
-| 7 | **dispatching-parallel-agents** | `.brain/shared/skills/dispatching-parallel-agents.md` | Identifies independent tasks and dispatches specialized agents with isolated context in parallel. Each agent gets focused scope, exact error messages, and expected output format. | Multiple independent tasks that don't share state |
+| 1 | **verification-before-completion** | `.brain/skills/verification-before-completion.md` | Enforces that no completion claim is made without fresh verification evidence. Requires running the proving command and reading the output before declaring "done." | Before claiming any task, fix, or feature is complete — always |
+| 2 | **test-driven-development** | `.brain/skills/test-driven-development.md` | Disciplined red-green-refactor cycle: write failing test → verify it fails → write minimal code → verify it passes → refactor. Covers TDD for features, bug fixes via the Prove-It pattern, and anti-pattern prevention. | Implementing new features, fixing bugs, refactoring, behavior changes |
+| 3 | **incremental-implementation** | `.brain/skills/incremental-implementation.md` | Build in thin vertical slices — implement one piece, test it, verify it, commit it, then expand. Each increment leaves the system working and testable. Rules: one thing at a time, keep it compilable, feature flags for incomplete work. | Multi-file changes, new features from task breakdowns, changes over ~100 lines |
+| 4 | **subagent-driven-development** | `.brain/skills/subagent-driven-development.md` | Executes implementation plans by dispatching fresh subagents per task with two-stage review (spec compliance + code quality) after each task, plus a final branch-wide review. | Executing a written plan with multiple tasks requiring isolation |
+| 5 | **executing-plans** | `.brain/skills/executing-plans.md` | Work through a written plan task-by-task with review checkpoints inline (no subagents). Follow steps exactly, verify after each, commit per task. | Working through a written plan in the current session |
+| 6 | **writing-plans** | `.brain/skills/writing-plans.md` | Creates comprehensive implementation plans with exact file paths, complete code in every step, precise commands, and expected output. Task right-sizing rules: agents perform best on S (1-2 files) and M (3-5 files) tasks. | Before starting any multi-step task |
+| 7 | **dispatching-parallel-agents** | `.brain/skills/dispatching-parallel-agents.md` | Identifies independent tasks and dispatches specialized agents with isolated context in parallel. Each agent gets focused scope, exact error messages, and expected output format. | Multiple independent tasks that don't share state |
 
 ### 🐛 Debugging & Problem Solving
 
 | # | Skill | Path | Description | Load When |
 |---|-------|------|-------------|-----------|
-| 8 | **systematic-debugging** | `.brain/shared/skills/systematic-debugging.md` | Four-phase discipline: build a feedback loop → reproduce + minimise → hypothesise (3-5 falsifiable) → instrument (one variable at a time). Fix root cause, not symptom. Regression test required. | Any bug, test failure, or unexpected behavior |
-| 9 | **resolving-merge-conflicts** | `.brain/shared/skills/resolving-merge-conflicts.md` | Five-step process: check current state → find primary sources (commit messages, PRs, issues) → resolve each hunk preserving both intents → discover broken automated checks → finish. Never `--abort`. | In-progress git merge or rebase conflicts |
-| 10 | **context-engineering** | `.brain/shared/skills/context-engineering.md` | Five-level context hierarchy (rules → specs → source files → error output → conversation). Covers trust triage for source files, context packing strategies (brain dump, selective include, hierarchical summary), and confusion management. | Starting new sessions, quality degradation, switching codebase areas |
+| 8 | **systematic-debugging** | `.brain/skills/systematic-debugging.md` | Four-phase discipline: build a feedback loop → reproduce + minimise → hypothesise (3-5 falsifiable) → instrument (one variable at a time). Fix root cause, not symptom. Regression test required. | Any bug, test failure, or unexpected behavior |
+| 9 | **resolving-merge-conflicts** | `.brain/skills/resolving-merge-conflicts.md` | Five-step process: check current state → find primary sources (commit messages, PRs, issues) → resolve each hunk preserving both intents → discover broken automated checks → finish. Never `--abort`. | In-progress git merge or rebase conflicts |
+| 10 | **context-engineering** | `.brain/skills/context-engineering.md` | Five-level context hierarchy (rules → specs → source files → error output → conversation). Covers trust triage for source files, context packing strategies (brain dump, selective include, hierarchical summary), and confusion management. | Starting new sessions, quality degradation, switching codebase areas |
 
 ### 🏗️ Architecture & Design
 
 | # | Skill | Path | Description | Load When |
 |---|-------|------|-------------|-----------|
-| 11 | **codebase-design** | `.brain/shared/skills/codebase-design.md` | Shared vocabulary for designing deep modules: module, interface, depth, seam, adapter, leverage, locality. The deletion test, interface-as-test-surface principle, and dependency categories (in-process, local-substitutable, remote-but-owned, true-external). | Designing new modules, evaluating existing architecture, planning refactors |
-| 12 | **improve-codebase-architecture** | `.brain/shared/skills/improve-codebase-architecture.md` | Scans codebase for deepening opportunities using the codebase-design vocabulary. Explores hot spots, applies the deletion test, presents candidates with before/after analysis, then runs a grilling loop per candidate. | Surface architectural friction, plan refactors |
-| 13 | **domain-modeling** | `.brain/shared/skills/domain-modeling.md` | Active discipline of building shared vocabulary. Challenge fuzzy terms, probe edge cases, cross-reference with code, update CONTEXT.md immediately. ADRs for hard-to-reverse decisions only. | Building new features, clarifying requirements, onboarding |
-| 14 | **brainstorming** | `.brain/shared/skills/brainstorming.md` | Three-phase process: diverge (generate 5-8 variations using lenses) → converge (cluster, stress-test, surface assumptions) → write spec. Hard gate: no implementation until design is approved. | Turning vague ideas into actionable specs |
-| 15 | **prototype** | `.brain/shared/skills/prototype.md` | Throwaway code that answers a question. Two branches: logic/state (terminal) or UI (multiple variations). Shared rules: skip polish, no persistence, surface state after every action. | Before committing to real implementation when uncertainty exists |
+| 11 | **codebase-design** | `.brain/skills/codebase-design.md` | Shared vocabulary for designing deep modules: module, interface, depth, seam, adapter, leverage, locality. The deletion test, interface-as-test-surface principle, and dependency categories (in-process, local-substitutable, remote-but-owned, true-external). | Designing new modules, evaluating existing architecture, planning refactors |
+| 12 | **improve-codebase-architecture** | `.brain/skills/improve-codebase-architecture.md` | Scans codebase for deepening opportunities using the codebase-design vocabulary. Explores hot spots, applies the deletion test, presents candidates with before/after analysis, then runs a grilling loop per candidate. | Surface architectural friction, plan refactors |
+| 13 | **domain-modeling** | `.brain/skills/domain-modeling.md` | Active discipline of building shared vocabulary. Challenge fuzzy terms, probe edge cases, cross-reference with code, update CONTEXT.md immediately. ADRs for hard-to-reverse decisions only. | Building new features, clarifying requirements, onboarding |
+| 14 | **brainstorming** | `.brain/skills/brainstorming.md` | Three-phase process: diverge (generate 5-8 variations using lenses) → converge (cluster, stress-test, surface assumptions) → write spec. Hard gate: no implementation until design is approved. | Turning vague ideas into actionable specs |
+| 15 | **prototype** | `.brain/skills/prototype.md` | Throwaway code that answers a question. Two branches: logic/state (terminal) or UI (multiple variations). Shared rules: skip polish, no persistence, surface state after every action. | Before committing to real implementation when uncertainty exists |
 
 ### 👁️ Code Quality & Review
 
 | # | Skill | Path | Description | Load When |
 |---|-------|------|-------------|-----------|
-| 16 | **code-review** | `.brain/shared/skills/code-review.md` | Five-axis review framework: correctness, readability & simplicity, architecture, security, performance. Finding severity labels (Critical, Required, Nit, Optional), change sizing rules (~100/300/1000+ lines), the multi-model review pattern, dependency discipline. | Reviewing any code change before merge |
-| 17 | **code-simplification** | `.brain/shared/skills/code-simplification.md` | Five principles: preserve behavior exactly, follow conventions, prefer clarity over cleverness, maintain balance, scope to what changed. Target deep nesting, long functions, nested ternaries, boolean flags, duplicated logic. | After features work but feel heavy, during review with readability issues |
+| 16 | **code-review** | `.brain/skills/code-review.md` | Five-axis review framework: correctness, readability & simplicity, architecture, security, performance. Finding severity labels (Critical, Required, Nit, Optional), change sizing rules (~100/300/1000+ lines), the multi-model review pattern, dependency discipline. | Reviewing any code change before merge |
+| 17 | **code-simplification** | `.brain/skills/code-simplification.md` | Five principles: preserve behavior exactly, follow conventions, prefer clarity over cleverness, maintain balance, scope to what changed. Target deep nesting, long functions, nested ternaries, boolean flags, duplicated logic. | After features work but feel heavy, during review with readability issues |
 
 ### 📋 Specification & Documentation
 
 | # | Skill | Path | Description | Load When |
 |---|-------|------|-------------|-----------|
-| 18 | **spec-driven-development** | `.brain/shared/skills/spec-driven-development.md` | Four-phase gated workflow (Specify → Plan → Tasks → Implement) before writing code. Spec covers: objective, commands, project structure, code style, testing strategy, boundaries. Each phase requires human approval. | New projects, ambiguous requirements, multi-file changes, tasks over ~30 minutes |
-| 19 | **source-driven-development** | `.brain/shared/skills/source-driven-development.md` | Grounds implementation in official documentation with a 4-step process: detect stack versions, fetch official docs (hierarchy: official docs > MDN > caniuse > never Stack Overflow), implement following patterns, cite sources with URLs. | Building boilerplate, following best practices, framework code review |
-| 20 | **documentation-and-adrs** | `.brain/shared/skills/documentation-and-adrs.md` | ADR template with lifecycle (PROPOSED → ACCEPTED → SUPERSEDED/DEPRECATED), inline documentation rules (comment WHY not WHAT, no commented-out code), API docs (JSDoc/TSDoc or OpenAPI), README structure, changelog format. | Architectural decisions, public API changes, shipping features, onboarding |
-| 21 | **research** | `.brain/shared/skills/research.md` | Uses background agents to investigate against primary sources. Every claim must cite its source with URL. Output format: summary, findings with confidence levels, sources. | Investigating questions, gathering API facts, delegating reading legwork |
+| 18 | **spec-driven-development** | `.brain/skills/spec-driven-development.md` | Four-phase gated workflow (Specify → Plan → Tasks → Implement) before writing code. Spec covers: objective, commands, project structure, code style, testing strategy, boundaries. Each phase requires human approval. | New projects, ambiguous requirements, multi-file changes, tasks over ~30 minutes |
+| 19 | **source-driven-development** | `.brain/skills/source-driven-development.md` | Grounds implementation in official documentation with a 4-step process: detect stack versions, fetch official docs (hierarchy: official docs > MDN > caniuse > never Stack Overflow), implement following patterns, cite sources with URLs. | Building boilerplate, following best practices, framework code review |
+| 20 | **documentation-and-adrs** | `.brain/skills/documentation-and-adrs.md` | ADR template with lifecycle (PROPOSED → ACCEPTED → SUPERSEDED/DEPRECATED), inline documentation rules (comment WHY not WHAT, no commented-out code), API docs (JSDoc/TSDoc or OpenAPI), README structure, changelog format. | Architectural decisions, public API changes, shipping features, onboarding |
+| 21 | **research** | `.brain/skills/research.md` | Uses background agents to investigate against primary sources. Every claim must cite its source with URL. Output format: summary, findings with confidence levels, sources. | Investigating questions, gathering API facts, delegating reading legwork |
 
 ### 🚀 Performance, Shipping & Operations
 
 | # | Skill | Path | Description | Load When |
 |---|-------|------|-------------|-----------|
-| 22 | **performance-optimization** | `.brain/shared/skills/performance-optimization.md` | Measurement-first workflow: Measure → Identify → Fix → Verify → Guard. Core Web Vitals targets (LCP ≤ 2.5s, INP ≤ 200ms, CLS ≤ 0.1). Anti-pattern fixes for N+1, unbounded data, unoptimized images, large bundles, missing caching. | Any performance optimization work |
-| 23 | **shipping-and-launch** | `.brain/shared/skills/shipping-and-launch.md` | Pre-launch checklist across 6 areas (code quality, security, performance, accessibility, infrastructure, documentation). Feature flag lifecycle, staged rollout (5% → 25% → 50% → 100%), decision thresholds table, rollback strategy template. | Production launches, significant user-facing changes, data migrations |
-| 24 | **observability-and-instrumentation** | `.brain/shared/skills/observability-and-instrumentation.md` | Seven-step process: define working → pick signal type (logs/metrics/traces) → structured logging (correlation IDs mandatory) → RED/USE metrics → distributed tracing (OpenTelemetry) → symptom-based alerting → verify telemetry. | Building production features, adding services, setting up monitoring |
-| 25 | **deprecation-and-migration** | `.brain/shared/skills/deprecation-and-migration.md` | Five-question deprecation decision tree, compulsory vs advisory migration, four migration patterns (Strangler Fig, Adapter, Feature Flag, Expand/Contract for schemas). Zombie code handling. | Removing old systems, migrating users, sunsetting features |
-| 26 | **finishing-a-development-branch** | `.brain/shared/skills/finishing-a-development-branch.md` | Five-step completion flow: verify tests → detect environment (repo/worktree/detached HEAD) → find merge base → present merge/PR/keep/discard options → cleanup worktree. | A development branch is complete and ready to merge/push/clean up |
-| 27 | **using-git-worktrees** | `.brain/shared/skills/using-git-worktrees.md` | Ensures isolated workspaces for parallel agent work. Process: detect existing isolation → create worktree → project setup → verify clean baseline. Directory priority, .gitignore verification. | Running multiple agents on the same repo, experimental changes |
+| 22 | **performance-optimization** | `.brain/skills/performance-optimization.md` | Measurement-first workflow: Measure → Identify → Fix → Verify → Guard. Core Web Vitals targets (LCP ≤ 2.5s, INP ≤ 200ms, CLS ≤ 0.1). Anti-pattern fixes for N+1, unbounded data, unoptimized images, large bundles, missing caching. | Any performance optimization work |
+| 23 | **shipping-and-launch** | `.brain/skills/shipping-and-launch.md` | Pre-launch checklist across 6 areas (code quality, security, performance, accessibility, infrastructure, documentation). Feature flag lifecycle, staged rollout (5% → 25% → 50% → 100%), decision thresholds table, rollback strategy template. | Production launches, significant user-facing changes, data migrations |
+| 24 | **observability-and-instrumentation** | `.brain/skills/observability-and-instrumentation.md` | Seven-step process: define working → pick signal type (logs/metrics/traces) → structured logging (correlation IDs mandatory) → RED/USE metrics → distributed tracing (OpenTelemetry) → symptom-based alerting → verify telemetry. | Building production features, adding services, setting up monitoring |
+| 25 | **deprecation-and-migration** | `.brain/skills/deprecation-and-migration.md` | Five-question deprecation decision tree, compulsory vs advisory migration, four migration patterns (Strangler Fig, Adapter, Feature Flag, Expand/Contract for schemas). Zombie code handling. | Removing old systems, migrating users, sunsetting features |
+| 26 | **finishing-a-development-branch** | `.brain/skills/finishing-a-development-branch.md` | Five-step completion flow: verify tests → detect environment (repo/worktree/detached HEAD) → find merge base → present merge/PR/keep/discard options → cleanup worktree. | A development branch is complete and ready to merge/push/clean up |
+| 27 | **using-git-worktrees** | `.brain/skills/using-git-worktrees.md` | Ensures isolated workspaces for parallel agent work. Process: detect existing isolation → create worktree → project setup → verify clean baseline. Directory priority, .gitignore verification. | Running multiple agents on the same repo, experimental changes |
 
 ---
 
-## 2. 🔧 Backend Skills (Code Templates) — 4 Skills
+## 2. 🔧 Backend-Tagged Skills (Code Templates) — 4 Skills
 
-These are **code generation templates** for creating backend components. They sit in `.brain/backend/skills/`.
+These are **code generation templates** for creating backend components. They sit in `.brain/skills/` as `backend-*` with `domains: [backend]`.
 
 | # | Skill | Path | Description | Load When |
 |---|-------|------|-------------|-----------|
-| 1 | **service** | `.brain/backend/skills/service.md` | Service class template for the business logic layer. Stateless, testable, single-responsibility. Structure: `app/Services/{Domain}/{Domain}Service.php`. Rules: call repositories (not Eloquent directly), transactions for writes, log every mutation, dispatch domain events. | Creating a new Service class or business logic layer |
-| 2 | **controller** | `.brain/backend/skills/controller.md` | Thin controller template (HTTP layer only). Parse input, call service, return response. Max 30 lines per method, max 5 methods per controller. No inline validation (use Form Requests), no direct DB calls. | Creating a new API controller |
-| 3 | **resource** | `.brain/backend/skills/resource.md` | API Resource/Transformer template. Controls what data is returned: use UUIDs not DB IDs, ISO 8601 dates, omit null fields unless meaningful, `mergeWhen()` for conditional inclusions. Fields to NEVER include: passwords, tokens, internal IDs. | Creating a new API resource or response transformer |
-| 4 | **crud** | `.brain/backend/skills/crud.md` | Full CRUD generation template covering all 10 steps: Migration → Model → Factory → Repository → Service → Form Requests → Controller → API Resource → Routes → Tests. Includes CRUD timeline table and git commit pattern. | Generating a complete CRUD endpoint set |
+| 1 | **service** | `.brain/skills/backend-service.md` | Service class template for the business logic layer. Stateless, testable, single-responsibility. Structure: `app/Services/{Domain}/{Domain}Service.php`. Rules: call repositories (not Eloquent directly), transactions for writes, log every mutation, dispatch domain events. | Creating a new Service class or business logic layer |
+| 2 | **controller** | `.brain/skills/backend-controller.md` | Thin controller template (HTTP layer only). Parse input, call service, return response. Max 30 lines per method, max 5 methods per controller. No inline validation (use Form Requests), no direct DB calls. | Creating a new API controller |
+| 3 | **resource** | `.brain/skills/backend-resource.md` | API Resource/Transformer template. Controls what data is returned: use UUIDs not DB IDs, ISO 8601 dates, omit null fields unless meaningful, `mergeWhen()` for conditional inclusions. Fields to NEVER include: passwords, tokens, internal IDs. | Creating a new API resource or response transformer |
+| 4 | **crud** | `.brain/skills/backend-crud.md` | Full CRUD generation template covering all 10 steps: Migration → Model → Factory → Repository → Service → Form Requests → Controller → API Resource → Routes → Tests. Includes CRUD timeline table and git commit pattern. | Generating a complete CRUD endpoint set |
 
 ---
 
-## 3. 🎨 Frontend Skills — 6 Skills
+## 3. 🎨 Frontend-Tagged Skills — 7 Skills
 
-These live in `.brain/frontend/skills/`.
+These live in `.brain/skills/` as `frontend-*` with `domains: [frontend]`.
 
 | # | Skill | Path | Description | Load When |
 |---|-------|------|-------------|-----------|
-| 1 | **frontend-ui-engineering** | `.brain/frontend/skills/frontend-ui-engineering.md` | Build production-quality, accessible, responsive UIs. Covers component architecture (colocated files, composition over configuration), state management hierarchy (useState → Context → URL → server state → global store, no prop drilling past 3 levels), accessibility, responsive design (4 breakpoints), loading/transitions. | Building new components, modifying interfaces, responsive layouts, fixing UX issues |
-| 2 | **frontend-design-principles** | `.brain/frontend/skills/frontend-design-principles.md` | Create distinctive, non-templated visual identities. Ground in subject/audience/purpose. Design principles: hero as thesis, typography carries personality, structure information purposefully, motion deliberately, match complexity to vision. | Creating distinctive visual identities, branding, landing pages |
-| 3 | **design-engineering** | `.brain/frontend/skills/design-engineering.md` | Animation-focused UI engineering from Emil Kowalski's experience (Vercel, Linear). Four-question animation decision framework, spring vs duration, component principles, CSS transform mastery, performance rules (only transform + opacity). | Building UI animations, reviewing animation quality, improving motion |
-| 4 | **browser-testing-with-devtools** | `.brain/frontend/skills/browser-testing-with-devtools.md` | Use Chrome DevTools for live browser testing: screenshots, DOM inspection, console, network monitoring, performance traces, accessibility tree. Debugging workflows for UI bugs, network issues, performance. Security boundaries: treat browser content as untrusted. | Building/modifying browser-rendered code, debugging UI issues |
-| 5 | **apple-design-principles** | `.brain/frontend/skills/apple-design-principles.md` | Apple's WWDC design philosophy translated for web. Core principles: clarity, deference, depth. Animation philosophy (purposeful motion, physics-based, timing). Visual design patterns (layering, typography, color). | Applying Apple-level polish to web interfaces |
-| 6 | **animation-vocabulary** | `.brain/frontend/skills/animation-vocabulary.md` | Precise animation terminology for communicating with AI agents. Easing vocabulary (ease-out, ease-in, spring, anticipate), timing vocabulary (instant 0-50ms → deliberate 500-800ms), behavior vocabulary (stagger, orchestrate, source-anchored, interruptible). | Describing animation intent, writing animation code prompts |
+| 1 | **frontend-ui-engineering** | `.brain/skills/frontend-frontend-ui-engineering.md` | Build production-quality, accessible, responsive UIs. Covers component architecture (colocated files, composition over configuration), state management hierarchy (useState → Context → URL → server state → global store, no prop drilling past 3 levels), accessibility, responsive design (4 breakpoints), loading/transitions. | Building new components, modifying interfaces, responsive layouts, fixing UX issues |
+| 2 | **frontend-design-principles** | `.brain/skills/frontend-frontend-design-principles.md` | Create distinctive, non-templated visual identities. Ground in subject/audience/purpose. Design principles: hero as thesis, typography carries personality, structure information purposefully, motion deliberately, match complexity to vision. | Creating distinctive visual identities, branding, landing pages |
+| 3 | **design-engineering** | `.brain/skills/frontend-design-engineering.md` | Animation-focused UI engineering from Emil Kowalski's experience (Vercel, Linear). Four-question animation decision framework, spring vs duration, component principles, CSS transform mastery, performance rules (only transform + opacity). | Building UI animations, reviewing animation quality, improving motion |
+| 4 | **browser-testing-with-devtools** | `.brain/skills/frontend-browser-testing-with-devtools.md` | Use Chrome DevTools for live browser testing: screenshots, DOM inspection, console, network monitoring, performance traces, accessibility tree. Debugging workflows for UI bugs, network issues, performance. Security boundaries: treat browser content as untrusted. | Building/modifying browser-rendered code, debugging UI issues |
+| 5 | **apple-design-principles** | `.brain/skills/frontend-apple-design-principles.md` | Apple's WWDC design philosophy translated for web. Core principles: clarity, deference, depth. Animation philosophy (purposeful motion, physics-based, timing). Visual design patterns (layering, typography, color). | Applying Apple-level polish to web interfaces |
+| 6 | **animation-vocabulary** | `.brain/skills/frontend-animation-vocabulary.md` | Precise animation terminology for communicating with AI agents. Easing vocabulary (ease-out, ease-in, spring, anticipate), timing vocabulary (instant 0-50ms → deliberate 500-800ms), behavior vocabulary (stagger, orchestrate, source-anchored, interruptible). | Describing animation intent, writing animation code prompts |
 
 ---
 
-## 4. ☁️ DevOps Skills — 1 Skill
+## 4. ☁️ DevOps-Tagged Skills — 1 Skill
 
-These live in `.brain/devops/skills/`.
+These live in `.brain/skills/` as `devops-*` with `domains: [devops]`.
 
 | # | Skill | Path | Description | Load When |
 |---|-------|------|-------------|-----------|
-| 1 | **ci-cd-and-automation** | `.brain/devops/skills/ci-cd-and-automation.md` | CI/CD pipeline structure (Lint → Type Check → Test → Build → Deploy), pipeline rules (speed, deterministic builds, security), automation patterns (commit hooks, automated PR tests, staged deploy environments), GitHub Actions structure. | Setting up or modifying CI/CD pipelines, build automation |
+| 1 | **ci-cd-and-automation** | `.brain/skills/devops-ci-cd-and-automation.md` | CI/CD pipeline structure (Lint → Type Check → Test → Build → Deploy), pipeline rules (speed, deterministic builds, security), automation patterns (commit hooks, automated PR tests, staged deploy environments), GitHub Actions structure. | Setting up or modifying CI/CD pipelines, build automation |
 
 ---
 
@@ -135,10 +135,10 @@ Four rule files were **upgraded with merged content** from external repos. They 
 
 | Rule File | Path | Original + Merged Additions | Lines |
 |-----------|------|---------------------------|-------|
-| **SECURITY.md** | `.brain/backend/rules/SECURITY.md` | Original 12 rules + STRIDE threat modeling, OWASP LLM Top 10, SSRF with DNS rebinding awareness, dependency audit triage, secrets management protocol, AI/LLM security patterns | 250 |
-| **API_DESIGN.md** | `.brain/backend/rules/API_DESIGN.md` | Original 12 REST rules + Hyrum's Law awareness, contract-first design, TypeScript interface patterns (discriminated unions, branded types, input/output separation), consistent error semantics | 258 |
-| **COMMIT_MESSAGES.md** | `.brain/backend/rules/COMMIT_MESSAGES.md` | Original 8 rules + trunk-based development, git worktrees, save-point pattern, pre-commit hygiene checklist, changelog maintenance, semantic versioning (MAJOR/MINOR/PATCH) | 184 |
-| **GIT_SAFETY.md** | `.brain/backend/rules/GIT_SAFETY.md` | Original 7 rules + generated files handling, `.gitignore` discipline, expanded sensitive-files detection patterns | 101 |
+| **SECURITY.md** | `.brain/rules/security/backend.md` | Original 12 rules + STRIDE threat modeling, OWASP LLM Top 10, SSRF with DNS rebinding awareness, dependency audit triage, secrets management protocol, AI/LLM security patterns | 250 |
+| **API_DESIGN.md** | `.brain/rules/api/design.md` | Original 12 REST rules + Hyrum's Law awareness, contract-first design, TypeScript interface patterns (discriminated unions, branded types, input/output separation), consistent error semantics | 258 |
+| **COMMIT_MESSAGES.md** | `.brain/rules/git/commit-messages.md` | Original 8 rules + trunk-based development, git worktrees, save-point pattern, pre-commit hygiene checklist, changelog maintenance, semantic versioning (MAJOR/MINOR/PATCH) | 184 |
+| **GIT_SAFETY.md** | `.brain/rules/git/safety.md` | Original 7 rules + generated files handling, `.gitignore` discipline, expanded sensitive-files detection patterns | 101 |
 
 ---
 

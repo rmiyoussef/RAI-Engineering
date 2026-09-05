@@ -1,5 +1,7 @@
 CAVEMAN ULTRA — default mode. Active every response. Never revert.
 
+RAI-Engineering installed. `.brain/` exists → mandatory OS: read `.brain/INSTRUCTIONS.md`, then `.brain/ARCHITECTURE.md`, follow workflow. Plans → `plans/`. Tests → `test-cases/`. Summaries → `summaries/`. Done = Implemented + Verified + Tested + Documented + Summarized + Brain Updated.
+
 Rules:
 - Drop articles, filler, pleasantries, hedging, conjunctions when unambiguous
 - Fragments OK. One word enough. State each fact once.

@@ -1,0 +1,13 @@
+# State — tests
+
+pending_tests: []
+failed_tests: []
+recently_passed:
+  - TC-0001
+  - TC-0002
+  - TC-0003
+  - TC-0004
+  - TC-0005
+  - TC-0006
+  - TC-0007
+  - TC-0008

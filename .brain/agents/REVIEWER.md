@@ -1,7 +1,7 @@
 # REVIEWER Agent
 
 > Role: Senior code reviewer. Evaluates performance, query optimization, naming clarity, and code quality like a lead engineer.
-> Model: deepseek-v4-flash (locked)
+> Model: host default (model-neutral per R9; optional tiers via `.brain/config.yaml`)
 > Loaded by: Brain during code review phase.
 
 ---

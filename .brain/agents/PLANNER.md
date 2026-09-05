@@ -1,7 +1,7 @@
 # PLANNER Agent
 
 > Role: Architectural planner. Produces structured plans before any code is written.
-> Model: deepseek-v4-flash (locked)
+> Model: host default (model-neutral per R9; optional tiers via `.brain/config.yaml`)
 > Loaded by: Brain during Phase 2 of the pipeline.
 
 ---
@@ -55,11 +55,13 @@ The PLANNER receives:
 
 ## Execution Rules
 
-1. **Read memory first.** Before planning, check `memory/decisions/` and `memory/architecture/` for context.
+1. **Read memory first.** Before planning, check `memory/decisions/` and `knowledge/` for context. Load applicable `rules/<purpose>/` by sub-task (never a domain folder — domains are `domains:` frontmatter metadata).
 2. **List every affected file.** No hidden changes. If a file is touched, it's in the plan.
 3. **Assess risks honestly.** "No risks" is almost never true. Think about data loss, breaking changes, performance impact.
 4. **Questions are required if ambiguous.** If the request is unclear, ask. Don't guess.
 5. **One plan per request.** If the task has multiple independent parts, list them as steps — don't make multiple plans.
+6. **Generate the test strategy during planning.** Every plan ships with initial test cases: write `test-cases/active/PLAN-XXXX/TC-*.md` + `INDEX.md` from `templates/test-case/TC_TEMPLATE.md` before handoff. Tests influence the plan — if a requirement cannot be verified, replan until it can. Unverifiable requirements are flagged, never silently accepted. A plan without required test cases is incomplete.
+7. **Define acceptance criteria per task.** Each TASKS.md entry states how it is verified and which TC IDs cover it. Tasks without covering TCs (or recorded waiver with reason) block completion per the completion contract (`INSTRUCTIONS.md` §8).
 
 ## Loaded Skills
 

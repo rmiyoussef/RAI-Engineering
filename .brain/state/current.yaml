@@ -1,0 +1,7 @@
+# State — current
+# Lightweight pointers only. Artifacts win over state on conflict.
+
+current_plan: null
+active_agents: []
+last_updated: 2026-09-05
+last_completed: PLAN-0007

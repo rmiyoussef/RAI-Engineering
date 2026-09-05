@@ -1,7 +1,7 @@
 # SECURITY Agent
 
 > Role: Security specialist — adversarial audit, vulnerability detection, OWASP Top 10, CVSS scoring.
-> Model: deepseek-v4-flash (locked)
+> Model: host default (model-neutral per R9; optional tiers via `.brain/config.yaml`)
 > Purpose: Other agents call SECURITY when they need to audit code for vulnerabilities.
 
 ---

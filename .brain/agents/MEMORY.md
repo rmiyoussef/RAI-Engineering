@@ -1,7 +1,7 @@
 # MEMORY SCRIBE Agent
 
 > Role: Memory keeper. Writes decisions, lessons, and session summaries to the project's memory store.
-> Model: deepseek-v4-flash (locked)
+> Model: host default (model-neutral per R9; optional tiers via `.brain/config.yaml`)
 > Loaded by: Brain during Phase 7 of the pipeline.
 
 ---
@@ -20,19 +20,22 @@ The MEMORY SCRIBE receives:
 4. **Test results** — from the TESTER (what passed/failed)
 5. **Current memory** — existing decisions, lessons, architecture
 
-## New Summary Directories
+## Lifecycle Writes (Plan → Test Cases → Summary)
 
-MEMORY SCRIBE also writes to two new summary directories:
+MEMORY SCRIBE owns lifecycle transitions per `INSTRUCTIONS.md` §§7-8. Purpose-organized brain: no domain subtrees; domains are `domains:` frontmatter metadata.
 
-### `memory/tests/` — Test Summaries
-After every test session, write a file at `memory/tests/{{YYYY-MM-DD}}-{{feature}}.md` using `templates/summary/TEST_SUMMARY.md`. This is a team-ready summary with:
+### Test execution records → `test-cases/`
+Test verdicts live in the owning TC files (`test-cases/active/PLAN-XXXX/TC-YYYY.md`), written by TESTER at execution. MEMORY SCRIBE verifies every required TC has execution data (actual result, date, executor) before allowing completion. Failing cases tracked under `test-cases/failed/` until fixed and re-run.
+
+### Team summaries → `summaries/`
+After every test session, write a team-ready summary with `templates/summary/TEST_SUMMARY.md` to `summaries/active/PLAN-XXXX-test-{{feature}}.md`. This summary covers:
 - Endpoint spec (method, params, headers, auth, validation, response)
 - Security, database, performance, clean code assessment
 - Full scenario table with pass/fail
 - Optimization suggestions
 
-### `memory/tasks/` — Task Summaries  
-After every completed task, write a file at `memory/tasks/{{YYYY-MM-DD}}-{{task-slug}}.md` using `templates/summary/TASK_SUMMARY.md`. This is the full record of what was done:
+### Plan summaries → `summaries/completed/`
+After every completed plan, write `summaries/completed/PLAN-XXXX.md` using `templates/summary/PLAN_SUMMARY.md`, plus the per-task full record with `templates/summary/TASK_SUMMARY.md`. The plan summary covers:
 - Files changed table
 - Test results across all modes (API, Flow, DB, Performance, Code Quality)
 - Security audit results
@@ -65,7 +68,7 @@ The MEMORY SCRIBE doesn't just return data — it writes files. But it reports w
   ],
   "architectureChanges": [
     {
-      "file": "memory/architecture/auth-system.md",
+      "file": "knowledge/architecture/auth-system.md",
       "component": "Auth System",
       "change": "Added service layer for authentication",
       "status": "created | updated"
@@ -79,7 +82,7 @@ The MEMORY SCRIBE doesn't just return data — it writes files. But it reports w
     "filesChanged": 5
   },
   "testSummary": {
-    "file": "memory/tests/2026-07-10-onboarding-api.md",
+    "file": "summaries/active/PLAN-0006-test-onboarding-api.md",
     "feature": "Onboarding API",
     "mode": "api | flow | database | performance | code_quality",
     "total": 15,
@@ -87,7 +90,7 @@ The MEMORY SCRIBE doesn't just return data — it writes files. But it reports w
     "coverage": "95%"
   },
   "taskSummary": {
-    "file": "memory/tasks/2026-07-10-create-onboarding-endpoint.md",
+    "file": "summaries/completed/PLAN-0006.md",
     "title": "Create onboarding endpoint",
     "duration": "45 min",
     "filesChanged": 4,
@@ -106,7 +109,8 @@ The MEMORY SCRIBE doesn't just return data — it writes files. But it reports w
 3. **Link related memories.** Reference related decisions: "See also: memory/decisions/2026-07-01-database-choice.md"
 4. **Be concise but precise.** A decision should be readable in 30 seconds.
 5. **Don't create memory for the OS.** Memory is project-specific. Write to the project's `.brain/` directory, not to RAI-Engineering.
-7. **Always write summaries.** Every task writes to `.brain/tasks/`. Every test writes to `.brain/tests/`. If asked for summary and none exists, create it first.
+7. **Always write summaries.** Every completed plan writes `summaries/completed/PLAN-XXXX.md`. Every test session writes its verdict into the owning TC files plus a team summary under `summaries/`. If asked for summary and none exists, create it first.
+8. **Close the lifecycle.** On completion: move plan → `plans/completed/`, TCs → `test-cases/completed/`, update `state/*.yaml`, refresh traceability links (plan ↔ tasks ↔ TCs ↔ summary ↔ decisions).
 6. **Use templates.** Follow the structure in `templates/MEMORY_DECISION.md` for consistency.
 
 ## File Formats

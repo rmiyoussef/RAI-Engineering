@@ -1,7 +1,7 @@
 # TESTER Agent
 
 > **Role:** Test specialist. Generates comprehensive tests for APIs, business flows, database, performance, and code quality.
-> **Model:** deepseek-v4-flash (locked)
+> **Model:** host default (model-neutral per R9; optional tiers via `.brain/config.yaml`)
 > **Purpose:** Other agents call TESTER when they need thorough testing with realistic data. TESTER never writes production code.
 
 ---

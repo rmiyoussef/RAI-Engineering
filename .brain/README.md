@@ -1,70 +1,43 @@
-# 🧠 Project Brain
+# Project Brain
 
-> **This folder is the brain of the project.**
-> Every AI tool — Claude, Cursor, Copilot, Windsurf, Gemini — can read this folder and instantly understand the project.
+> `.brain/` is the central intelligence of this project — the single source of truth for architecture, instructions, rules, planning, testing, memory, and state. Every AI tool (Claude, Cursor, Copilot, Windsurf, Gemini) reads this folder and operates from the same knowledge.
 
-## Domain-Isolated Structure
+## Purpose-Organized Knowledge
 
-Knowledge is organized into **domain-isolated subtrees**. Each domain is self-contained — Backend rules never mix with Frontend rules.
+Knowledge is organized by purpose, not by technical domain. A task like "real-time notifications" spans backend, database, queue, WebSocket, frontend, security, testing — so domains are metadata (`domains:` frontmatter), never directories.
 
 ```
 .brain/
-├── INDEX.md                   ← Master index — start here
-├── README.md                  ← You are here
-├── agents/                    ← Agent definitions (framework-agnostic)
-├── brain/                     ← Core system files (MISSION, PRINCIPLES, RULES, SYSTEM)
-├── templates/                 ← Summary & testing templates
-├── shared/skills/             ← Cross-domain skills (27 skills from 6 repos)
-│
-├── backend/                   ← Backend domain
-│   ├── memory/                ← guidelines, decisions, lessons, sessions, tests, tasks
-│   ├── skills/                ← Code templates (service, controller, resource, crud)
-│   ├── rules/                 ← Project conventions (8 rule files)
-│   ├── plans/                 ← Project plans
-│   └── connections/           ← DB schema (gitignored)
-│
-├── frontend/                  ← Frontend domain
-│   ├── INDEX.md               ← Frontend index
-│   ├── FRONTEND_BEST_PRACTICES.md ← Human-readable guide
-│   ├── skills/                ← 7 skills (Mantine, UI eng, design, animations)
-│   ├── rules/                 ← 11 frontend engineering rules
-│   ├── reference/             ← Mantine UI integration guide
-│   └── memory/                ← Decisions, lessons, tests, tasks
-│
-├── mobile-ios/                ← iOS domain (for future projects)
-├── mobile-android/            ← Android domain (for future projects)
-└── devops/                    ← DevOps domain
-    └── skills/                ← DevOps patterns
+├── ARCHITECTURE.md  ← structural authority: what lives where, lifecycles
+├── INSTRUCTIONS.md  ← operational authority: mandatory agent workflow
+├── INDEX.md         ← navigation map (start here after the two above)
+├── constitution/    ← mission, principles, canonical rules, constraints, quality
+├── context/         ← current project facts (stack, architecture, environment)
+├── knowledge/       ← how-things-work, by purpose (api, database, security, ...)
+├── memory/          ← what happened and why (decisions, lessons, sessions)
+├── plans/        ← plans PLAN-XXXX with tasks (active/completed/blocked/archived)
+├── test-cases/      ← first-class test cases TC-YYYY per plan
+├── summaries/       ← final summary per completed plan
+├── agents/          ← agent definitions (retrieve knowledge, never duplicate it)
+├── skills/          ← how to perform work (universal unless domain-tagged)
+├── rules/           ← engineering rules by purpose (categories, not domain brains)
+├── reference/       ← stable protocols + external references
+├── templates/       ← scaffolds for plans, test cases, summaries
+├── sessions/        ← session registry (live data gitignored)
+└── state/           ← machine-readable pointers to current work
 ```
 
-## What's Inside Each Domain
+## Lifecycle
 
-| Path | What It Tells the AI |
-|------|----------------------|
-| `{domain}/memory/guidelines.md` | Architecture, tech stack, conventions |
-| `{domain}/memory/decisions/` | Why past decisions were made |
-| `{domain}/memory/lessons/` | What went wrong and how to avoid it |
-| `{domain}/memory/tasks/` | What work was done and how |
-| `{domain}/memory/tests/` | Test results per feature |
-| `{domain}/skills/` | How to write code in this project |
-| `{domain}/rules/` | Project-specific conventions (8-11 files per domain) |
-| `{domain}/plans/` | Active and past plans |
-| `{domain}/reference/` | External reference docs (Mantine, etc.) |
+Every plan follows `PLAN → TASKS → TEST CASES → IMPLEMENTATION → TEST EXECUTION → VALIDATION → SUMMARY → COMPLETE`. A plan is complete only when implemented, verified, tested, documented, summarized, and recorded in the brain. See `INSTRUCTIONS.md` §8 for the completion contract.
 
-## For AI Tools
+## For AI Agents
 
-When you start working on this project:
-
-1. **Identify the domain** — Backend, Frontend, Mobile, or DevOps?
-2. **Read** `.brain/INDEX.md` — full map
-3. **Read** `.brain/{domain}/memory/guidelines.md` — architecture & conventions
-4. **Check** `.brain/{domain}/skills/` — code patterns
-5. **Check** `.brain/{domain}/rules/` — engineering rules
-6. **Check** `.brain/{domain}/plans/` — active plans
+1. Read `ARCHITECTURE.md` + `INSTRUCTIONS.md`.
+2. Read `state/current.yaml`, then selectively load relevant context/rules/knowledge/memory via `INDEX.md`.
+3. Never bulk-read the whole brain. Never create domain directories.
 
 ## For Humans
 
-- Commit this folder to your repo
-- Every team member's AI tool reads the same knowledge
-- Nothing is lost between sessions
-- Always up to date
+- Commit this folder. Every team member's AI tool reads the same knowledge; nothing is lost between sessions.
+- Retired domain-first layout documented in `_deprecated/DOMAINS_MIGRATION.md`.

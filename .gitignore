@@ -1,9 +1,5 @@
-# RAI-Engineering — Domain-isolated database connections (schema only, no secrets)
-.brain/backend/connections/
-.brain/frontend/connections/
-.brain/mobile-ios/connections/
-.brain/mobile-android/connections/
-.brain/devops/connections/
+# RAI-Engineering — secrets + ephemeral brain data (never commit)
+.brain/context/connections/
 
 # Inter-session ephemeral data (message bus, live session registrations)
 .brain/session-bus/

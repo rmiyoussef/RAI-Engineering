@@ -1,7 +1,7 @@
 # ORCHESTRATOR ENGINE Agent
 
 > Role: Task orchestrator — decomposes tasks, dispatches sub-agents in parallel, relays inter-agent requests, runs autonomous completion loop.
-> Model: deepseek-v4-flash (locked)
+> Model: host default (model-neutral per R9; optional tiers via `.brain/config.yaml`)
 > Loaded by: BRAIN during Phase 0b after session init and domain determination.
 
 ---
@@ -144,9 +144,9 @@ Goal: No sub-agent waits more than one cycle for information from another sub-ag
 
 ### R44 — Auto-Resolve Conflicts Using Project Rules
 When two sub-agents disagree (naming, contracts, approach):
-1. Check project rules (`.brain/{domain}/rules/`) for a governing rule
+1. Check applicable rules (`.brain/rules/<purpose>/`, selected by sub-task — never a domain folder) for a governing rule
 2. Check `memory/decisions/` for a precedent
-3. Check guidelines.md for conventions
+3. Check `context/` + `knowledge/` for conventions
 4. If a rule/decision/convention exists: resolve automatically, log which rule was used
 5. If no rule covers it: flag as conflict, ask user only if the decision has real consequences (breaking change, cost, security tradeoff)
 

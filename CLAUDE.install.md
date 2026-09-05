@@ -1,7 +1,7 @@
 # RAI-Engineering — CLAUDE.md
 
-> **Model Lock:** All operations run on `deepseek-v4-flash`. No exceptions.
-> **Version:** v1.6.0 — Lazy-load boot, consolidated rules, model tiering, approval modes, memory timeline, skills-diff, migration testing
+> **Model:** host default. RAI is model-neutral (R9); optional tiers via `.brain/config.yaml`.
+> **Version:** v1.8.0 — Purpose-organized brain, plan-test-summary lifecycle, completion contract
 > **This file:** Symlinked from `.ai/CLAUDE.md` to project root
 > **Memory:** `.brain/` — persists across sessions
 > **Boot Size:** ~8KB (was 36KB) — loads detail files on demand
@@ -22,47 +22,36 @@ You do NOT use slash commands. You auto-detect agents based on task.
 ============================================================
 
 ```
-[1] LOAD CORE BRAIN FILES (read each):
-      .brain/brain/MISSION.md
-      .brain/brain/PRINCIPLES.md
-      .brain/brain/RULES.md          ← Canonical R1-R45
-      .brain/brain/LIMITATIONS.md
-      .brain/brain/SYSTEM.md         ← Message broker protocol
-      .brain/brain/MEMORY_SYSTEM.md
-      .brain/brain/ORCHESTRATION.md  ← Parallel dispatch
-      .brain/brain/INTER_SESSION.md  ← Multi-session mesh
+[1] LOAD BRAIN AUTHORITY FILES (read each):
+      .brain/ARCHITECTURE.md + .brain/INSTRUCTIONS.md (structure + mandatory workflow)
+      .brain/INDEX.md + .brain/state/current.yaml (navigation + active work)
+      .brain/constitution/MISSION.md + PRINCIPLES.md + RULES.md (R1-R45) + CONSTRAINTS.md
+      .brain/reference/message-protocol.md + orchestration-protocol.md + inter-session-protocol.md
 
-[2] DETERMINE DOMAIN — derive from task or ask user
+[2] TAG DOMAINS AS METADATA — affected areas (backend, frontend, ...) as tags, never directories
 
-[3] CHECK DOMAIN FOLDER — .brain/{domain}/ exists?
-      If no → init with plans/, rules/, skills/, memory/ subdirs
+[3] SELECTIVELY LOAD — relevant context/ + rules/<purpose>/ + knowledge/ (domains: filter)
+      + memory/decisions|lessons + active plan dir + its test cases. Never whole brain.
 
-[4] READ PROJECT MEMORY:
-      .brain/INDEX.md
-      .brain/{domain}/memory/guidelines.md
-      .brain/{domain}/memory/decisions/
-      .brain/{domain}/memory/architecture/
-      .brain/{domain}/memory/lessons/
-      .brain/{domain}/memory/tests/
-      .brain/{domain}/memory/tasks/
+[4] LOAD RELEVANT AGENT — .brain/agents/{NAME}.md for agents the task needs
 
-[5] LOAD RELEVANT AGENT — .brain/agents/{NAME}.md for agents the task needs
+[5] CHECK SKILL TRIGGER TABLE — load matching skill before coding
 
-[6] CHECK SKILL TRIGGER TABLE — load matching skill before coding
+[6] PLAN → TASKS → TEST CASES → IMPLEMENT → TEST → SUMMARY. Implementation alone never completes a plan.
 ```
 
 ============================================================
 ## SKILL MANDATE
 ============================================================
 
-Skills are mandatory. Check trigger table before every task. Load matching skill. Never skip. Apply multiple if multi-domain.
+Skills are mandatory. Check trigger table before every task. Load matching skill. Never skip. Apply multiple if multi-area.
 
-| Task signal | Domain | Load |
+| Task signal | Areas | Load |
 |---|---|---|
-| React/Vue/Angular, UI, Mantine | Frontend | Frontend rules (`.brain/frontend/rules/`) |
-| API, DB, server, auth, jobs | Backend | Backend skill + shared skills |
-| Swift/Kotlin/Flutter/RN | Mobile | Mobile skill |
-| Terraform, Docker, CI/CD, deploy | DevOps | DevOps rules |
+| React/Vue/Angular, UI, Mantine | frontend | `.brain/rules/` by sub-task + `frontend-*` skills |
+| API, DB, server, auth, jobs | backend | `.brain/skills/backend-*` + universal skills |
+| Swift/Kotlin/Flutter/RN | mobile | Tagged knowledge/rules |
+| Terraform, Docker, CI/CD, deploy | infra | `.brain/rules/infrastructure/` + `devops-*` skills |
 | "review this", "audit" | Any | Code Review skill |
 
 **Full catalog:** `SKILLS.md` | `.brain/INDEX.md`
@@ -102,7 +91,7 @@ Load `.brain/agents/{NAME}.md` when that agent is activated.
 - **Code review / audit** → REVIEWER + SECURITY, BACKEND QA, DATABASE as needed
 - **Testing** → TESTER
 - **Fix loop** → EXECUTOR fixes → REVIEWER re-scores (max 3 per R45)
-- **Complex / multi-domain** → ORCHESTRATOR ENGINE: decompose → dispatch → relay → verify → report
+- **Complex / multi-area** → ORCHESTRATOR ENGINE: decompose → dispatch → relay → verify → report
 
 ============================================================
 ## APPROVAL PROTOCOL — R21
@@ -116,22 +105,11 @@ Two modes, switchable mid-session ("quick mode" / "full mode"):
 Read-only tasks need no approval (R22).
 
 ============================================================
-## MODEL TIERING PROTOCOL
+## MODEL POLICY
 ============================================================
 
-By default all agents use `deepseek-v4-flash`. Set `.brain/config.yaml` to route agents to different model tiers. No config = backward compatible, all defaulting to locked model.
+RAI is model-neutral (R9). Agents run on the host tool's default model. Optional per-agent tiers via `.brain/config.yaml` — no config needed for correct operation.
 
-============================================================
-## TOOLS (NEW in v1.6.0)
-============================================================
-
-| Script | Purpose | Usage |
-|--------|---------|-------|
-| 📊 Memory Timeline | Cross-reference decisions/lessons/sessions by date | `python3 .ai/memory-timeline.py [--days N] [--domain X]` |
-| 🔍 Skills Drift | Compare local skills against upstream hashes | `bash .ai/skills-diff.sh [--verbose]` |
-| 🔄 Update | Refresh skills from upstream | `bash .ai/update.sh` |
-
-============================================================
 ## TESTING TEMPLATES (6 modes)
 ============================================================
 
@@ -148,43 +126,32 @@ By default all agents use `deepseek-v4-flash`. Set `.brain/config.yaml` to route
 ## MEMORY SYSTEM
 ============================================================
 
-Memory lives in `.brain/` — domain-isolated structure:
+Memory lives in `.brain/` — purpose-organized (domains are `domains:` metadata, never directories):
 
 ```
 .brain/
-├── INDEX.md                  ← Master index (auto-maintained)
-├── TIMELINE.md               ← Auto-generated (run .ai/memory-timeline.py)
-├── backend/                  ← Backend domain
-│   ├── memory/guidelines.md  ← Project structure & conventions
-│   ├── memory/decisions/     ← Architecture decisions
-│   ├── memory/architecture/  ← Component maps
-│   ├── memory/lessons/       ← Things learned
-│   ├── memory/sessions/      ← Every interaction (ALWAYS written)
-│   ├── memory/tests/         ← Test summaries
-│   ├── memory/tasks/         ← Task summaries
-│   ├── memory/business/      ← Business rules
-│   ├── skills/               ← Code templates
-│   ├── rules/                ← Project conventions
-│   ├── plans/                ← Project plans
-│   └── connections/          ← Database connections (gitignored!)
-├── frontend/                 ← Frontend domain (same structure)
-├── mobile-ios/               ← iOS domain
-├── mobile-android/           ← Android domain
-└── devops/                   ← DevOps domain
+├── ARCHITECTURE.md + INSTRUCTIONS.md + INDEX.md  ← authority + map (read first)
+├── constitution/   ← mission, principles, rules R1-R45, constraints, quality
+├── context/        ← current project facts (+ gitignored connections/)
+├── knowledge/<purpose>/ ← how-things-work (api, database, security, ...)
+├── memory/         ← decisions/ discoveries/ lessons/ incidents/ sessions/
+├── plans/       ← plans PLAN-XXXX (active/completed/blocked/archived)
+├── test-cases/     ← TC-YYYY per plan (active/completed/failed/archived)
+├── summaries/      ← final summary per completed plan
+├── agents/ skills/ rules/<purpose>/ reference/ templates/ sessions/ state/
 ```
 
-**Before work:** Read INDEX.md → guidelines.md → decisions/ → lessons/
-**After work:** ALWAYS write session + decisions/lessons if applicable + update INDEX.md
+**Before work:** Read ARCHITECTURE.md + INSTRUCTIONS.md → state/ → selective context/rules/knowledge/memory
+**After work:** TC verdicts + summary + decisions/lessons + state update (INSTRUCTIONS.md §8)
 
 ### Git Safety
-- `.brain/{domain}/` (except `connections/`) — **committed**
-- `.brain/{domain}/connections/` — **gitignored** (schema data)
-- `.brain/session-bus/`, `.brain/sessions/live/` — **gitignored**
+- `.brain/` — **committed**, except:
+- `.brain/context/connections/` `.brain/session-bus/` `.brain/sessions/live/` — **gitignored**
 
 ============================================================
 ## VERSION
 ============================================================
 
-RAI-Engineering v1.6.0 — Lazy-load boot, consolidated rules, model tiering, approval modes, memory timeline, skills-diff, migration testing templates
-17 agents, 45 rules, 6 testing templates, 34 imported skills
+RAI-Engineering v1.8.0 — Vendor-neutral OS, non-destructive update.sh, mandatory RAI workflow
+17 agents, 45 rules, 6 testing templates, 39 skills
 Update: `bash .ai/update.sh` or ask me

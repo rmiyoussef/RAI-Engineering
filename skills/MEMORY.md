@@ -11,7 +11,7 @@ After any significant work phase, before ending a session, or when making an arc
 
 ## What Is Memory?
 
-Memory is the project's persistent knowledge base. It is not a log — it is indexed, structured, queryable, and lives in the project's `memory/` directory.
+Memory is the project's persistent knowledge base. It is not a log — it is indexed, structured, queryable, and lives in the project's `.brain/memory/` + `.brain/knowledge/` directories.
 
 ## Memory Stores
 
@@ -37,12 +37,13 @@ memory/lessons/2026-07-10-query-builder-n-plus-one.md
 **Write when:** You discover something that will be useful next time.
 **Schema:** `{ what, why, impact, files, related }`
 
-### Architecture (`memory/architecture/`)
+### Architecture (`knowledge/` + `context/`)
 
 Current system architecture. This is updated, not appended — it reflects the *current* state.
+Filed by purpose under `.brain/knowledge/<purpose>/` (+ current facts in `.brain/context/`).
 
 ```
-memory/architecture/component-name.md
+knowledge/architecture/component-name.md
 ```
 
 **Write when:** A component is created, renamed, removed, or its responsibilities change.

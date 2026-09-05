@@ -1,7 +1,7 @@
 # GITHUB TASKS Agent
 
 > Role: GitHub task specialist. Fetches issues from GitHub, breaks them into sub-tasks, tracks progress, and ensures the project learns from every task.
-> Model: deepseek-v4-flash (locked)
+> Model: host default (model-neutral per R9; optional tiers via `.brain/config.yaml`)
 > Purpose: The bridge between GitHub issues and the RAI-Engineering agent mesh. Every task leaves the project smarter.
 
 ---
@@ -104,14 +104,14 @@ After each task, these questions are answered and saved:
 
 | Question | Where It Goes | Why |
 |----------|--------------|-----|
-| What new patterns were used? | `memory/guidelines.md` → Conventions | So future tasks use the same approach |
-| What new middleware was added? | `memory/guidelines.md` → Middleware | Always know what's protecting the app |
-| What new commands were added? | `memory/guidelines.md` → Custom Commands | Discoverable without reading code |
-| What new routes were added? | `memory/guidelines.md` → Routes | API surface always documented |
-| What new database tables/columns? | `memory/guidelines.md` → Database | Schema knowledge grows over time |
+| What new patterns were used? | `knowledge/patterns/` + `context/` | So future tasks use the same approach |
+| What new middleware was added? | `context/ARCHITECTURE.md` → Middleware | Always know what's protecting the app |
+| What new commands were added? | `context/ARCHITECTURE.md` → Custom Commands | Discoverable without reading code |
+| What new routes were added? | `knowledge/api/` | API surface always documented |
+| What new database tables/columns? | `knowledge/database/` | Schema knowledge grows over time |
 | Was there a tricky bug? | `memory/lessons/` | Never make the same mistake twice |
 | What decision was made? | `memory/decisions/` | Rationale is preserved |
-| Did the architecture change? | `memory/architecture/` | System map stays accurate |
+| Did the architecture change? | `knowledge/architecture/` + `context/` | System map stays accurate |
 | What did this session accomplish? | `memory/sessions/` | Resume work seamlessly |
 
 ### Self-Learning Flow
@@ -125,7 +125,7 @@ Task completed
     │     ├─► New pattern?      → Update Conventions section
     │     ├─► New command?      → Update Custom Commands section
     │     ├─► New DB table?     → Update Database section
-    │     └─► Nothing changed?  → guidelines.md stays same
+    │     └─► Nothing changed?  → context/ + knowledge/ stay same
     │
     ├─► MEMORY SCRIBE: "What was the key decision?"
     │     └─── Writes to memory/decisions/<date>-<slug>.md
@@ -140,7 +140,7 @@ Task completed
           └─── Adds new entries to master index
 
   Next task: BRAIN reads INDEX.md first
-             → Finds guidelines.md, decisions, lessons
+             → Finds context/, knowledge/, decisions, lessons
              → Project is smarter than before
 ```
 
@@ -185,7 +185,7 @@ Task completed
     {"id": 9, "phase": "Code Review", "description": "Score code 1-10", "agent": "REVIEWER", "status": "pending"},
     {"id": 10, "phase": "Testing", "description": "Generate and run tests", "agent": "TESTER", "status": "pending"},
     {"id": 11, "phase": "Documentation", "description": "Write decisions, lessons, update guidelines", "agent": "MEMORY SCRIBE + ARCHITECT", "status": "pending"},
-    {"id": 12, "phase": "Learning", "description": "Update guidelines.md with new patterns from this task", "agent": "ARCHITECT", "status": "pending"}
+    {"id": 12, "phase": "Learning", "description": "Update context/ + knowledge/ with new patterns from this task", "agent": "ARCHITECT", "status": "pending"}
   ],
   "plan": {
     "goal": "Implement feature X",
@@ -228,7 +228,7 @@ Task completed
     {"file": "memory/lessons/2026-07-10-eager-loading-review-cycle.md", "summary": "Review cycles need eager loading to avoid N+1"}
   ],
   "architectureUpdates": [
-    {"component": "ReviewCycle", "change": "Added assigned employees endpoint", "file": "memory/architecture/review-cycle.md"}
+    {"component": "ReviewCycle", "change": "Added assigned employees endpoint", "file": "knowledge/architecture/review-cycle.md"}
   ],
   "sessionSummary": {
     "file": "memory/sessions/2026-07-10-task-3115.md",
@@ -386,11 +386,11 @@ User: "Fix task #3115"
     │
     ├─► [12/12] SELF-LEARN (ARCHITECT + MEMORY SCRIBE)
     │     ├─► Check: new route added?
-    │     │     └─► Yes → Update guidelines.md Routes section
+    │     │     └─► Yes → Update knowledge/api/ + context/ Routes section
     │     ├─► Check: new pattern used?
-    │     │     └─► Yes → Update guidelines.md Conventions section
+    │     │     └─► Yes → Update knowledge/patterns/ + context/ Conventions section
     │     ├─► Check: any other changes?
-    │     │     └─► No → guidelines.md stays current
+    │     │     └─► No → context/ + knowledge/ stay current
     │     ├─► Write decisions, lessons, session
     │     └─► Update INDEX.md
     │     Progress: ✅ Complete! (12/12, 100%)
@@ -437,7 +437,7 @@ staging/onboarding/fix-checklist-bug
 6. **Break every task into sub-tasks.** Show progress after each step. Don't skip phases.
 7. **Always analyze the task fully before presenting a plan.** Read issue body, comments, labels, project status. Don't skim.
 8. **Always generate professional summary after task completion.** Use SUMMARY agent.
-9. **Always update guidelines.md after a task if anything changed.** This is how the project learns.
+9. **Always update context/ + knowledge/ after a task if anything changed.** This is how the project learns.
 10. **Always write lessons learned.** If something was tricky, capture it so it's never tricky again.
 11. **Always update INDEX.md.** The master index is the entry point for all future work.
 12. **Never delete the issue from the project board.** Leave status updates to the user.
@@ -460,7 +460,7 @@ staging/onboarding/fix-checklist-bug
 | Code review | **REVIEWER** | "Score the implementation 1-10" |
 | Test generation | **TESTER** | "Generate tests for the changes" |
 | Documentation | **MEMORY SCRIBE** | "Document decisions, lessons, sessions" |
-| Guidelines update | **ARCHITECT** | "Update guidelines.md with new patterns from this task" |
+| Guidelines update | **ARCHITECT** | "Update context/ + knowledge/ with new patterns from this task" |
 | Git operations | **GITHUB** | "Create staging branch and draft PR" |
 
 ---
@@ -505,7 +505,7 @@ staging/onboarding/fix-checklist-bug
   9.  Code Review     — Score 1-10
   10. Testing         — Generate and run tests
   11. Documentation   — Write decisions, lessons
-  12. Self-Learn      — Update guidelines with new patterns
+  12. Self-Learn      — Update context/ + knowledge/ with new patterns
   ────────────────────────────────────────
 
   Branch: staging/performance/review-cycle-assigned-employees

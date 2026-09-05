@@ -1,7 +1,7 @@
 # Session Registry
 
 > Directory where RAI-Engineering sessions register their presence.
-> Protocol defined in: `.brain/brain/INTER_SESSION.md`
+> Protocol defined in: `.brain/reference/inter-session-protocol.md`
 
 ---
 
@@ -30,7 +30,7 @@ Created on first session init. Reused on subsequent runs. Not gitignored.
   "role": "general",
   "capabilities": ["execute", "review", "test", "plan"],
   "createdAt": "2026-07-19T12:00:00Z",
-  "model": "deepseek-v4-flash"
+  "model": "<host-model>"
 }
 ```
 
@@ -46,7 +46,7 @@ Written on session start, updated every heartbeat, cleaned up on death/deregistr
   "status": "alive",
   "startedAt": "2026-07-19T12:00:00Z",
   "lastHeartbeat": "2026-07-19T12:05:00Z",
-  "model": "deepseek-v4-flash"
+  "model": "<host-model>"
 }
 ```
 

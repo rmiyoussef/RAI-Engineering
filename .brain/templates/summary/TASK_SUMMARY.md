@@ -96,8 +96,8 @@
 | 📄 Decision | `memory/decisions/{{file}}` | {{purpose}} |
 | 📄 Lesson | `memory/lessons/{{file}}` | {{purpose}} |
 | 📄 Session | `memory/sessions/{{file}}` | {{purpose}} |
-| 🧪 Test Summary | `memory/tests/{{file}}` | {{purpose}} |
-| 📋 Task Summary | `memory/tasks/{{file}}` | {{purpose}} |
+| 🧪 Test Summary | `summaries/{{plan}}-test-{{file}}` | {{purpose}} |
+| 📋 Task Summary | `summaries/completed/{{plan}}.md` | {{purpose}} |
 
 ---
 

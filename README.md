@@ -2,7 +2,7 @@
 
 **Your project's AI brain — v1.8.3**
 
-Instead of behaving like a chatbot, the AI behaves like an **engineering organization** — with specialized agents that plan, build, review, test, audit, and remember. All project knowledge is organized by **purpose** — planning, test cases, summaries, memory, knowledge, rules — so a multi-area task lives in one plan with area tags, never scattered across domain folders.
+Instead of behaving like a chatbot, the AI behaves like an **engineering organization** — with specialized agents that plan, build, review, test, audit, and remember. All project knowledge is organized by **purpose** — plans, test-cases, summaries, memory, knowledge, rules — so a multi-area task lives in one plan with area tags, never scattered across domain folders.
 
 ```
 curl -fsSL https://raw.githubusercontent.com/rmiyoussef/RAI-Engineering/master/setup.sh | bash
@@ -219,20 +219,33 @@ This creates:
 ```
 your-project/
 ├── CLAUDE.md → .ai/CLAUDE.md     ← The Brain (loaded automatically by Claude Code)
-├── .ai/                          ← RAI-Engineering
-│   ├── brain/                    ← System definitions
-│   ├── agents/                   ← Agent roles
-│   ├── skills/                   ← Cross-domain skills
-│   ├── rules/                    ← Engineering rules
-│   ├── templates/                ← Memory templates
-│   └── workflows/                ← Workflow references
-└── .brain/                       ← YOUR project knowledge — purpose-organized
-    ├── plans/       ← Plans PLAN-XXXX (active/completed/blocked/archived)
-    ├── test-cases/     ← Test cases TC-YYYY per plan
-    ├── summaries/      ← Final summary per completed plan
-    ├── memory/         ← Decisions, lessons, sessions
-    ├── knowledge/      ← How-things-work, by purpose
-    └── rules/          ← Engineering rules, by purpose
+├── AGENTS.md                      ← Brain bootstrap + Caveman rules (all tools)
+├── .caveman.json                  ← Token compression (ULTRA)
+├── .ai/                           ← Regenerable mirror + updater
+│   ├── update.sh                  ← Non-destructive installer/updater
+│   ├── CLAUDE.md                  ← Brain entrypoint copy
+│   ├── brain/                     ← Mirror of constitution + protocols
+│   ├── agents/                    ← Mirror of 16 agent roles
+│   ├── skills/                    ← Mirror of universal + area-tagged skills
+│   ├── rules/                     ← Mirror of engineering rules
+│   ├── templates/                 ← Mirror of memory templates
+│   ├── workflows/                 ← Workflow references
+│   └── docs/                      ← Config guide copy
+└── .brain/                        ← YOUR project knowledge — purpose-organized
+    ├── ARCHITECTURE.md + INSTRUCTIONS.md + INDEX.md ← Authority + map
+    ├── constitution/  ← Mission, principles, canonical rules R1-R45
+    ├── context/       ← Current project facts (+ gitignored connections/)
+    ├── knowledge/     ← How-things-work, by purpose
+    ├── memory/        ← Decisions, lessons, sessions
+    ├── plans/         ← Plans PLAN-XXXX (active/completed/blocked/archived)
+    ├── test-cases/    ← Test cases TC-YYYY per plan
+    ├── summaries/     ← Final summary per completed plan
+    ├── agents/        ← Agent definitions (16 roles)
+    ├── skills/        ← How to perform work (universal + area-tagged)
+    ├── rules/         ← Engineering rules, by purpose (areas as `domains:` metadata)
+    ├── reference/     ← Stable protocols + external references
+    ├── templates/     ← Plan, test-case, summary + testing scaffolds
+    └── state/         ← Machine-readable pointers to current work
 ```
 
 ### Update
@@ -277,7 +290,7 @@ Then give it a task:
 - *"Build a search component with debounce, loading states, and error handling"*
 - *"Review the accessibility of the checkout form"*
 
-For a **complete reference of all 37 skills** across Backend, Frontend, DevOps, and Shared domains — see [SKILLS.md](SKILLS.md).
+For a **complete reference of all 39 skills** — 27 universal + 12 area-tagged (`backend-*`/`frontend-*`/`devops-*`) — see [SKILLS.md](SKILLS.md).
 
 ### What's New in v1.5.2 — Frontend Rules System
 
@@ -335,53 +348,43 @@ The Brain reads this before every session so nothing is forgotten.
 
 ## Rules
 
-When installed, your project gets access to purpose-organized engineering rules (area tags are metadata):
+When installed, your project gets engineering rules filed by **purpose** (`rules/<purpose>/`). Technical areas are `domains:` metadata, never directories. The Brain loads the relevant rule files per sub-task.
 
-**Backend-tagged (rules/<purpose>/, `domains: [backend]`):**
-
-| Rule File | Covers |
-|-----------|--------|
-| `rules/git/commit-messages.md` | Conventional commit format, types, scopes |
-| `rules/coding/error-handling.md` | Exceptions, logging, fail-fast, HTTP codes |
-| `rules/coding/naming.md` | Classes, methods, variables, tests naming |
-| `rules/security/backend.md` | Input validation, SQL injection, XSS, CSRF, auth |
-| `rules/database/database.md` | Migrations, indexing, N+1, pagination, constraints |
-| `rules/api/design.md` | RESTful URLs, consistent responses, versioning |
-| `rules/testing/testing.md` | Writing tests — coverage, scenarios, templates |
-
-**Frontend-tagged (rules/<purpose>/, `domains: [frontend]`):**
-
-| Rule File | Covers |
-|-----------|--------|
-| `rules/architecture/components.md` | Single responsibility, props design, smart/presentational, error boundaries |
-| `rules/coding/state-management.md` | State ownership, context optimization, `useEffect` hygiene |
-| `rules/performance/frontend.md` | Core Web Vitals, bundle budgets, image optimization |
-| `rules/coding/accessibility.md` | WCAG 2.2 AA, semantic HTML, keyboard nav, screen readers |
-| `rules/coding/styling.md` | Token system, mobile-first, dark mode, flat specificity |
-| `rules/coding/error-ux.md` | Four States Contract — loading, error, empty, success |
-| `rules/api/frontend-integration.md` | Cache layer, typed client, optimistic updates |
-| `rules/testing/frontend.md` | Testing trophy, RTL queries, MSW, what to test |
-| `rules/security/frontend.md` | XSS, CSP, token storage, dependency audit |
-| `rules/coding/forms.md` | Validation, autocomplete, confirmation patterns |
-| `rules/infrastructure/build-tooling.md` | CI pipeline, TypeScript strict, pre-commit hooks |
-
-**DevOps-tagged (rules/<purpose>/, `domains: [devops]`):**
-
-| Rule File | Covers |
-|-----------|--------|
-| `rules/infrastructure/containers.md` | Multi-stage builds, layer ordering, image scanning |
-| `rules/infrastructure/kubernetes.md` | Pod spec, probes, network policies, HPA, cluster security |
-| `rules/infrastructure/ci-cd.md` | Pipeline perf, caching, secrets, branch protection |
-| `rules/infrastructure/infra-as-code.md` | Terraform state, modules, CI for IaC |
-| `rules/infrastructure/cloud-services.md` | Multi-AZ, VPC, IAM, storage, cost optimization |
-| `rules/infrastructure/monitoring.md` | RED metrics, structured logging, alerting, SLO |
-| `rules/security/devops.md` | Supply chain, secrets, runtime security, compliance |
-| `rules/infrastructure/networking-dns.md` | VPC design, DNS, TLS, load balancers, WAF |
-| `rules/database/ops.md` | DB provisioning, connection pooling, zero-downtime migrations |
-| `rules/infrastructure/backup-dr-incident.md` | DR tiers, incident response, postmortem template |
-| `rules/infrastructure/cost-optimization.md` | Right-sizing, pricing models, budget alerts |
-| `rules/infrastructure/release-management.md` | Deploy process, rollback, feature flags, semver |
-| `rules/infrastructure/automation-scripting.md` | Shell script standards, idempotency, Makefiles |
+| Rule File | Areas | Covers |
+|-----------|-------|--------|
+| `rules/coding/error-handling.md` | backend | Exceptions, logging, fail-fast, HTTP codes |
+| `rules/coding/naming.md` | backend | Classes, methods, variables, tests naming |
+| `rules/coding/accessibility.md` | frontend | WCAG 2.2 AA, semantic HTML, keyboard nav, screen readers |
+| `rules/coding/error-ux.md` | frontend | Four States Contract — loading, error, empty, success |
+| `rules/coding/forms.md` | frontend | Validation, autocomplete, confirmation patterns |
+| `rules/coding/state-management.md` | frontend | State ownership, context optimization, `useEffect` hygiene |
+| `rules/coding/styling.md` | frontend | Token system, mobile-first, dark mode, flat specificity |
+| `rules/api/design.md` | backend | RESTful URLs, consistent responses, versioning |
+| `rules/api/frontend-integration.md` | frontend | Cache layer, typed client, optimistic updates |
+| `rules/architecture/components.md` | frontend | Single responsibility, props design, smart/presentational, error boundaries |
+| `rules/architecture/orchestration.md` | backend | Task decomposition, parallel dispatch, verify loop |
+| `rules/database/database.md` | backend | Migrations, indexing, N+1, pagination, constraints |
+| `rules/database/ops.md` | devops | DB provisioning, connection pooling, zero-downtime migrations |
+| `rules/testing/testing.md` | backend | Writing tests — coverage, scenarios, templates |
+| `rules/testing/frontend.md` | frontend | Testing trophy, RTL queries, MSW, what to test |
+| `rules/security/backend.md` | backend | Input validation, SQL injection, XSS, CSRF, auth |
+| `rules/security/frontend.md` | frontend | XSS, CSP, token storage, dependency audit |
+| `rules/security/devops.md` | devops | Supply chain, secrets, runtime security, compliance |
+| `rules/performance/frontend.md` | frontend | Core Web Vitals, bundle budgets, image optimization |
+| `rules/git/commit-messages.md` | backend | Conventional commit format, types, scopes |
+| `rules/git/safety.md` | backend | Generated files, gitignore discipline, sensitive files |
+| `rules/infrastructure/build-tooling.md` | frontend | CI pipeline, TypeScript strict, pre-commit hooks |
+| `rules/infrastructure/containers.md` | devops | Multi-stage builds, layer ordering, image scanning |
+| `rules/infrastructure/kubernetes.md` | devops | Pod spec, probes, network policies, HPA, cluster security |
+| `rules/infrastructure/ci-cd.md` | devops | Pipeline perf, caching, secrets, branch protection |
+| `rules/infrastructure/infra-as-code.md` | devops | Terraform state, modules, CI for IaC |
+| `rules/infrastructure/cloud-services.md` | devops | Multi-AZ, VPC, IAM, storage, cost optimization |
+| `rules/infrastructure/monitoring.md` | devops | RED metrics, structured logging, alerting, SLO |
+| `rules/infrastructure/networking-dns.md` | devops | VPC design, DNS, TLS, load balancers, WAF |
+| `rules/infrastructure/backup-dr-incident.md` | devops | DR tiers, incident response, postmortem template |
+| `rules/infrastructure/cost-optimization.md` | devops | Right-sizing, pricing models, budget alerts |
+| `rules/infrastructure/release-management.md` | devops | Deploy process, rollback, feature flags, semver |
+| `rules/infrastructure/automation-scripting.md` | devops | Shell script standards, idempotency, Makefiles |
 
 | Template | When Used |
 |----------|-----------|
@@ -398,15 +401,17 @@ Rules are loaded automatically by sub-task from `rules/<purpose>/` (area tags ar
 
 ## Skills
 
-| Skill | When Used |
-|-------|-----------|
-| `skills/code-review.md` | Reviewing code (universal) |
-| `skills/test-driven-development.md` | Writing tests red-green-refactor (universal) |
-| `skills/finishing-a-development-branch.md` | Committing, branching, PRs (universal) |
-| `skills/verification-before-completion.md` | No completion claim without fresh evidence |
-| `skills/backend-service.md` | Service-layer backend pattern (`domains: [backend]`) |
-| `skills/frontend-mantine.md` | Mantine UI component reference, form patterns, theming |
-| `skills/devops-ci-cd-and-automation.md` | CI/CD pipeline setup and automation patterns |
+39 skills in `.brain/skills/` — 27 universal how-tos + 12 area-tagged (`backend-*`/`frontend-*`/`devops-*`, `domains:` metadata). Full catalog: [SKILLS.md](SKILLS.md).
+
+| Skill | Areas | When Used |
+|-------|-------|-----------|
+| `.brain/skills/code-review.md` | universal | Reviewing code |
+| `.brain/skills/test-driven-development.md` | universal | Writing tests red-green-refactor |
+| `.brain/skills/finishing-a-development-branch.md` | universal | Committing, branching, PRs |
+| `.brain/skills/verification-before-completion.md` | universal | No completion claim without fresh evidence |
+| `.brain/skills/backend-service.md` | backend | Service-layer backend pattern |
+| `.brain/skills/frontend-mantine.md` | frontend | Mantine UI component reference, form patterns, theming |
+| `.brain/skills/devops-ci-cd-and-automation.md` | devops | CI/CD pipeline setup and automation patterns |
 
 ---
 
@@ -535,7 +540,7 @@ R29: Template-led testing. Templates are the source of truth.
 
 ## Purpose-Organized Brain — v1.7 / Mandatory OS — v1.8
 
-A task routinely spans many technical areas (backend, database, queue, WebSocket, frontend, security, testing, infra). Filing knowledge by domain forced single-domain pigeonholes — so **domains are metadata now** (`domains:` frontmatter), and `.brain/` is organized by purpose: constitution, context, knowledge, memory, planning, test-cases, summaries, agents, skills, rules, reference, templates, state.
+A task routinely spans many technical areas (backend, database, queue, WebSocket, frontend, security, testing, infra). Filing knowledge by domain forced single-domain pigeonholes — so **domains are metadata now** (`domains:` frontmatter), and `.brain/` is organized by purpose: constitution, context, knowledge, memory, plans, test-cases, summaries, agents, skills, rules, reference, templates, state.
 
 ### Lifecycle
 

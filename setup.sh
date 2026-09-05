@@ -147,6 +147,13 @@ Auto-Clarity: full sentences for security/destructive ops/user confused. Resume 
 Boundaries: code/commits/PRs normal.
 CAVEOF
   echo -e "   ${GREEN}✓${NC} Created AGENTS.md with caveman ULTRA rules"
+elif ! grep -qF ".brain/INSTRUCTIONS.md" "AGENTS.md" 2>/dev/null; then
+  AGENTS_BOOTSTRAP='RAI-Engineering installed. `.brain/` exists → mandatory OS: read `.brain/INSTRUCTIONS.md`, then `.brain/ARCHITECTURE.md`, follow workflow. Plans → `plans/`. Tests → `test-cases/`. Summaries → `summaries/`. Done = Implemented + Verified + Tested + Documented + Summarized + Brain Updated.'
+  _tmp_agents="$(mktemp)"
+  { printf "%s\n\n" "$AGENTS_BOOTSTRAP"; cat "AGENTS.md"; } > "$_tmp_agents"
+  cat "$_tmp_agents" > "AGENTS.md"
+  rm -f "$_tmp_agents"
+  echo -e "   ${GREEN}✓${NC} AGENTS.md brain bootstrap enforced (user content preserved)"
 fi
 
 if [ "$CAVEMAN_OK" = true ]; then

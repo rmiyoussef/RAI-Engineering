@@ -3,6 +3,7 @@
 pending_tests: []
 failed_tests: []
 recently_passed:
+  - TC-0009
   - TC-0001
   - TC-0002
   - TC-0003

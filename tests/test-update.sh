@@ -184,6 +184,19 @@ assert_file "$T/.brain/plans/active/.gitkeep" "setup: plans/ tree"
 assert_file "$T/AGENTS.md" "setup: AGENTS.md adapter"
 grep -q "INSTRUCTIONS.md" "$T/AGENTS.md" && pass "setup: AGENTS.md points to brain" || fail "setup: AGENTS.md points to brain"
 
+echo "== 10. existing AGENTS.md without brain bootstrap gets repaired =="
+T="$(new_tmp)"
+run_update "$T" >/dev/null 2>&1
+printf 'CAVEMAN ULTRA — max compression. Active every response. No revert.\n\nRules:\n- test custom marker\n' > "$T/AGENTS.md"
+run_update "$T" >/dev/null 2>&1
+assert_contains "$T/AGENTS.md" ".brain/INSTRUCTIONS.md" "existing AGENTS.md: brain bootstrap prepended"
+assert_contains "$T/AGENTS.md" "test custom marker" "existing AGENTS.md: user content preserved"
+[ "$(grep -cF '.brain/INSTRUCTIONS.md' "$T/AGENTS.md")" = "1" ] && pass "existing AGENTS.md: single bootstrap" || fail "existing AGENTS.md: single bootstrap"
+BEFORE_HASH="$(sha256sum "$T/AGENTS.md" | awk '{print $1}')"
+run_update "$T" >/dev/null 2>&1
+[ "$(sha256sum "$T/AGENTS.md" | awk '{print $1}')" = "$BEFORE_HASH" ] \
+    && pass "existing AGENTS.md: repair idempotent" || fail "existing AGENTS.md: repair idempotent"
+
 echo ""
 echo "─────────────────────────────────"
 echo "PASS: $PASS  FAIL: $FAIL"

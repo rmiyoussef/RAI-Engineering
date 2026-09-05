@@ -783,10 +783,28 @@ ensure_adapters() {
             add_warning "CLAUDE.md missing and could not be restored (no .ai/CLAUDE.md)"
         fi
     fi
-    # AGENTS.md: create only if missing (it carries repo communication rules).
-    if [ ! -f "AGENTS.md" ] && [ "$LOCAL_SRC" = true ] && [ -f "${RAI_SOURCE_DIR:-$SCRIPT_DIR}/AGENTS.md" ]; then
-        cp "${RAI_SOURCE_DIR:-$SCRIPT_DIR}/AGENTS.md" "AGENTS.md"
-        ok "AGENTS.md installed (OpenCode + agents read this)"
+    # AGENTS.md: Opencode reads this (CLAUDE.md ignored when AGENTS.md exists),
+    # so brain bootstrap must be enforced non-destructively — never overwrite user content.
+    AGENTS_BOOTSTRAP='RAI-Engineering installed. `.brain/` exists → mandatory OS: read `.brain/INSTRUCTIONS.md`, then `.brain/ARCHITECTURE.md`, follow workflow. Plans → `plans/`. Tests → `test-cases/`. Summaries → `summaries/`. Done = Implemented + Verified + Tested + Documented + Summarized + Brain Updated.'
+    if [ ! -f "AGENTS.md" ]; then
+        if [ "$LOCAL_SRC" = true ] && [ -f "${RAI_SOURCE_DIR:-$SCRIPT_DIR}/AGENTS.md" ]; then
+            cp "${RAI_SOURCE_DIR:-$SCRIPT_DIR}/AGENTS.md" "AGENTS.md"
+            ok "AGENTS.md installed (OpenCode + agents read this)"
+        elif fetch_source "AGENTS.md" > "AGENTS.md.tmp" 2>/dev/null; then
+            mv "AGENTS.md.tmp" "AGENTS.md"
+            ok "AGENTS.md installed (fetched)"
+        else
+            rm -f "AGENTS.md.tmp"
+            printf '%s\n' "$AGENTS_BOOTSTRAP" > "AGENTS.md"
+            ok "AGENTS.md bootstrap created"
+        fi
+    elif ! grep -qF ".brain/INSTRUCTIONS.md" "AGENTS.md" 2>/dev/null; then
+        tmp_agents="$(mktemp)"
+        { printf '%s\n\n' "$AGENTS_BOOTSTRAP"; cat "AGENTS.md"; } > "$tmp_agents"
+        cat "$tmp_agents" > "AGENTS.md"
+        rm -f "$tmp_agents"
+        ok "AGENTS.md brain bootstrap enforced (user content preserved)"
+        migrate_log "agents-bootstrap" "prepended brain bootstrap to existing AGENTS.md"
     fi
     # opencode.json: only ensure an instructions pointer when opencode is in use
     # and the file already exists — never create vendor config uninvited.

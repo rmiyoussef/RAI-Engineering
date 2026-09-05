@@ -1,6 +1,6 @@
 # RAI-Engineering
 
-**Your project's AI brain — v1.8.0**
+**Your project's AI brain — v1.8.1**
 
 Instead of behaving like a chatbot, the AI behaves like an **engineering organization** — with specialized agents that plan, build, review, test, audit, and remember. All project knowledge is organized by **purpose** — planning, test cases, summaries, memory, knowledge, rules — so a multi-area task lives in one plan with area tags, never scattered across domain folders.
 
@@ -571,6 +571,7 @@ Every plan (`plans/active/PLAN-XXXX/`) ships with tasks, acceptance criteria, an
 | **v1.6.0** | **Lazy-load boot, consolidated rules, model tiering, approval modes, memory timeline, skills-diff, migration testing** | ✅ Done |
 | **v1.7.0** | **Purpose-organized brain** — ARCHITECTURE.md + INSTRUCTIONS.md, plan-test-summary lifecycle, completion contract, domains as metadata | ✅ Done |
 | **v1.8.0** | **Mandatory vendor-neutral OS** — thin entrypoints, model neutrality, non-destructive versioned update.sh (manifest/backup/log), plans/ primary, planning thresholds | ✅ Done |
+| **v1.8.1** | **AGENTS.md bootstrap enforcement** — install/update prepend .brain pointer to pre-existing custom AGENTS.md, user content preserved, idempotent | ✅ Done |
 
 ---
 
@@ -582,7 +583,7 @@ Every plan (`plans/active/PLAN-XXXX/`) ships with tasks, acceptance criteria, an
       <b>Rami Youssef</b>
     </a>
     <br>
-    <small>RAI-Engineering — v1.8.0</small>
+    <small>RAI-Engineering — v1.8.1</small>
   </sub>
   <br>
 </div>

@@ -1,6 +1,6 @@
 # RAI-Engineering — CLAUDE.md (thin bootstrap)
 
-> **Version:** v1.8.0 — Vendor-neutral OS, non-destructive update.sh, mandatory RAI workflow
+> **Version:** v1.8.1 — AGENTS.md brain bootstrap enforcement on install/update
 > **Model:** host default. RAI is model-neutral (R9); optional tiers via `.brain/config.yaml`.
 > **Communication Mode:** CAVEMAN ULTRA (AGENTS.md) — default for all responses
 > **This file is a thin entrypoint.** Real instructions live in `.brain/INSTRUCTIONS.md` + `.brain/ARCHITECTURE.md`. If `.brain` exists, they override everything below on conflict.

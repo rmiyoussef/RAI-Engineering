@@ -125,6 +125,8 @@ assert_contains "$T/.brain/state/migrations.log" "migrate-v1-to-v2" "migrated: l
 # backup contains the original user data
 tar -tzf "$T"/.brain/.migration/backup-*.tgz 2>/dev/null | grep -q "backend/memory/decisions/2024-01-01-postgres.md" \
     && pass "backup holds user data" || fail "backup holds user data"
+tar -tzf "$T"/.brain/.migration/backup-*.tgz 2>/dev/null | grep -q "\.migration" \
+    && fail "backup excludes itself" || pass "backup excludes itself"
 
 echo "== 5. modified system file → conflict, never overwrite =="
 T="$(new_tmp)"
@@ -239,6 +241,24 @@ assert_file "$T/.brain/summaries/completed/2026-03-04-add-widget-validation.md" 
 grep -q "2026-03-04-add-widget-validation" "$T/.brain/state/plans.yaml" && pass "v3: state pointers remapped" || fail "v3: state pointers remapped"
 assert_version "$T" "3" "v3: version stamped 3"
 assert_contains "$T/.brain/state/migrations.log" "migrate-v2-to-v3" "v3: log records migration"
+
+echo "== 14. loose plan files in plans/ move to completed =="
+T="$(new_tmp)"
+run_update "$T" >/dev/null 2>&1
+printf '# Plan: Stray Idea\n\nBody.\n' > "$T/.brain/plans/stray-idea.md"
+touch -d "2026-02-03 10:00:00" "$T/.brain/plans/stray-idea.md"
+printf '# Fix Widget\n' > "$T/.brain/plans/2026-01-15-fix-widget.md"
+printf 'active: []\n' > "$T/.brain/state/plans.yaml"
+run_update "$T" >/dev/null 2>&1
+assert_file "$T/.brain/plans/completed/2026-02-03-stray-idea/PLAN.md" "loose: derived slug wrapped"
+assert_contains "$T/.brain/plans/completed/2026-02-03-stray-idea/STATUS.md" "completed (recovered loose file" "loose: status completed"
+assert_file "$T/.brain/plans/completed/2026-01-15-fix-widget/PLAN.md" "loose: filename slug kept"
+[ -z "$(ls "$T/.brain/plans"/*.md 2>/dev/null)" ] && pass "loose: plans/ root clean" || fail "loose: plans/ root clean"
+grep -qF "2026-02-03-stray-idea" "$T/.brain/state/plans.yaml" && pass "loose: state pointer added" || fail "loose: state pointer added"
+BEFORE="$(find "$T/.brain/plans" | sort | sha256sum)"
+run_update "$T" >/dev/null 2>&1
+[ "$(find "$T/.brain/plans" | sort | sha256sum)" = "$BEFORE" ] \
+    && pass "loose: recovery idempotent" || fail "loose: recovery idempotent"
 
 echo ""
 echo "─────────────────────────────────"

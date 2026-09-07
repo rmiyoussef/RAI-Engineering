@@ -1,7 +1,7 @@
 # RAI-Engineering — CLAUDE.md
 
 > **Model:** host default. RAI is model-neutral (R9); optional tiers via `.brain/config.yaml`.
-> **Version:** v1.9.0 — readable slug-based plan/test/summary naming, brain v3
+> **Version:** v1.9.1 — loose plans/ auto-recovery to completed, backup self-exclusion fix
 > **This file:** Symlinked from `.ai/CLAUDE.md` to project root
 > **Memory:** `.brain/` — persists across sessions
 > **Boot Size:** ~8KB (was 36KB) — loads detail files on demand
@@ -152,6 +152,6 @@ Memory lives in `.brain/` — purpose-organized (domains are `domains:` metadata
 ## VERSION
 ============================================================
 
-RAI-Engineering v1.9.0 — readable slug-based plan/test/summary naming, brain v3
+RAI-Engineering v1.9.1 — loose plans/ auto-recovery to completed, backup self-exclusion fix
 17 agents, 45 rules, 6 testing templates, 39 skills
 Update: `bash .ai/update.sh` or ask me

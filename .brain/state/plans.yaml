@@ -3,6 +3,7 @@
 active: []
 blocked: []
 recently_completed:
+  - 2026-09-07-loose-plan-recovery
   - 2026-09-07-readable-plan-naming
   - 2026-09-05-agents-no-bypass-guard
   - 2026-09-05-updater-self-refresh

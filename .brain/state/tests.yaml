@@ -3,6 +3,7 @@
 pending_tests: []
 failed_tests: []
 recently_passed:
+  - 2026-09-07-loose-plan-recovery/TC-01
   - 2026-09-07-readable-plan-naming/TC-01
   - 2026-09-05-agents-no-bypass-guard/TC-01
   - 2026-09-05-updater-self-refresh/TC-01

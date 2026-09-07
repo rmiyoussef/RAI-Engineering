@@ -3,6 +3,9 @@
 active_tasks: []
 blocked_tasks: []
 recently_done:
+  - 2026-09-07-loose-plan-recovery/T1
+  - 2026-09-07-loose-plan-recovery/T2
+  - 2026-09-07-loose-plan-recovery/T3
   - 2026-09-07-readable-plan-naming/T1
   - 2026-09-07-readable-plan-naming/T2
   - 2026-09-07-readable-plan-naming/T3

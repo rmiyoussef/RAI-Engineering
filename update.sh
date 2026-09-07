@@ -473,7 +473,7 @@ do_backup() {
     ts="$(date -u +%Y%m%dT%H%M%SZ)"
     local dest="$BRAIN_DIR/.migration/backup-$ts-v$old-to-v$new.tgz"
     mkdir -p "$BRAIN_DIR/.migration"
-    tar -czf "$dest" --exclude="./.migration" -C "$(dirname "$BRAIN_DIR")" "$(basename "$BRAIN_DIR")"
+    tar -czf "$dest" --exclude="$(basename "$BRAIN_DIR")/.migration" -C "$(dirname "$BRAIN_DIR")" "$(basename "$BRAIN_DIR")"
     ok "backup created: $dest"
     migrate_log "backup" "created $dest"
 }
@@ -757,7 +757,10 @@ plan_id_for() {
     head="$(grep -m1 '^# ' "$1" 2>/dev/null | sed 's/^# //')"
     head="$(printf '%s' "$head" | sed -E 's/^PLAN-[0-9]+( — | - |: )//; s/^[Pp]lan: //')"
     if [ -z "$head" ]; then
-        head="$(basename "$(dirname "$1")")"
+        head="$(basename "$1" .md)"
+        if [ "$head" = "PLAN" ]; then
+            head="$(basename "$(dirname "$1")")"
+        fi
     fi
     slug="$(slugify "$head")"
     [ -z "$slug" ] && slug="plan"
@@ -857,6 +860,37 @@ migrate_v2_to_v3() {
     rm -f "$map"
     migrate_log "migrate-v2-to-v3" "renamed=$renamed"
     ok "plan naming migrated v2 → v3 (renamed: $renamed)"
+}
+
+# ── Loose plan recovery (runs every update) ────────────────────────────
+recover_loose_plans() {
+    # Loose *.md files sitting directly in plans/ (old convention) → wrap each
+    # into plans/completed/<id>/PLAN.md + STATUS.md (completed). Filenames
+    # already shaped <date>-<slug> keep their name; others derive via plan_id_for.
+    # No-op when clean. State pointers appended (deduped).
+    local f base id stem n
+    for f in "$BRAIN_DIR"/plans/*.md; do
+        [ -f "$f" ] || continue
+        base="$(basename "$f" .md)"
+        case "$base" in
+            ????-??-??-*) id="$base" ;;
+            *) plan_id_for "$f" "$BRAIN_DIR/plans/completed"; id="$PLAN_NEW_ID" ;;
+        esac
+        stem="$id"; n=2
+        while [ -e "$BRAIN_DIR/plans/completed/$id" ]; do
+            id="$stem-$n"; n=$((n + 1))
+        done
+        mkdir -p "$BRAIN_DIR/plans/completed/$id"
+        mv "$f" "$BRAIN_DIR/plans/completed/$id/PLAN.md"
+        printf '# Status %s\n\n**Status:** completed (recovered loose file from plans/)\n' "$id" \
+            > "$BRAIN_DIR/plans/completed/$id/STATUS.md"
+        if [ -f "$BRAIN_DIR/state/plans.yaml" ] \
+            && ! grep -qF "  - $id" "$BRAIN_DIR/state/plans.yaml" 2>/dev/null; then
+            printf '  - %s\n' "$id" >> "$BRAIN_DIR/state/plans.yaml"
+        fi
+        migrate_log "recover-loose-plan" "wrapped $base → plans/completed/$id/"
+        ok "loose plan recovered: plans/$base.md → plans/completed/$id/"
+    done
 }
 
 # ── System file refresh ────────────────────────────────────────────────
@@ -1023,6 +1057,8 @@ case "$STATE" in
 esac
 
 refresh_self
+
+recover_loose_plans
 
 # ── Entrypoint sanity ──────────────────────────────────────────────────
 if [ ! -f "$BRAIN_DIR/INSTRUCTIONS.md" ] || [ ! -f "$BRAIN_DIR/ARCHITECTURE.md" ]; then

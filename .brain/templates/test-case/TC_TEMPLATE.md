@@ -1,11 +1,11 @@
 # Test Case Template
 
-> Scaffold for `test-cases/active/PLAN-XXXX/TC-YYYY.md`. See `INSTRUCTIONS.md` §5.
+> Scaffold for `test-cases/active/<plan-id>/TC-NN.md`. See `INSTRUCTIONS.md` §5.
 
 ```markdown
-# TC-YYYY — {{title}}
+# TC-NN — {{title}}
 
-**Plan:** PLAN-XXXX
+**Plan:** <plan-id>
 **Status:** PENDING
 **Purpose:** {{what this verifies}}
 **Related task:** {{TASKS.md id}}

@@ -1,17 +1,17 @@
 # State — plans
 
-next_plan_id: PLAN-0011
 active: []
 blocked: []
 recently_completed:
-  - PLAN-0010
-  - PLAN-0009
-  - PLAN-0008
-  - PLAN-0007
-  - PLAN-0006
+  - 2026-09-07-readable-plan-naming
+  - 2026-09-05-agents-no-bypass-guard
+  - 2026-09-05-updater-self-refresh
+  - 2026-09-05-agents-bootstrap-enforcement
+  - 2026-09-05-mandatory-vendor-neutral-os
+  - 2026-09-05-central-engineering-brain
 archived:
-  - PLAN-0001  # multi-session-architecture (pre-lifecycle, see plans/archived/PLAN-0001/STATUS.md)
-  - PLAN-0002  # domain-isolation-protocol (pre-lifecycle)
-  - PLAN-0003  # flatten-domain-structure (pre-lifecycle)
-  - PLAN-0004  # orchestration-parallel-execution (pre-lifecycle)
-  - PLAN-0005  # update-setup-scripts (pre-lifecycle)
+  - 2026-07-19-multi-session-architecture
+  - 2026-07-24-domain-isolation-protocol
+  - 2026-07-23-flatten-domain-structure
+  - 2026-07-23-orchestration-parallel-execution
+  - 2026-07-23-update-setup-scripts

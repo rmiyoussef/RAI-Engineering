@@ -14,7 +14,7 @@ Domain-first layout forced single-domain filing for multi-domain work (e.g. real
 - `{backend,frontend,devops}/rules/*` (33 files + backend project-rules → context/provenance) → `rules/<purpose>/` with `domains:` tags
 - `{backend,frontend,devops}/skills/*` + `shared/skills/*` → `skills/` (`backend-*`/`frontend-*`/`devops-*` prefixes where domain-specific; universal skills untagged)
 - `{backend,frontend}/memory/decisions|lessons` → `memory/decisions|lessons` (tagged); `backend/memory/tasks/*` → `summaries/archived/` (pre-lifecycle records); `backend/memory/guidelines.md` → `knowledge/patterns/backend-service-layer-guidelines.md`
-- `backend/plans/*` → `planning/archived/PLAN-0001..0005` (pre-lifecycle, STATUS.md notes provenance)
+- `backend/plans/*` → `planning/archived/` pre-lifecycle plans (renamed to date-slugs in v1.9.0, STATUS.md notes provenance)
 - `frontend/reference/mantine.md` → `reference/mantine.md`; `frontend/FRONTEND_BEST_PRACTICES.md` → `knowledge/patterns/`; `devops/DEVOPS_BEST_PRACTICES.md` → `knowledge/infrastructure/`
 - Domain `README.md`/`INDEX.md` stubs → `old-domains/` (this folder)
 - `{domain}/connections/` (gitignored) → `context/connections/` (gitignored); `{domain}/memory/{sessions,tests,architecture,business}` had no files — concepts now at `memory/sessions/`, `test-cases/`+`summaries/`, `knowledge/`

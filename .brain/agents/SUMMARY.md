@@ -239,10 +239,10 @@ You produce a **single structured document** with this layout:
 ## Summary Types
 
 ### Plan Summary (required per plan)
-Use `templates/summary/PLAN_SUMMARY.md` for the final record. Write to `summaries/completed/PLAN-XXXX.md`. A future agent must understand the work without reading the plan or session history. Traceability: link plan ↔ tasks ↔ TCs ↔ decisions.
+Use `templates/summary/PLAN_SUMMARY.md` for the final record. Write to `summaries/completed/<plan-id>.md`. A future agent must understand the work without reading the plan or session history. Traceability: link plan ↔ tasks ↔ TCs ↔ decisions.
 
 ### Test Summary
-Use `templates/summary/TEST_SUMMARY.md` when documenting test results for a feature. Write to `summaries/active/PLAN-XXXX-test-{{feature}}.md`.
+Use `templates/summary/TEST_SUMMARY.md` when documenting test results for a feature. Write to `summaries/active/<plan-id>-test-{{feature}}.md`.
 
 Includes: endpoint spec, params, headers, auth, validation, security, database (tables/queries/N+1), performance (p50/p95/p99), clean code, optimization suggestions, full scenario table, coverage pie chart.
 

@@ -78,7 +78,7 @@ def extract_domains(content: str):
 
 
 def collect_from_dir(dir_path: Path, category: str, entries: list, recursive_dirs=False):
-    """Collect markdown files from a directory (optionally one level of subdirs, e.g. PLAN-XXXX/)."""
+    """Collect markdown files from a directory (optionally one level of subdirs, e.g. plan IDs/)."""
     if not dir_path.exists():
         return
 

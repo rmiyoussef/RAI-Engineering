@@ -3,18 +3,22 @@
 active_tasks: []
 blocked_tasks: []
 recently_done:
-  - PLAN-0010/T1
-  - PLAN-0010/T2
-  - PLAN-0010/T3
-  - PLAN-0009/T1
-  - PLAN-0009/T2
-  - PLAN-0009/T3
-  - PLAN-0008/T1
-  - PLAN-0008/T2
-  - PLAN-0008/T3
-  - PLAN-0007/T1
-  - PLAN-0007/T2
-  - PLAN-0007/T3
-  - PLAN-0007/T4
-  - PLAN-0007/T5
-  - PLAN-0007/T6
+  - 2026-09-07-readable-plan-naming/T1
+  - 2026-09-07-readable-plan-naming/T2
+  - 2026-09-07-readable-plan-naming/T3
+  - 2026-09-07-readable-plan-naming/T4
+  - 2026-09-05-agents-no-bypass-guard/T1
+  - 2026-09-05-agents-no-bypass-guard/T2
+  - 2026-09-05-agents-no-bypass-guard/T3
+  - 2026-09-05-updater-self-refresh/T1
+  - 2026-09-05-updater-self-refresh/T2
+  - 2026-09-05-updater-self-refresh/T3
+  - 2026-09-05-agents-bootstrap-enforcement/T1
+  - 2026-09-05-agents-bootstrap-enforcement/T2
+  - 2026-09-05-agents-bootstrap-enforcement/T3
+  - 2026-09-05-mandatory-vendor-neutral-os/T1
+  - 2026-09-05-mandatory-vendor-neutral-os/T2
+  - 2026-09-05-mandatory-vendor-neutral-os/T3
+  - 2026-09-05-mandatory-vendor-neutral-os/T4
+  - 2026-09-05-mandatory-vendor-neutral-os/T5
+  - 2026-09-05-mandatory-vendor-neutral-os/T6

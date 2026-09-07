@@ -2,7 +2,7 @@
 
 **Date:** 2026-09-05
 **Domains:** all
-**Context:** .ai/update.sh copies in consumer projects never refreshed. PLAN-0008 fix sat on master while installs ran stale updaters showing no change.
+**Context:** .ai/update.sh copies in consumer projects never refreshed. 2026-09-05-agents-bootstrap-enforcement fix sat on master while installs ran stale updaters showing no change.
 
 ## Options Considered
 - Track .ai/update.sh in manifest (rejected: manifest compares installed tree files; the runner overwriting itself mid-run via generic path risks cwd writes)

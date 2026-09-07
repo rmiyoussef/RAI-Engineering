@@ -24,8 +24,8 @@ Progressive disclosure throughout — never read the whole brain. Details per §
 ```
 [A] READ .brain/INDEX.md — locate relevant context/rules/knowledge/memory.
 [B] LOAD selectively: context/ files; rules/<purpose>/; knowledge/ (domains: filter);
-    memory/ decisions/discoveries/lessons; active plan dir (plans/active/PLAN-XXXX/)
-    + its test-cases/active/PLAN-XXXX/.
+    memory/ decisions/discoveries/lessons; active plan dir (plans/active/<plan-id>/)
+    + its test-cases/active/<plan-id>/.
 ```
 
 Old behavior this replaces: deriving a single domain then reading `.brain/{domain}/`. Domains are metadata now. A task touching backend+frontend+security loads rules from `rules/api/`, `rules/security/`, knowledge tagged accordingly — never a domain subtree.
@@ -39,7 +39,7 @@ Old behavior this replaces: deriving a single domain then reading `.brain/{domai
 
 ## 3. During Planning (PLANNER)
 
-Produce `plans/active/PLAN-XXXX/` with `PLAN.md TASKS.md CONTEXT.md DECISIONS.md TEST-PLAN.md STATUS.md` per `templates/plan/PLAN_TEMPLATE.md`. Every plan contains: ID, title, objective, problem, scope, non-goals, requirements, relevant context links, affected areas, technical approach, architecture considerations, dependencies, risks, tasks with acceptance criteria, required test cases (initial test strategy — see §4), status. The plan MUST hold enough for another agent to continue without the original conversation.
+Produce `plans/active/<plan-id>/` with `PLAN.md TASKS.md CONTEXT.md DECISIONS.md TEST-PLAN.md STATUS.md` per `templates/plan/PLAN_TEMPLATE.md`. Every plan contains: ID, title, objective, problem, scope, non-goals, requirements, relevant context links, affected areas, technical approach, architecture considerations, dependencies, risks, tasks with acceptance criteria, required test cases (initial test strategy — see §4), status. The plan MUST hold enough for another agent to continue without the original conversation.
 
 ### When planning is required
 
@@ -55,7 +55,7 @@ Test strategy is part of planning, not an afterthought:
 Requirement → Analysis → Plan → Tasks → Acceptance Criteria → Test Cases
 ```
 
-PLANNER writes the initial TC files (`test-cases/active/PLAN-XXXX/TC-*.md` + `INDEX.md`) from `templates/test-case/TC_TEMPLATE.md` before handoff to EXECUTOR. Tests influence the plan: if something cannot be verified, replan until it can. Unverifiable requirements are flagged, never silently accepted.
+PLANNER writes the initial TC files (`test-cases/active/<plan-id>/TC-*.md` + `INDEX.md`) from `templates/test-case/TC_TEMPLATE.md` before handoff to EXECUTOR. Tests influence the plan: if something cannot be verified, replan until it can. Unverifiable requirements are flagged, never silently accepted.
 
 ## 4. During Implementation (EXECUTOR + specialists)
 
@@ -85,7 +85,7 @@ REVIEWER scores; score < 7 returns to EXECUTOR (max 3 cycles). BACKEND QA / SECU
 Generate summary → record decisions/discoveries/lessons → mark plan complete → mark test cases complete → update state
 ```
 
-- SUMMARY writes `summaries/completed/PLAN-XXXX.md` per `templates/summary/PLAN_SUMMARY.md` (objective, changes, decisions, files affected, tests + results, limitations, lessons, recommendations).
+- SUMMARY writes `summaries/completed/<plan-id>.md` per `templates/summary/PLAN_SUMMARY.md` (objective, changes, decisions, files affected, tests + results, limitations, lessons, recommendations).
 - MEMORY SCRIBE persists `memory/decisions|discoveries|lessons/` entries, moves plan → `plans/completed/`, TCs → `test-cases/completed/`, updates `state/*.yaml`, refreshes `TIMELINE.md` data.
 - ARCHITECT promotes timeless findings into `knowledge/` and refreshes `context/` if architecture changed.
 
@@ -105,7 +105,7 @@ Missing any condition ⇒ status is not COMPLETED (`active` or `blocked` with re
 
 ## 9. Traceability
 
-Maintain the chain `PLAN-XXXX → TASK → TC-YYYY → result → SUMMARY-XXXX → decision/memory → knowledge` using IDs in every artifact. A future agent must navigate plan → tasks → tests → results → summary → decisions → knowledge without reading session history.
+Maintain the chain `<plan-id> → TASK → TC-NN → result → SUMMARY → decision/memory → knowledge` using IDs in every artifact. A future agent must navigate plan → tasks → tests → results → summary → decisions → knowledge without reading session history.
 
 ## 10. State Discipline
 

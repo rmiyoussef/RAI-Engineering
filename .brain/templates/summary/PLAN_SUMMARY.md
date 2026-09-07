@@ -1,9 +1,9 @@
 # Plan Summary Template
 
-> Scaffold for `summaries/completed/PLAN-XXXX.md`. See `INSTRUCTIONS.md` §7.
+> Scaffold for `summaries/completed/<plan-id>.md`. See `INSTRUCTIONS.md` §7.
 
 ```markdown
-# Summary PLAN-XXXX — {{title}}
+# Summary <plan-id> — {{title}}
 
 **Objective:** ...
 **Status:** completed

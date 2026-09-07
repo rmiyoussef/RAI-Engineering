@@ -24,9 +24,9 @@
 
 - `memory/decisions/` (5 records incl. orchestration-engine, brain-migration, mantine-reference) · `memory/discoveries/` · `memory/lessons/` (`version-bump-before-push.md`) · `memory/incidents/` · `memory/sessions/`
 
-## Planning / Tests / Summaries (lifecycle: PLAN-XXXX ↔ TC-YYYY ↔ SUMMARY)
+## Planning / Tests / Summaries (lifecycle: plan-id ↔ TC-NN ↔ SUMMARY)
 
-- Plans: `plans/active|completed|blocked|archived/` (archived: PLAN-0001 multi-session-arch … PLAN-0005 update-setup-scripts, pre-lifecycle)
+- Plans: `plans/active|completed|blocked|archived/` (archived: 2026-07-19-multi-session-arch … 2026-07-23-update-setup-scripts, pre-lifecycle)
 - Test cases: `test-cases/active|completed|failed|archived/` (`PENDING RUNNING PASSED FAILED BLOCKED SKIPPED`)
 - Summaries: `summaries/active|completed|archived/` (archived: 3 pre-lifecycle task records)
 - Templates: `templates/plan/PLAN_TEMPLATE.md` `templates/test-case/TC_TEMPLATE.md` `templates/summary/PLAN_SUMMARY.md` (+ `testing/` modes, `summary/` team outputs, `MEMORY_DECISION.md`, `GUIDELINES.md`)

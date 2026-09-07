@@ -33,7 +33,7 @@
 
 set -euo pipefail
 
-TARGET_BRAIN_VERSION=2
+TARGET_BRAIN_VERSION=3
 REPO="rmiyoussef/RAI-Engineering"
 BRANCH="master"
 AI_DIR=".ai"
@@ -659,17 +659,15 @@ migrate_v1_to_v2() {
     [ -f "$BRAIN_DIR/devops/DEVOPS_BEST_PRACTICES.md" ] && merge_move "$BRAIN_DIR/devops/DEVOPS_BEST_PRACTICES.md" "$BRAIN_DIR/knowledge/infrastructure/devops-practices.md"
     [ -f "$BRAIN_DIR/frontend/reference/mantine.md" ] && merge_move "$BRAIN_DIR/frontend/reference/mantine.md" "$BRAIN_DIR/reference/mantine.md"
 
-    # plans → plans/archived/PLAN-00xx/ (pre-lifecycle, honest provenance)
-    n=1
-    while [ -d "$BRAIN_DIR/plans/archived/PLAN-$(printf '%04d' "$n")" ]; do n=$((n + 1)); done
+    # plans → plans/archived/<date>-<slug>/ (pre-lifecycle, honest provenance)
     for f in "$BRAIN_DIR"/backend/plans/*.md "$BRAIN_DIR"/frontend/plans/*.md "$BRAIN_DIR"/devops/plans/*.md; do
         [ -f "$f" ] || continue
-        id="$(printf 'PLAN-%04d' "$n")"
+        plan_id_for "$f" "$BRAIN_DIR/plans/archived"
+        id="$PLAN_NEW_ID"
         mkdir -p "$BRAIN_DIR/plans/archived/$id"
         mv "$f" "$BRAIN_DIR/plans/archived/$id/PLAN.md"
         printf '# Status %s\n\n**Status:** archived (pre-lifecycle)\n' "$id" > "$BRAIN_DIR/plans/archived/$id/STATUS.md"
         echo "moved:$f->plans/archived/$id/PLAN.md" >> "$MERGE_REPORT"
-        n=$((n + 1))
     done
 
     # connections/ → context/connections/ (still gitignored)
@@ -743,6 +741,122 @@ migrate_legacy_user_dirs() {
             merge_move "$f" "$BRAIN_DIR/memory/sessions/$(basename "$f")"
         done
     fi
+}
+
+# ── v2 → v3 plan naming (PLAN-XXXX → <date>-<slug>) ─────────────────────
+slugify() {
+    # $1 = text → lowercase hyphenated slug (max 60 chars).
+    printf '%s' "$1" | tr '[:upper:]' '[:lower:]' \
+        | sed 's/[^a-z0-9][^a-z0-9]*/-/g; s/^-\+//; s/-\+$//' | cut -c1-60
+}
+
+plan_id_for() {
+    # $1 = PLAN.md path (or plan file), $2 = parent dir for collision check.
+    # Sets global PLAN_NEW_ID to <mtime-date>-<slug> (-2 on collision).
+    local head slug fdate base cand i
+    head="$(grep -m1 '^# ' "$1" 2>/dev/null | sed 's/^# //')"
+    head="$(printf '%s' "$head" | sed -E 's/^PLAN-[0-9]+( — | - |: )//; s/^[Pp]lan: //')"
+    if [ -z "$head" ]; then
+        head="$(basename "$(dirname "$1")")"
+    fi
+    slug="$(slugify "$head")"
+    [ -z "$slug" ] && slug="plan"
+    fdate="$(stat -c %y "$1" 2>/dev/null | cut -d' ' -f1)"
+    case "$fdate" in
+        ????-??-??) ;;
+        *) fdate="$(date -u +%F)" ;;
+    esac
+    base="$fdate-$slug"
+    cand="$base"; i=2
+    while [ -e "$2/$cand" ]; do cand="$base-$i"; i=$((i + 1)); done
+    PLAN_NEW_ID="$cand"
+}
+
+migrate_v2_to_v3() {
+    log "migrating plan naming v2 → v3 (PLAN-XXXX → date-slug, merge, never delete)..."
+    local map renamed statedir dir old new f otc ntc n sedf
+    map="$(mktemp)"
+    renamed=0
+    # Phase 1: plans/*/<PLAN-NNNN>/ → <date>-<slug>/
+    for statedir in active completed blocked archived; do
+        [ -d "$BRAIN_DIR/plans/$statedir" ] || continue
+        for dir in "$BRAIN_DIR"/plans/$statedir/PLAN-[0-9]*; do
+            [ -d "$dir" ] || continue
+            old="$(basename "$dir")"
+            if [ -f "$dir/PLAN.md" ]; then
+                plan_id_for "$dir/PLAN.md" "$BRAIN_DIR/plans/$statedir"
+            else
+                PLAN_NEW_ID="$(slugify "$old")"
+            fi
+            new="$PLAN_NEW_ID"
+            mv "$dir" "$BRAIN_DIR/plans/$statedir/$new"
+            printf '%s|%s\n' "$old" "$new" >> "$map"
+            renamed=$((renamed + 1))
+        done
+    done
+    # Phase 2: test-cases/*/<old>/ → <new>/ + TC-NNNN → TC-NN + Plan field
+    for statedir in active completed failed archived; do
+        [ -d "$BRAIN_DIR/test-cases/$statedir" ] || continue
+        while IFS='|' read -r old new; do
+            [ -z "$old" ] && continue
+            dir="$BRAIN_DIR/test-cases/$statedir/$old"
+            [ -d "$dir" ] || continue
+            mv "$dir" "$BRAIN_DIR/test-cases/$statedir/$new"
+            dir="$BRAIN_DIR/test-cases/$statedir/$new"
+            n=0
+            for f in "$dir"/TC-[0-9]*.md; do
+                [ -f "$f" ] || continue
+                n=$((n + 1))
+                ntc="$(printf 'TC-%02d' "$n")"
+                mv "$f" "$dir/$ntc.tmp"
+                printf 's|\\b%s\\b|%s|g\n' "$(basename "$f" .md)" "$ntc" >> "$dir/.tcsed"
+            done
+            for f in "$dir"/TC-*.tmp; do
+                [ -f "$f" ] || continue
+                mv "$f" "${f%.tmp}.md"
+            done
+            if [ -f "$dir/.tcsed" ]; then
+                for f in "$dir"/*.md; do
+                    [ -f "$f" ] || continue
+                    sed -i -f "$dir/.tcsed" "$f"
+                done
+                rm -f "$dir/.tcsed"
+            fi
+            sed -i "s|^\(\*\*Plan:\*\*\) $old\$|\1 $new|" "$dir"/*.md 2>/dev/null || true
+            renamed=$((renamed + 1))
+        done < "$map"
+    done
+    # Phase 3: summaries <old>.md / <old>-*.md → <new> prefix
+    for statedir in active completed archived; do
+        [ -d "$BRAIN_DIR/summaries/$statedir" ] || continue
+        while IFS='|' read -r old new; do
+            [ -z "$old" ] && continue
+            for f in "$BRAIN_DIR"/summaries/$statedir/"$old".md "$BRAIN_DIR"/summaries/$statedir/"$old"-*.md; do
+                [ -f "$f" ] || continue
+                mv "$f" "$BRAIN_DIR/summaries/$statedir/$new${f#$BRAIN_DIR/summaries/$statedir/$old}"
+                renamed=$((renamed + 1))
+            done
+        done < "$map"
+    done
+    # Phase 4: state pointers — mapped plan IDs; drop retired counter
+    for f in "$BRAIN_DIR"/state/plans.yaml "$BRAIN_DIR"/state/tasks.yaml \
+             "$BRAIN_DIR"/state/tests.yaml "$BRAIN_DIR"/state/current.yaml \
+             "$BRAIN_DIR"/state/agents.yaml; do
+        [ -f "$f" ] || continue
+        while IFS='|' read -r old new; do
+            [ -z "$old" ] && continue
+            sed -i "s|\b$old\b|$new|g" "$f"
+        done < "$map"
+    done
+    if [ -f "$BRAIN_DIR/state/plans.yaml" ]; then
+        sed -i '/^next_plan_id:/d' "$BRAIN_DIR/state/plans.yaml"
+    fi
+    if grep -qE "TC-[0-9]{4}" "$BRAIN_DIR/state/tests.yaml" 2>/dev/null; then
+        add_warning "bare TC-XXXX refs kept verbatim in state/tests.yaml (pre-slug era)"
+    fi
+    rm -f "$map"
+    migrate_log "migrate-v2-to-v3" "renamed=$renamed"
+    ok "plan naming migrated v2 → v3 (renamed: $renamed)"
 }
 
 # ── System file refresh ────────────────────────────────────────────────
@@ -894,10 +1008,11 @@ case "$STATE" in
         fi
         ensure_tree
         do_backup "$CURRENT_VERSION" "$TARGET_BRAIN_VERSION"
-        if [ "$STATE" = "migrate-domains" ]; then
+        if [ "$STATE" = "migrate-domains" ] || [ "$CURRENT_VERSION" = "1" ]; then
             migrate_v1_to_v2
         fi
         migrate_legacy_user_dirs
+        migrate_v2_to_v3
         ensure_gitignore
         refresh_system_files
         write_version

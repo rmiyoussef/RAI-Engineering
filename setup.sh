@@ -168,7 +168,7 @@ fi
 
 # ── Done ─────────────────────────────────────────────────────────
 echo ""
-echo -e "${GREEN}✅  RAI-Engineering v1.8.3 — Vendor-neutral engineering OS installed!${NC}"
+echo -e "${GREEN}✅  RAI-Engineering v1.9.0 — Vendor-neutral engineering OS installed!${NC}"
 echo ""
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo "  Project structure:"

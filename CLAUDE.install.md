@@ -1,7 +1,7 @@
 # RAI-Engineering — CLAUDE.md
 
 > **Model:** host default. RAI is model-neutral (R9); optional tiers via `.brain/config.yaml`.
-> **Version:** v1.8.3 — AGENTS.md rewrite with no-bypass guard
+> **Version:** v1.9.0 — readable slug-based plan/test/summary naming, brain v3
 > **This file:** Symlinked from `.ai/CLAUDE.md` to project root
 > **Memory:** `.brain/` — persists across sessions
 > **Boot Size:** ~8KB (was 36KB) — loads detail files on demand
@@ -135,8 +135,8 @@ Memory lives in `.brain/` — purpose-organized (domains are `domains:` metadata
 ├── context/        ← current project facts (+ gitignored connections/)
 ├── knowledge/<purpose>/ ← how-things-work (api, database, security, ...)
 ├── memory/         ← decisions/ discoveries/ lessons/ incidents/ sessions/
-├── plans/       ← plans PLAN-XXXX (active/completed/blocked/archived)
-├── test-cases/     ← TC-YYYY per plan (active/completed/failed/archived)
+├── plans/       ← plans <date>-<slug> (active/completed/blocked/archived)
+├── test-cases/     ← TC-NN per plan (active/completed/failed/archived)
 ├── summaries/      ← final summary per completed plan
 ├── agents/ skills/ rules/<purpose>/ reference/ templates/ sessions/ state/
 ```
@@ -152,6 +152,6 @@ Memory lives in `.brain/` — purpose-organized (domains are `domains:` metadata
 ## VERSION
 ============================================================
 
-RAI-Engineering v1.8.3 — AGENTS.md rewrite with no-bypass guard
+RAI-Engineering v1.9.0 — readable slug-based plan/test/summary naming, brain v3
 17 agents, 45 rules, 6 testing templates, 39 skills
 Update: `bash .ai/update.sh` or ask me

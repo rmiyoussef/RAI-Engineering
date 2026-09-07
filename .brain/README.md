@@ -15,8 +15,8 @@ Knowledge is organized by purpose, not by technical domain. A task like "real-ti
 ├── context/         ← current project facts (stack, architecture, environment)
 ├── knowledge/       ← how-things-work, by purpose (api, database, security, ...)
 ├── memory/          ← what happened and why (decisions, lessons, sessions)
-├── plans/        ← plans PLAN-XXXX with tasks (active/completed/blocked/archived)
-├── test-cases/      ← first-class test cases TC-YYYY per plan
+├── plans/        ← plans <date>-<slug> with tasks (active/completed/blocked/archived)
+├── test-cases/      ← first-class test cases TC-NN per plan
 ├── summaries/       ← final summary per completed plan
 ├── agents/          ← agent definitions (retrieve knowledge, never duplicate it)
 ├── skills/          ← how to perform work (universal unless domain-tagged)

@@ -1,6 +1,6 @@
 # RAI-Engineering — CLAUDE.md (thin bootstrap)
 
-> **Version:** v1.8.3 — AGENTS.md rewrite with no-bypass guard
+> **Version:** v1.9.0 — readable slug-based plan/test/summary naming, brain v3
 > **Model:** host default. RAI is model-neutral (R9); optional tiers via `.brain/config.yaml`.
 > **Communication Mode:** CAVEMAN ULTRA (AGENTS.md) — default for all responses
 > **This file is a thin entrypoint.** Real instructions live in `.brain/INSTRUCTIONS.md` + `.brain/ARCHITECTURE.md`. If `.brain` exists, they override everything below on conflict.

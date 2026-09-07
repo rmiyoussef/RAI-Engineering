@@ -56,11 +56,11 @@ skills inform execution; templates scaffold artifacts
 
 ```
 Request → load ARCHITECTURE + INSTRUCTIONS → read state/ → selective context/rules/knowledge/memory
-  → plans/active/PLAN-XXXX/ (PLAN.md TASKS.md CONTEXT.md DECISIONS.md TEST-PLAN.md STATUS.md)
-  → test-cases/active/PLAN-XXXX/ (TC-*.md + INDEX.md)
+  → plans/active/<plan-id>/ (PLAN.md TASKS.md CONTEXT.md DECISIONS.md TEST-PLAN.md STATUS.md)
+  → test-cases/active/<plan-id>/ (TC-*.md + INDEX.md)
   → implementation (code repo, not .brain)
   → test execution records back into TC files → STATUS.md updates → state/*.yaml updates
-  → summaries/completed/PLAN-XXXX.md → memory/ (decisions/discoveries/lessons) → knowledge/ (if timeless)
+  → summaries/completed/<plan-id>.md → memory/ (decisions/discoveries/lessons) → knowledge/ (if timeless)
   → plans/completed/ + test-cases/completed/ + state/ updated
 ```
 
@@ -74,15 +74,15 @@ Request → load ARCHITECTURE + INSTRUCTIONS → read state/ → selective conte
 
 ### Planning
 
-`active/` → (`blocked/` ↔ `active/`) → `completed/`. `archived/` holds pre-lifecycle or historical plans (see `_deprecated/` note + plan STATUS.md for provenance). Plan dir: `PLAN.md TASKS.md CONTEXT.md DECISIONS.md TEST-PLAN.md STATUS.md` (`TEST-PLAN.md` = test strategy: coverage map task→TC, required vs optional, execution order). IDs: `PLAN-0001` increasing. Next ID tracked in `state/plans.yaml`.
+`active/` → (`blocked/` ↔ `active/`) → `completed/`. `archived/` holds pre-lifecycle or historical plans (see `_deprecated/` note + plan STATUS.md for provenance). Plan dir: `PLAN.md TASKS.md CONTEXT.md DECISIONS.md TEST-PLAN.md STATUS.md` (`TEST-PLAN.md` = test strategy: coverage map task→TC, required vs optional, execution order). IDs: `<YYYY-MM-DD>-<slug>` from creation date + title (collision → `-2` suffix). No counter file.
 
 ### Testing
 
-Test cases live under `test-cases/<state>/PLAN-XXXX/TC-YYYY.md` + `INDEX.md`. Statuses: `PENDING RUNNING PASSED FAILED BLOCKED SKIPPED`. `failed/` holds currently-failing cases requiring fixes; resolved cases move with their plan to `completed/`. Execution recorded inside the TC file (actual result, date, executor). Required cases unresolved ⇒ plan cannot complete.
+Test cases live under `test-cases/<state>/<plan-id>/TC-NN.md` + `INDEX.md`. Statuses: `PENDING RUNNING PASSED FAILED BLOCKED SKIPPED`. `failed/` holds currently-failing cases requiring fixes; resolved cases move with their plan to `completed/`. Execution recorded inside the TC file (actual result, date, executor). Required cases unresolved ⇒ plan cannot complete.
 
 ### Summary
 
-One file per plan: `summaries/completed/PLAN-XXXX.md`. In-progress work may keep `summaries/active/PLAN-XXXX.md` draft. Pre-lifecycle historical task records live in `summaries/archived/`.
+One file per plan: `summaries/completed/<plan-id>.md`. In-progress work may keep `summaries/active/<plan-id>.md` draft. Pre-lifecycle historical task records live in `summaries/archived/`.
 
 ### Memory
 
@@ -102,14 +102,14 @@ Append-only. `decisions/` (choice + rationale + consequences), `discoveries/` (f
 
 ## 7. Naming and Metadata Conventions
 
-- Plans: `PLAN-XXXX` zero-padded, increasing. Test cases: `TC-YYYY` globally unique, each file declares `Plan:` ID. Summaries: `PLAN-XXXX.md` matching plan ID.
+- Plans: `<YYYY-MM-DD>-<slug>` (e.g. `2026-09-05-agents-bootstrap-enforcement`). Test cases: `TC-NN` per plan (full ref `<plan-id>/TC-NN`), each file declares `Plan:` ID. Summaries: `<plan-id>.md` matching plan ID.
 - Memory/decisions/lessons: `YYYY-MM-DD-slug.md`. Sessions: `YYYY-MM-DD-slug.md` with `Type:` field.
 - Frontmatter `domains: [backend|frontend|devops|mobile|all]` marks technical-domain metadata on rules/skills/knowledge. Cross-cutting work lists multiple or omits the tag.
 - Every plan, TC, summary cross-references the others by ID, not just by path.
 
 ## 8. Dependency Rules
 
-- TC files depend on their plan (`Plan: PLAN-XXXX`). Plans list `Required test cases`. Summaries list `Tests executed` with results.
+- TC files depend on their plan (`Plan: <plan-id>`). Plans list `Required test cases`. Summaries list `Tests executed` with results.
 - TASKS.md entries link to TC IDs covering them. A task without covering TC (or explicit waiver with reason) blocks completion.
 - Knowledge updates cite the decision/session that motivated them.
 

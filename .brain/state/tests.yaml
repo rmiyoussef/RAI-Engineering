@@ -3,14 +3,21 @@
 pending_tests: []
 failed_tests: []
 recently_passed:
-  - TC-0011
-  - TC-0010
-  - TC-0009
-  - TC-0001
-  - TC-0002
-  - TC-0003
-  - TC-0004
-  - TC-0005
-  - TC-0006
-  - TC-0007
-  - TC-0008
+  - 2026-09-07-readable-plan-naming/TC-01
+  - 2026-09-05-agents-no-bypass-guard/TC-01
+  - 2026-09-05-updater-self-refresh/TC-01
+  - 2026-09-05-agents-bootstrap-enforcement/TC-01
+  - 2026-09-05-mandatory-vendor-neutral-os/TC-01
+  - 2026-09-05-mandatory-vendor-neutral-os/TC-02
+  - 2026-09-05-mandatory-vendor-neutral-os/TC-03
+  - 2026-09-05-mandatory-vendor-neutral-os/TC-04
+  - 2026-09-05-mandatory-vendor-neutral-os/TC-05
+  - 2026-09-05-mandatory-vendor-neutral-os/TC-06
+  - 2026-09-05-mandatory-vendor-neutral-os/TC-07
+  - 2026-09-05-mandatory-vendor-neutral-os/TC-08
+  - 2026-09-05-central-engineering-brain/TC-01
+  - 2026-09-05-central-engineering-brain/TC-02
+  - 2026-09-05-central-engineering-brain/TC-03
+  - 2026-09-05-central-engineering-brain/TC-04
+  - 2026-09-05-central-engineering-brain/TC-05
+  - 2026-09-05-central-engineering-brain/TC-06

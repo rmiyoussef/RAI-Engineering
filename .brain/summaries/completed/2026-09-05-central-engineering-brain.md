@@ -1,0 +1,48 @@
+# Summary 2026-09-05-central-engineering-brain — Refactor .brain into Central Engineering Brain
+
+**Objective:** Replace domain-first `.brain/` layout with purpose-organized central brain.
+**Status:** completed
+**Date:** 2026-09-05
+
+## What was implemented
+- New purpose-organized tree: constitution/context/knowledge/memory/planning/test-cases/summaries/agents/skills/rules/reference/templates/sessions/session-bus/state/_deprecated.
+- Authority files: ARCHITECTURE.md (structure), INSTRUCTIONS.md (operations + completion contract), INDEX.md (navigation), README.md, constitution/QUALITY.md, 6 context files, 5 state YAMLs, 3 lifecycle templates.
+- Migration via git mv (history preserved): 33 rules → rules/<purpose>/, 12 domain skills → skills/ prefixes, 27 universal skills → skills/, 5 decisions + 1 lesson → memory/, 3 task records → summaries/archived/, 5 plans → planning/archived/ (pre-lifecycle, STATUS.md notes provenance), reference docs → reference/.
+- Agent behavior: PLANNER test strategy + acceptance criteria, MEMORY lifecycle close, SUMMARY summaries/ outputs, ARCHITECT context/knowledge ownership, DATABASE connections path; reference protocols rewritten (load sequence, conflict sources, purpose_placement check, domainTags).
+- Canonical rules updated: R16-R20 (context/memory paths), R36-R40 rewritten (purpose-organization), R44 (resolution sources).
+- Repo updates: CLAUDE.md + CLAUDE.install.md boot protocols, README.md, SKILLS.md, docs/architecture.md, setup.sh (purpose tree + area tags), update.sh (full domain→purpose auto-migration), memory-timeline.py (new sources), skills-diff.sh, workflows/STANDARD.md, .gitignore, VERSION v1.7.0.
+
+## What changed (files/components)
+- `.brain/`: ~105 git-mv renames, ~40 new files, 7 domain dirs removed, 0 deletions.
+- Root: CLAUDE.md, CLAUDE.install.md, README.md, SKILLS.md, setup.sh, update.sh, VERSION, .gitignore, docs/architecture.md, .ai/memory-timeline.py, .ai/skills-diff.sh, workflows/STANDARD.md, skills/MEMORY.md.
+
+## Important architectural decisions
+- memory/decisions/2026-09-05-central-engineering-brain (see planning/completed/2026-09-05-central-engineering-brain/DECISIONS.md): connections→context/connections/, tasks→summaries/archived/, no symlinks, untagged skills = universal, self-demonstrating lifecycle.
+- Domains are `domains:` frontmatter metadata, never directories.
+
+## Tests executed + results
+| TC | Result | Notes |
+|---|---|---|
+| TC-01 tree exists | PASSED | 16 agents / 39 skills / 33 rules, all authority files |
+| TC-02 domain dirs removed | PASSED | 7 dirs absent |
+| TC-03 zero loss + no stale refs | PASSED | 0 deletions; stale refs fixed in RULES/safety/template/skills/READMEs/knowledge docs |
+| TC-04 authorities consistent | PASSED | lifecycles match; lifecycle behaviors present |
+| TC-05 lifecycle artifacts | PASSED | templates cross-linked; YAML valid (fixed scalar bug) |
+| TC-06 timeline regen | PASSED | exit 0, 14 entries, zero old-domain links |
+
+## Known limitations / remaining issues
+- skills/ repo-level mirrors (CODE_REVIEW.md etc.) are legacy snapshots; only MEMORY.md path refs patched. Full reconciliation is tech debt.
+- Universal skills retain upstream `Domain: Shared — Cross-Domain` headers meaning cross-area applicability, not directories.
+- Archived pre-lifecycle plans predate lifecycle (no TCs) — honestly labeled, not backfilled.
+
+## Performance / security considerations
+- Progressive disclosure enforced (ARCHITECTURE.md §10): boot loads 2 files + selective context instead of whole brain.
+- Secrets still gitignored (context/connections/, session-bus/, sessions/live/); git safety rule updated.
+
+## Lessons learned
+- Validation-as-test-cases works: TC-05 caught a real YAML bug, TC-03 caught real stale refs in canonical rules.
+- memory/decisions/brain-migration.md (prior migration) predicted this refactor's map; consulted during planning.
+
+## Future recommendations
+- Next plan: reconcile repo-level skills/ mirrors with .brain/skills/ (single source).
+- Consider CI check: grep for domain-folder creation + YAML parse of state/.

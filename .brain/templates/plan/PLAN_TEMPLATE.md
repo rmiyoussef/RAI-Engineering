@@ -1,9 +1,9 @@
 # Plan Template
 
-> Scaffold for `plans/active/PLAN-XXXX/PLAN.md`. See `INSTRUCTIONS.md` §3.
+> Scaffold for `plans/active/<YYYY-MM-DD>-<slug>/PLAN.md`. See `INSTRUCTIONS.md` §3.
 
 ```markdown
-# PLAN-XXXX — {{title}}
+# {{YYYY-MM-DD}}-{{slug}} — {{title}}
 
 **Objective:** {{one sentence}}
 **Status:** active
@@ -43,7 +43,7 @@
 See TASKS.md. Each task has acceptance criteria + covering TC IDs.
 
 ## Required test cases
-See test-cases/active/PLAN-XXXX/INDEX.md. Initial test strategy defined during planning.
+See test-cases/active/<YYYY-MM-DD>-<slug>/INDEX.md. Initial test strategy defined during planning.
 
 ## Completion requirements
 Completion contract (`INSTRUCTIONS.md` §8) checklist state.

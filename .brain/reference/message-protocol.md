@@ -289,7 +289,7 @@ User request arrives
     |
 [8] BRAIN loads relevant knowledge/ files (filtered by domains: frontmatter)
     |
-[9] If active plan exists: BRAIN loads plans/active/PLAN-XXXX/ + its test-cases/
+[9] If active plan exists: BRAIN loads plans/active/<plan-id>/ + its test-cases/
     |
 [10] If task involves database:
     ├─► BRAIN reads context/connections/database.md
@@ -430,7 +430,7 @@ MEMORY SCRIBE starts
         ├─ memory/lessons/<date>-<slug>.md
         ├─ knowledge/<purpose>/<component>.md (timeless findings)
         ├─ memory/sessions/<date>-<slug>.md
-        ├─ summaries/completed/PLAN-XXXX.md
+        ├─ summaries/completed/<plan-id>.md
         └─ state/*.yaml updates (+ plan → plans/completed/, TCs → test-cases/completed/)
 ```
 

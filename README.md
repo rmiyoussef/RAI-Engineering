@@ -1,6 +1,6 @@
 # RAI-Engineering
 
-**Your project's AI brain — v1.8.3**
+**Your project's AI brain — v1.9.0**
 
 Instead of behaving like a chatbot, the AI behaves like an **engineering organization** — with specialized agents that plan, build, review, test, audit, and remember. All project knowledge is organized by **purpose** — plans, test-cases, summaries, memory, knowledge, rules — so a multi-area task lives in one plan with area tags, never scattered across domain folders.
 
@@ -9,6 +9,12 @@ curl -fsSL https://raw.githubusercontent.com/rmiyoussef/RAI-Engineering/master/s
 ```
 
 ---
+
+## What's New in v1.9
+
+| Feature | Description |
+|---------|-------------|
+| 📛 **Readable plan names** | Folders use `<date>-<slug>` instead of `PLAN-XXXX`. TCs `TC-NN` per plan, summaries match. `update.sh` migrates consumer brains v2→v3 |
 
 ## What's New in v1.8.3
 
@@ -33,7 +39,7 @@ curl -fsSL https://raw.githubusercontent.com/rmiyoussef/RAI-Engineering/master/s
 | Feature | Description |
 |---------|-------------|
 | 🧠 **Mandatory RAI workflow** | Thin vendor-neutral entrypoints (CLAUDE.md 66 lines, AGENTS.md pointer). AI tools discover `.brain/INSTRUCTIONS.md` + `ARCHITECTURE.md` and follow them |
-| 🔄 **Non-destructive update.sh** | Versioned (`state/version`), manifest conflicts (`.new`), pre-migration backups, `migrations.log`, idempotent re-runs, 65-test suite |
+| 🔄 **Non-destructive update.sh** | Versioned (`state/version`), manifest conflicts (`.new`), pre-migration backups, `migrations.log`, idempotent re-runs, 72-test suite |
 | 📋 **plans/ primary** | Planning directory renamed per convention; plan dirs gain `TEST-PLAN.md`; thresholds define when planning is required vs skippable |
 | 🤖 **Model neutrality** | R9: host default model, optional tiers. No hard-coded vendor model anywhere |
 
@@ -237,8 +243,8 @@ your-project/
     ├── context/       ← Current project facts (+ gitignored connections/)
     ├── knowledge/     ← How-things-work, by purpose
     ├── memory/        ← Decisions, lessons, sessions
-    ├── plans/         ← Plans PLAN-XXXX (active/completed/blocked/archived)
-    ├── test-cases/    ← Test cases TC-YYYY per plan
+    ├── plans/         ← Plans <date>-<slug> (active/completed/blocked/archived)
+    ├── test-cases/    ← Test cases TC-NN per plan
     ├── summaries/     ← Final summary per completed plan
     ├── agents/        ← Agent definitions (16 roles)
     ├── skills/        ← How to perform work (universal + area-tagged)
@@ -329,8 +335,8 @@ Every decision, lesson, test result, and task is saved to `.brain/` — a **team
 ├── context/               ← Current project facts (+ gitignored connections/)
 ├── knowledge/             ← How-things-work, by purpose (api, database, security, ...)
 ├── memory/                ← Decisions, discoveries, lessons, incidents, sessions
-├── plans/              ← Plans PLAN-XXXX (active/completed/blocked/archived)
-├── test-cases/            ← Test cases TC-YYYY per plan
+├── plans/              ← Plans <date>-<slug> (active/completed/blocked/archived)
+├── test-cases/            ← Test cases TC-NN per plan
 ├── summaries/             ← Final summary per completed plan
 ├── agents/                ← Agent definitions (ARCHITECT, PLANNER, etc.)
 ├── skills/                ← How to perform work (universal + area-tagged)
@@ -548,7 +554,7 @@ A task routinely spans many technical areas (backend, database, queue, WebSocket
 PLAN → TASKS → TEST CASES → IMPLEMENTATION → TEST EXECUTION → VALIDATION → SUMMARY → COMPLETE
 ```
 
-Every plan (`plans/active/PLAN-XXXX/`) ships with tasks, acceptance criteria, and initial test cases (`test-cases/active/PLAN-XXXX/`). Completion requires the contract in `.brain/INSTRUCTIONS.md` §8: implemented + verified + tested + documented + summarized + brain updated. Traceability runs plan → tasks → test cases → results → summary → decisions → knowledge, by ID.
+Every plan (`plans/active/<date>-<slug>/`) ships with tasks, acceptance criteria, and initial test cases (`test-cases/active/<date>-<slug>/`). Completion requires the contract in `.brain/INSTRUCTIONS.md` §8: implemented + verified + tested + documented + summarized + brain updated. Traceability runs plan → tasks → test cases → results → summary → decisions → knowledge, by ID.
 
 ### Organization Rules
 
@@ -597,6 +603,7 @@ Every plan (`plans/active/PLAN-XXXX/`) ships with tasks, acceptance criteria, an
 | **v1.8.1** | **AGENTS.md bootstrap enforcement** — install/update prepend .brain pointer to pre-existing custom AGENTS.md, user content preserved, idempotent | ✅ Done |
 | **v1.8.2** | **Updater self-refresh** — installed `.ai/update.sh` copies refresh from source every run, updater fixes reach existing installs | ✅ Done |
 | **v1.8.3** | **AGENTS.md no-bypass guard** — canonical adapter carries the no-parallel-system rule, rest stays in `.brain/` | ✅ Done |
+| **v1.9.0** | **Readable plan names** — `<date>-<slug>` plan/test/summary IDs, brain v3, `update.sh` v2→v3 migration | ✅ Done |
 
 ---
 
@@ -608,7 +615,7 @@ Every plan (`plans/active/PLAN-XXXX/`) ships with tasks, acceptance criteria, an
       <b>Rami Youssef</b>
     </a>
     <br>
-    <small>RAI-Engineering — v1.8.3</small>
+    <small>RAI-Engineering — v1.9.0</small>
   </sub>
   <br>
 </div>

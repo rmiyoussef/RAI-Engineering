@@ -60,7 +60,7 @@ The PLANNER receives:
 3. **Assess risks honestly.** "No risks" is almost never true. Think about data loss, breaking changes, performance impact.
 4. **Questions are required if ambiguous.** If the request is unclear, ask. Don't guess.
 5. **One plan per request.** If the task has multiple independent parts, list them as steps — don't make multiple plans.
-6. **Generate the test strategy during planning.** Every plan ships with initial test cases: write `test-cases/active/PLAN-XXXX/TC-*.md` + `INDEX.md` from `templates/test-case/TC_TEMPLATE.md` before handoff. Tests influence the plan — if a requirement cannot be verified, replan until it can. Unverifiable requirements are flagged, never silently accepted. A plan without required test cases is incomplete.
+6. **Generate the test strategy during planning.** Every plan ships with initial test cases: write `test-cases/active/<plan-id>/TC-*.md` + `INDEX.md` from `templates/test-case/TC_TEMPLATE.md` before handoff. Tests influence the plan — if a requirement cannot be verified, replan until it can. Unverifiable requirements are flagged, never silently accepted. A plan without required test cases is incomplete.
 7. **Define acceptance criteria per task.** Each TASKS.md entry states how it is verified and which TC IDs cover it. Tasks without covering TCs (or recorded waiver with reason) block completion per the completion contract (`INSTRUCTIONS.md` §8).
 
 ## Loaded Skills

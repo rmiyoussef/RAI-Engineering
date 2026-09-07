@@ -10,62 +10,6 @@ curl -fsSL https://raw.githubusercontent.com/rmiyoussef/RAI-Engineering/master/s
 
 ---
 
-## What's New in v1.9.1
-
-| Feature | Description |
-|---------|-------------|
-| 📥 **Loose plan recovery** | Every update wraps stray `plans/*.md` files into `plans/completed/<slug>/`. Plus backup self-exclusion fix (tar no longer archives its own output) |
-
-## What's New in v1.9
-
-| Feature | Description |
-|---------|-------------|
-| 📛 **Readable plan names** | Folders use `<date>-<slug>` instead of `PLAN-XXXX`. TCs `TC-NN` per plan, summaries match. `update.sh` migrates consumer brains v2→v3 |
-
-## What's New in v1.8.3
-
-| Feature | Description |
-|---------|-------------|
-| 📌 **AGENTS.md no-bypass guard** | Canonical adapter gains one line: no parallel planning/memory/testing system. Identity, agent index, routing stay in `.brain/` only |
-
-## What's New in v1.8.2
-
-| Feature | Description |
-|---------|-------------|
-| 🔄 **Updater self-refresh** | Every run refreshes the installed `.ai/update.sh` copy from source. Updater fixes propagate to existing installs. One `.bak` kept, fetch failures never fail the run |
-
-## What's New in v1.8.1
-
-| Feature | Description |
-|---------|-------------|
-| 📌 **AGENTS.md bootstrap enforcement** | Install/update prepend the `.brain/` pointer to pre-existing custom `AGENTS.md`. User content preserved verbatim, idempotent re-runs, logged to `migrations.log` |
-
-## What's New in v1.8
-
-| Feature | Description |
-|---------|-------------|
-| 🧠 **Mandatory RAI workflow** | Thin vendor-neutral entrypoints (CLAUDE.md 66 lines, AGENTS.md pointer). AI tools discover `.brain/INSTRUCTIONS.md` + `ARCHITECTURE.md` and follow them |
-| 🔄 **Non-destructive update.sh** | Versioned (`state/version`), manifest conflicts (`.new`), pre-migration backups, `migrations.log`, idempotent re-runs, 79-test suite |
-| 📋 **plans/ primary** | Planning directory renamed per convention; plan dirs gain `TEST-PLAN.md`; thresholds define when planning is required vs skippable |
-| 🤖 **Model neutrality** | R9: host default model, optional tiers. No hard-coded vendor model anywhere |
-
-## What's New in v1.6
-
-| Feature | Description |
-|---------|-------------|
-| ⚡ **Lazy-load boot** | CLAUDE.md cut from 36KB → 8KB. Agents load on demand |
-| 📋 **Consolidated rules** | R3/R28 merged. R41-R45 canonical in RULES.md only |
-| 🎯 **Model Tiering** | Route agents to different models via `.brain/config.yaml` |
-| ✅ **Approval modes** | Quick one-liner + full approval box, switchable mid-session |
-| 📊 **Memory Timeline** | `python3 .ai/memory-timeline.py` — cross-reference all memory by date |
-| 🔍 **Skills Drift Check** | `bash .ai/skills-diff.sh` — compare local vs upstream hashes |
-| 🗄️ **Migration Testing** | New 7-scenario migration test template |
-| 📦 **Skills-lock v2** | Tracks upstream repos + commit SHAs for all 34 imported skills |
-
-See [docs/architecture.md](docs/architecture.md) for full details.
-
----
-
 ## Why?
 
 Most AI coding assistants behave like chatbots — they answer questions, write code on demand, and forget everything between sessions.
@@ -268,23 +212,6 @@ bash .ai/update.sh
 
 Or just ask: *"Update RAI-Engineering"*
 
-### What's New in v1.5
-
-RAI-Engineering v1.5 imports **34 skills from 6 external repositories** — learned patterns, best practices, and prompt techniques from the broader AI-engineering ecosystem:
-
-| Source | Skills Adapted |
-|--------|----------------|
-| **mattpocock/skills** | TDD, codebase-design, domain-modeling, research, prototype, merge-conflicts, code-review (2-axis), improve-architecture |
-| **anthropics/skills** | Frontend design principles |
-| **addyosmani/agent-skills** | Context-engineering, planning, incremental-implementation, source/spec-driven-dev, code-simplification, documentation & ADRs, deprecation & migration, performance, shipping, observability, debugging, git-workflow, API design, security-hardening (+4 rule merges), frontend-UI, CI/CD, browser-testing |
-| **obra/superpowers** | Verification-before-completion, subagent-driven-dev, parallel-agents, executing-plans, writing-plans, brainstorming, using-git-worktrees, finishing-a-branch, systematic-debugging |
-| **emilkowalski/skills** | Design engineering, animation vocabulary, Apple design principles |
-| **nextlevelbuilder/ui-ux-pro-max** | Design intelligence patterns (palettes, typography, UX guidelines) |
-
-**4 rule files upgraded** — SECURITY (+STRIDE/OWASP LLM/SSRF/dep audit), API_DESIGN (+Hyrum/contract-first/TypeScript patterns), COMMIT_MESSAGES (+trunk-based/semver/changelogs), GIT_SAFETY (+generated-files discipline)
-
-See `.brain/skills/` for all 39 skills (universal + `backend-*`/`frontend-*`/`devops-*` area-tagged).
-
 ### Use It
 
 ```bash
@@ -303,28 +230,6 @@ Then give it a task:
 - *"Review the accessibility of the checkout form"*
 
 For a **complete reference of all 39 skills** — 27 universal + 12 area-tagged (`backend-*`/`frontend-*`/`devops-*`) — see [SKILLS.md](SKILLS.md).
-
-### What's New in v1.5.2 — Frontend Rules System
-
-**11 frontend engineering rule files** — senior-level standards for building production frontends:
-
-| Rule file | Covers |
-|-----------|--------|
-| `COMPONENT_ARCHITECTURE` | Single responsibility, props design, smart/presentational, error boundaries |
-| `STATE_MANAGEMENT` | State ownership ladder, context optimization, URL-first, `useEffect` hygiene |
-| `PERFORMANCE` | Core Web Vitals, bundle budgets, image optimization, lazy loading |
-| `ACCESSIBILITY` | WCAG 2.2 AA, semantic HTML, keyboard nav, screen readers, reduced motion |
-| `STYLING` | Token system, mobile-first, dark mode, flat specificity |
-| `ERROR_LOADING_UX` | Four States Contract — loading, error, empty, success |
-| `API_INTEGRATION` | Cache layer, typed client, optimistic updates, request deduplication |
-| `TESTING` | Testing trophy, RTL queries, MSW, what to test |
-| `SECURITY` | XSS, CSP, token storage, SRI, dependency audit |
-| `FORMS_AND_INPUT` | Validation, autocomplete, confirmation patterns, keyboard support |
-| `BUILD_TOOLING` | CI pipeline, TypeScript strict, code splitting, pre-commit hooks |
-
-Plus: [Mantine UI skill](.brain/skills/frontend-mantine.md) (100+ component reference) and a team-readable [Best Practices Guide](.brain/knowledge/patterns/frontend-best-practices.md).
-
-The Brain auto-loads the relevant rule files based on what your task touches — component work loads architecture rules, API work loads integration rules, etc.
 
 ---
 

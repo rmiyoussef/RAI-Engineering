@@ -87,6 +87,8 @@ SYSTEM_FILES="$(cat << 'FILES_EOF'
 .brain/INSTRUCTIONS.md|.brain/INSTRUCTIONS.md
 .brain/INDEX.md|.brain/INDEX.md
 .brain/README.md|.brain/README.md
+.brain/docs/README.md|.brain/docs/README.md
+.brain/docs/_TEMPLATE.md|.brain/docs/_TEMPLATE.md
 .brain/constitution/MISSION.md|.brain/constitution/MISSION.md
 .brain/constitution/PRINCIPLES.md|.brain/constitution/PRINCIPLES.md
 .brain/constitution/RULES.md|.brain/constitution/RULES.md
@@ -151,6 +153,7 @@ SYSTEM_FILES="$(cat << 'FILES_EOF'
 .brain/skills/using-git-worktrees.md|.brain/skills/using-git-worktrees.md
 .brain/skills/verification-before-completion.md|.brain/skills/verification-before-completion.md
 .brain/skills/writing-plans.md|.brain/skills/writing-plans.md
+.brain/skills/writing-docs.md|.brain/skills/writing-docs.md
 .brain/rules/api/design.md|.brain/rules/api/design.md
 .brain/rules/api/frontend-integration.md|.brain/rules/api/frontend-integration.md
 .brain/rules/architecture/components.md|.brain/rules/architecture/components.md
@@ -234,6 +237,7 @@ AI_FILES="$(cat << 'FILES_EOF'
 .brain/skills/test-driven-development.md|.ai/skills/TESTING.md
 .brain/skills/verification-before-completion.md|.ai/skills/VERIFICATION.md
 .brain/skills/writing-plans.md|.ai/skills/WRITING_PLANS.md
+.brain/skills/writing-docs.md|.ai/skills/WRITING_DOCS.md
 .brain/skills/executing-plans.md|.ai/skills/EXECUTING_PLANS.md
 .brain/rules/git/commit-messages.md|.ai/rules/COMMIT_MESSAGES.md
 .brain/rules/coding/error-handling.md|.ai/rules/ERROR_HANDLING.md
@@ -428,7 +432,7 @@ merge_dir_contents() {
 }
 
 ensure_tree() {
-    mkdir -p "$BRAIN_DIR"/{constitution,context/connections,knowledge/{architecture,components,database,api,infrastructure,security,patterns},memory/{decisions,discoveries,lessons,incidents,sessions},plans/{active,completed,blocked,archived},test-cases/{active,completed,failed,archived},summaries/{active,completed,archived},agents,skills,rules/{coding,architecture,database,api,testing,security,performance,infrastructure,git},reference,templates/{plan,test-case,summary,testing},sessions/live,session-bus,state,_deprecated/old-domains}
+    mkdir -p "$BRAIN_DIR"/{constitution,context/connections,docs,knowledge/{architecture,components,database,api,infrastructure,security,patterns},memory/{decisions,discoveries,lessons,incidents,sessions},plans/{active,completed,blocked,archived},test-cases/{active,completed,failed,archived},summaries/{active,completed,archived},agents,skills,rules/{coding,architecture,database,api,testing,security,performance,infrastructure,git},reference,templates/{plan,test-case,summary,testing},sessions/live,session-bus,state,_deprecated/old-domains}
     mkdir -p "$AI_DIR"/{brain,agents,rules,skills,templates,workflows,docs}
     # Keep lifecycle dirs present even when empty (git does not track empty dirs).
     local d

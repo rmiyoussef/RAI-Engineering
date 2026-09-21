@@ -20,6 +20,10 @@
 
 - `knowledge/architecture/` `knowledge/components/` `knowledge/database/` `knowledge/api/` `knowledge/infrastructure/` `knowledge/security/` `knowledge/patterns/` (incl. `backend-service-layer-guidelines.md`, `frontend-best-practices.md`; `knowledge/infrastructure/devops-practices.md`)
 
+## Feature docs (living, per-feature — read before touching the feature)
+
+- `docs/README.md` (rules + naming) `docs/_TEMPLATE.md` (section order) + `docs/<feature>.md` per feature (method: `skills/writing-docs.md`)
+
 ## Memory (what happened and why, append-only)
 
 - `memory/decisions/` (5 records incl. orchestration-engine, brain-migration, mantine-reference) · `memory/discoveries/` · `memory/lessons/` (`version-bump-before-push.md`) · `memory/incidents/` · `memory/sessions/`
@@ -34,7 +38,7 @@
 ## Agents / Skills / Rules
 
 - Agents: `agents/` (16: PLANNER EXECUTOR REVIEWER TESTER ARCHIVIST ARCHITECT MEMORY SECURITY DATABASE BACKEND CLEAN_CODE GITHUB GITHUB_TASKS SUMMARY ORCHESTRATOR ORCHESTRATOR_ENGINE)
-- Skills: `skills/` (39: universal process skills untagged + `backend-*` `frontend-*` `devops-*` domain-tagged how-tos)
+- Skills: `skills/` (40: universal process skills untagged + `backend-*` `frontend-*` `devops-*` domain-tagged how-tos)
 - Rules by purpose: `rules/coding|architecture|database|api|testing|security|performance|infrastructure|git/` (categories organizational only)
 
 ## Reference / Sessions / State

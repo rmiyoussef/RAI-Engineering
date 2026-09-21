@@ -73,6 +73,10 @@ assert_file "$T/.brain/plans/active/.gitkeep" "fresh: plans/ tree (active kept)"
 [ -d "$T/.brain/backend" ] && fail "fresh: no domain dirs" || pass "fresh: no domain dirs"
 assert_file "$T/.brain/state/system-manifest.sha256" "fresh: manifest recorded"
 assert_file "$T/.brain/state/migrations.log" "fresh: migration log started"
+assert_file "$T/.brain/docs/README.md" "fresh: docs/README.md scaffold installed"
+assert_file "$T/.brain/docs/_TEMPLATE.md" "fresh: docs/_TEMPLATE.md scaffold installed"
+assert_file "$T/.brain/skills/writing-docs.md" "fresh: writing-docs skill installed"
+assert_file "$T/.ai/skills/WRITING_DOCS.md" "fresh: writing-docs .ai mirror installed"
 assert_file "$T/.ai/CLAUDE.md" "fresh: .ai mirror installed"
 [ -L "$T/CLAUDE.md" ] && pass "fresh: CLAUDE.md symlink" || fail "fresh: CLAUDE.md symlink"
 grep -q "context/connections" "$T/.gitignore" && pass "fresh: .gitignore secrets" || fail "fresh: .gitignore secrets"
@@ -259,6 +263,19 @@ BEFORE="$(find "$T/.brain/plans" | sort | sha256sum)"
 run_update "$T" >/dev/null 2>&1
 [ "$(find "$T/.brain/plans" | sort | sha256sum)" = "$BEFORE" ] \
     && pass "loose: recovery idempotent" || fail "loose: recovery idempotent"
+
+echo "== 15. user feature docs preserved across updates =="
+T="$(new_tmp)"
+run_update "$T" >/dev/null 2>&1
+printf '# Onboarding\n\n**Status:** live\n' > "$T/.brain/docs/onboarding.md"
+BEFORE_HASH="$(sha256sum "$T/.brain/docs/onboarding.md" | awk '{print $1}')"
+run_update "$T" >/dev/null 2>&1
+run_update "$T" >/dev/null 2>&1
+[ "$(sha256sum "$T/.brain/docs/onboarding.md" | awk '{print $1}')" = "$BEFORE_HASH" ] \
+    && pass "user feature doc byte-identical" || fail "user feature doc byte-identical"
+[ -z "$(ls "$T/.brain/docs"/*.new 2>/dev/null)" ] && pass "docs/: no .new conflicts" || fail "docs/: no .new conflicts"
+assert_file "$T/.brain/docs/README.md" "docs scaffold survives alongside user files"
+assert_version "$T" "3" "docs run: version stays 3"
 
 echo ""
 echo "─────────────────────────────────"

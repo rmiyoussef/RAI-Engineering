@@ -14,6 +14,7 @@ Knowledge is organized by purpose, not by technical domain. A task like "real-ti
 ├── constitution/    ← mission, principles, canonical rules, constraints, quality
 ├── context/         ← current project facts (stack, architecture, environment)
 ├── knowledge/       ← how-things-work, by purpose (api, database, security, ...)
+├── docs/            ← living per-feature docs (one <feature>.md per feature, read before touching it)
 ├── memory/          ← what happened and why (decisions, lessons, sessions)
 ├── plans/        ← plans <date>-<slug> with tasks (active/completed/blocked/archived)
 ├── test-cases/      ← first-class test cases TC-NN per plan
@@ -34,7 +35,7 @@ Every plan follows `PLAN → TASKS → TEST CASES → IMPLEMENTATION → TEST EX
 ## For AI Agents
 
 1. Read `ARCHITECTURE.md` + `INSTRUCTIONS.md`.
-2. Read `state/current.yaml`, then selectively load relevant context/rules/knowledge/memory via `INDEX.md`.
+2. Read `state/current.yaml`, then selectively load relevant context/rules/knowledge/memory/docs via `INDEX.md` (`docs/<feature>.md` is mandatory before any feature work).
 3. Never bulk-read the whole brain. Never create domain directories.
 
 ## For Humans

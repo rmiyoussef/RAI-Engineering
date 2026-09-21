@@ -149,10 +149,17 @@ List all middleware and which routes they apply to:
 
 ---
 
+## Feature Docs (`docs/`)
+
+Each feature holds one living document: `.brain/docs/<feature>.md` (e.g. `onboarding.md`). Read it before touching its feature; update it in the same change when behavior changes (method: `.brain/skills/writing-docs.md`). One file per feature, template section order kept, cross-feature facts linked never copied. Full rules: `.brain/docs/README.md`.
+
+---
+
 ## Important Notes
 
 - Never commit `.env` files or real credentials (use `.env.example`)
 - Never commit `.brain/connections/` (gitignored)
 - Run `pint` before committing PHP code
 - Write tests for every new feature or bug fix
+- Update `.brain/docs/<feature>.md` when adding or changing feature behavior
 - Update this file when adding new patterns, commands, or middleware

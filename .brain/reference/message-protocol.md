@@ -287,7 +287,7 @@ User request arrives
     |
 [7] BRAIN reads relevant memory/decisions/ + memory/lessons/
     |
-[8] BRAIN loads relevant knowledge/ files (filtered by domains: frontmatter)
+[8] BRAIN loads relevant knowledge/ files (filtered by domains: frontmatter) + relevant docs/<feature>.md (mandatory before feature work)
     |
 [9] If active plan exists: BRAIN loads plans/active/<plan-id>/ + its test-cases/
     |
